@@ -67,7 +67,7 @@ public class pnodeSplayPQ extends pnodePQ
       return;
     }
     
-    int comp = pnodeCMP(item, t.item);
+    double comp = pnodeCMP(item, t.item);
     
     pnodeSplayNode l = pnodeSplayNode.dummy;
     pnodeSplayNode r = pnodeSplayNode.dummy;

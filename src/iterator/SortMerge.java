@@ -252,7 +252,7 @@ public class SortMerge extends Iterator implements GlobalConst
 	   Exception
     {
       
-      int    comp_res;
+      double    comp_res;
       Tuple _tuple1,_tuple2;
       if (done) return null;
       

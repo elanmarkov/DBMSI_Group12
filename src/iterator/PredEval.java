@@ -40,7 +40,7 @@ public class PredEval
       AttrType[]  val_type = new AttrType[1];
       
       AttrType  comparison_type = new AttrType(AttrType.attrInteger);
-      int       comp_res;
+      double       comp_res;
       boolean   op_res = false, row_res = false, col_res = true;
       
       if (p == null)
@@ -89,6 +89,11 @@ public class PredEval
 		      comparison_type.attrType = in2[fld1-1].attrType;
 		    }
 		  break;
+		case AttrType.attrDesc:
+			value.setHdr((short)1, val_type, null);
+			value.setDescFld(1, temp_ptr.operand1.desc);
+			comparison_type.attrType = AttrType.attrDesc;
+			break;
 		default:
 		  break;
 		}
@@ -121,6 +126,11 @@ public class PredEval
 		  else
 		    tuple2 = t2;
 		  break;
+		case AttrType.attrDesc:
+			value.setHdr((short)1, val_type, null);
+			value.setDescFld(1, temp_ptr.operand2.desc);
+			tuple2 = value;
+			break;
 		default:
 		  break;
 		}
@@ -132,34 +142,62 @@ public class PredEval
 	      }catch (TupleUtilsException e){
 		throw new PredEvalException (e,"TupleUtilsException is caught by PredEval.java");
 	      }
-	      op_res = false;
-	      
-	      switch (temp_ptr.op.attrOperator)
-		{
-		case AttrOperator.aopEQ:
-		  if (comp_res == 0) op_res = true;
-		  break;
-		case AttrOperator.aopLT:
-		  if (comp_res <  0) op_res = true;
-		  break;
-		case AttrOperator.aopGT:
-		  if (comp_res >  0) op_res = true;
-		  break;
-		case AttrOperator.aopNE:
-		  if (comp_res != 0) op_res = true;
-		  break;
-		case AttrOperator.aopLE:
-		  if (comp_res <= 0) op_res = true;
-		  break;
-		case AttrOperator.aopGE:
-		  if (comp_res >= 0) op_res = true;
-		  break;
-		case AttrOperator.aopNOT:
-		  if (comp_res != 0) op_res = true;
-		  break;
-		default:
-		  break;
-		}
+	      op_res = false; 
+	      if(temp_ptr.type1.attrType == AttrType.attrDesc && temp_ptr.type2.attrType == AttrType.attrDesc) {
+	    	  switch (temp_ptr.op.attrOperator)
+		  		{
+		  		case AttrOperator.aopEQ:
+		  		  if (comp_res == temp_ptr.distance) op_res = true;
+		  		  break;
+		  		case AttrOperator.aopLT:
+		  		  if (comp_res <  temp_ptr.distance) op_res = true;
+		  		  break;
+		  		case AttrOperator.aopGT:
+		  		  if (comp_res >  temp_ptr.distance) op_res = true;
+		  		  break;
+		  		case AttrOperator.aopNE:
+		  		  if (comp_res != temp_ptr.distance) op_res = true;
+		  		  break;
+		  		case AttrOperator.aopLE:
+		  		  if (comp_res <= temp_ptr.distance) op_res = true;
+		  		  break;
+		  		case AttrOperator.aopGE:
+		  		  if (comp_res >= temp_ptr.distance) op_res = true;
+		  		  break;
+		  		case AttrOperator.aopNOT:
+		  		  if (comp_res != temp_ptr.distance) op_res = true;
+		  		  break;
+		  		default:
+		  		  break;
+		  		}
+	      } else {
+	    	  switch (temp_ptr.op.attrOperator)
+	  		{
+	  		case AttrOperator.aopEQ:
+	  		  if (comp_res == 0) op_res = true;
+	  		  break;
+	  		case AttrOperator.aopLT:
+	  		  if (comp_res <  0) op_res = true;
+	  		  break;
+	  		case AttrOperator.aopGT:
+	  		  if (comp_res >  0) op_res = true;
+	  		  break;
+	  		case AttrOperator.aopNE:
+	  		  if (comp_res != 0) op_res = true;
+	  		  break;
+	  		case AttrOperator.aopLE:
+	  		  if (comp_res <= 0) op_res = true;
+	  		  break;
+	  		case AttrOperator.aopGE:
+	  		  if (comp_res >= 0) op_res = true;
+	  		  break;
+	  		case AttrOperator.aopNOT:
+	  		  if (comp_res != 0) op_res = true;
+	  		  break;
+	  		default:
+	  		  break;
+	  		}
+	      }
 	      
 	      row_res = row_res || op_res;
 	      if (row_res == true)

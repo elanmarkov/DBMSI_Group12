@@ -32,7 +32,7 @@ public class TupleUtils
    *          1        if the tuple is greater,
    *         -1        if the tuple is smaller,                              
    */
-  public static int CompareTupleWithTuple(AttrType fldType,
+  public static double CompareTupleWithTuple(AttrType fldType,
 					  Tuple  t1, int t1_fld_no,
 					  Tuple  t2, int t2_fld_no)
     throws IOException,
@@ -42,7 +42,7 @@ public class TupleUtils
       int   t1_i,  t2_i;
       float t1_r,  t2_r;
       String t1_s, t2_s;
-      
+      Descriptor t1_d, t2_d;
       switch (fldType.attrType) 
 	{
 	case AttrType.attrInteger:                // Compare two integers.
@@ -79,6 +79,15 @@ public class TupleUtils
 	  if(t1_s.compareTo( t2_s)>0)return 1;
 	  if (t1_s.compareTo( t2_s)<0)return -1;
 	  return 0;
+	  
+	case AttrType.attrDesc:
+		try {
+			t1_d = t1.getDescFld(t1_fld_no);
+		    t2_d = t2.getDescFld(t2_fld_no);
+		    return t1_d.distance(t2_d);
+		} catch (FieldNumberOutOfBoundException e) {
+			throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
+		}
 	default:
 	  
 	  throw new UnknowAttrType(null, "Don't know how to handle attrSymbol, attrNull");
@@ -103,7 +112,7 @@ public class TupleUtils
    *@exception IOException some I/O fault
    *@exception TupleUtilsException exception from this class   
    */            
-  public static int CompareTupleWithValue(AttrType fldType,
+  public static double CompareTupleWithValue(AttrType fldType,
 					  Tuple  t1, int t1_fld_no,
 					  Tuple  value)
     throws IOException,

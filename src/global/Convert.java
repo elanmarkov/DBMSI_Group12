@@ -152,6 +152,40 @@ public class Convert{
       return value;
     }
   
+  /**
+   * reads 10 bytes from the given byte array at the specified position
+   * convert it to a Descriptor
+   * @param       data            a byte array
+   * @param       position        the position in data[]
+   * @exception   java.io.IOException I/O errors
+   * @return      the Descriptor
+   */
+  public static Descriptor getDescValue (int position, byte []data)
+    throws java.io.IOException
+    {
+      InputStream in;
+      DataInputStream instr;
+      Descriptor value = new Descriptor();
+      int[] val;
+      val = new int[5];
+      byte tmp[] = new byte[2];
+      int i = 0;
+      while(i < 5) {
+          // copy the value from data array out to a tmp byte array  
+          System.arraycopy (data, position, tmp, 0, 2);
+        
+          /* creates a new data input stream to read data from the
+           * specified input stream
+           */
+          in = new ByteArrayInputStream(tmp);
+          instr = new DataInputStream(in);
+          val[i] = instr.readShort();
+          position += 2;
+      }
+      value.set(val[0],val[1],val[2],val[3],val[4]);
+      return value;
+    }
+  
   
   /**
    * update an integer value in the given byte array at the specified position
@@ -300,6 +334,38 @@ public class Convert{
       
       // copies contents of this byte array into data[]
       System.arraycopy (B, 0, data, position, 2);
+      
+    }
+  /**
+   * Update a Descriptor in the given byte array at the specified position.
+   * @param       data            a byte array
+   * @param       value           the value to be copied into data[]
+   * @param       position        the position of tht value in data[]
+   * @exception   java.io.IOException I/O errors
+   */
+  public static void setDescValue (Descriptor value, int position, byte []data)
+    throws java.io.IOException
+    {
+      /* creates a new data output stream to write data to
+       * underlying output stream
+       */
+      int i = 0;
+      while(i < 5)
+      {
+          OutputStream out = new ByteArrayOutputStream();
+          DataOutputStream outstr = new DataOutputStream (out);
+          
+          // write the value to the output stream
+          outstr.writeInt(value.get(i));
+          
+          // creates a byte array with this output stream size and the
+          // valid contents of the buffer have been copied into it
+          byte []B = ((ByteArrayOutputStream) out).toByteArray();
+          
+          // copies contents of this byte array into data[]
+          System.arraycopy (B, 0, data, position, 2);
+          position += 2;
+      }
       
     }
 }

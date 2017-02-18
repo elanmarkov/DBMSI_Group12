@@ -162,7 +162,7 @@ public class Sort extends Iterator implements GlobalConst
     int p_elems_curr_Q = 0;
     int p_elems_other_Q = 0;
     
-    int comp_res;
+    double comp_res;
     
     // set the lastElem to be the minimum value for the sort field
     if(order.tupleOrder == TupleOrder.Ascending) {

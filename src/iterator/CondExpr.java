@@ -21,7 +21,12 @@ public class CondExpr {
    * literal but an attribute name
    */    
   public AttrType     type1;
-  public AttrType     type2;    
+  public AttrType     type2;  
+  
+  /**
+   *  For operands of type attrDesc, the value of distance will be set to a non-negative integer
+   */
+  public double       distance;
  
   /**
    *the left operand and right operand 
@@ -44,6 +49,9 @@ public class CondExpr {
     
     operand1.integer = 0;
     operand2.integer = 0;
+    
+    //if(type1.attrType != AttrType.attrDesc && type2.attrType != AttrType.attrDesc)
+    	distance = -1;
     
     next = null;
   }

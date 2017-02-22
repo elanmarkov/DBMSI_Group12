@@ -1,4 +1,6 @@
-/* File DB.java */
+/* File DB.java 
+Modifications to read_file, write_file by Elan Markov
+*/
 
 package diskmgr;
 
@@ -39,6 +41,7 @@ public class DB implements GlobalConst {
     num_pages = 1;	//temporary num_page value for pinpage to work
     
     pinPage(pageId, apage, false /*read disk*/);
+    PCounter pageRW; // Counter for page read/writes (static contents)
     
     
     DBFirstPage firstpg = new DBFirstPage();
@@ -138,6 +141,8 @@ public class DB implements GlobalConst {
     throws InvalidPageNumberException, 
 	   FileIOException, 
 	   IOException {
+    
+    PCounter.readIncrement(); // Read request made; does not evaluate if it was successful.
 
     if((pageno.pid < 0)||(pageno.pid >= num_pages))
       throw new InvalidPageNumberException(null, "BAD_PAGE_NUMBER");
@@ -169,6 +174,8 @@ public class DB implements GlobalConst {
     throws InvalidPageNumberException, 
 	   FileIOException, 
 	   IOException {
+
+    PCounter.writeIncrement(); // Write request made; does not evaluate if it was successful.
 
     if((pageno.pid < 0)||(pageno.pid >= num_pages))
       throw new InvalidPageNumberException(null, "INVALID_PAGE_NUMBER");

@@ -2,7 +2,7 @@ package global;
 
 public class Descriptor {
     
-    int[] value;
+    private int[] value;
     	
     	Descriptor() {
         	value = new int[5];
@@ -13,7 +13,7 @@ public class Descriptor {
     	    value[4] = 0;
     	}
     
-    void set(int value0,int value1, int value2, int value3, int value4) {
+    public void set(int value0,int value1, int value2, int value3, int value4) {
         value[0] = value0;
         value[1] = value1;
         value[2] = value2;
@@ -21,12 +21,12 @@ public class Descriptor {
         value[4] = value4;
     }
     
-    int get(int idx) {
+    public int get(int idx) {
         return value[idx];
     }
     
     //return 1 if equal, 0 if not
-    double equal(Descriptor desc) {
+    public double equal(Descriptor desc) {
         return (value[0]==desc.value[0] && value[1]==desc.value[1] &&
         			value[2]==desc.value[2] && value[3]==desc.value[3] &&
         			value[4]==desc.value[4]) ? 1 : 0;

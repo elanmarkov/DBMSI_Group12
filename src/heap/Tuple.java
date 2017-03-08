@@ -18,30 +18,30 @@ public class Tuple implements GlobalConst{
  /** 
    * a byte array to hold data
    */
-  private byte [] data;
+  protected byte [] data;
 
   /**
    * start position of this tuple in data[]
    */
-  private int tuple_offset;
+  protected int tuple_offset;
 
   /**
    * length of this tuple
    */
-  private int tuple_length;
+  protected int tuple_length;
 
   /** 
    * private field
    * Number of fields in this tuple
    */
-  private short fldCnt;
+  protected short fldCnt;
 
   /** 
    * private field
    * Array of offsets of the fields
    */
  
-  private short [] fldOffset; 
+  protected short [] fldOffset; 
 
    /**
     * Class constructor
@@ -275,28 +275,6 @@ public class Tuple implements GlobalConst{
        throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
  
     }
-   /**
-    * Convert this field into a Descriptor value
-    *
-    * @param    fldNo   the field number
-    * @return           the descriptor value if success
-    *			
-    * @exception   IOException I/O errors
-    * @exception   FieldNumberOutOfBoundException Tuple field number out of bound
-    */
-    
-    public Descriptor getDescFld(int fldNo) 
-     throws IOException, FieldNumberOutOfBoundException
-     {
-        Descriptor val;
-        if ( (fldNo > 0) && (fldNo <= fldCnt))
-        {
-         val = Convert.getDescValue(fldOffset[fldNo -1], data);
-         return val;
-        }
-        else
-         throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
-     }
 
   /**
    * Set this field to integer value
@@ -361,28 +339,6 @@ public class Tuple implements GlobalConst{
      else 
        throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
     }
-   
-   /**
-    * Set this field to Descriptor value
-    *
-    * @param     fldNo   the field number
-    * @param     val     the float value
-    * @exception   IOException I/O errors
-    * @exception   FieldNumberOutOfBoundException Tuple field number out of bound
-    */
-
-   public Tuple setDescFld(int fldNo, Descriptor val)
-   	throws IOException, FieldNumberOutOfBoundException
-   { 
-    if ( (fldNo > 0) && (fldNo <= fldCnt))
-     {
-      Convert.setDescValue (val, fldOffset[fldNo -1], data);
-      return this;
-     }
-     else  
-      throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND"); 
-      
-   }
 
 
    /**

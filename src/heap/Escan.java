@@ -1,55 +1,37 @@
 package heap;
 
-/** JAVA */
-/**
- * Scan.java-  class Scan
- *
- */
+import global.EID;
+import global.GlobalConst;
+import global.PageId;
+import global.RID;
+import global.SystemDefs;
 
-import java.io.*;
-import global.*;
-import bufmgr.*;
-import diskmgr.*;
+import java.io.IOException;
 
+import diskmgr.Page;
 
-/**	
- * A Scan object is created ONLY through the function openScan
- * of a HeapFile. It supports the getNext interface which will
- * simply retrieve the next record in the heapfile.
- *
- * An object of type scan will always have pinned one directory page
- * of the heapfile.
- */
-public class Scan implements GlobalConst{
- 
-    /**
-     * Note that one record in our way-cool HeapFile implementation is
-     * specified by six (6) parameters, some of which can be determined
-     * from others:
-     */
-
-    /** The heapfile we are using. */
-    private Heapfile  _hf;
+public class Escan {
+	private EdgeHeapFile  _ehf;
 
     /** PageId of current directory page (which is itself an HFPage) */
     private PageId dirpageId = new PageId();
 
     /** pointer to in-core data of dirpageId (page is pinned) */
-    private HFPage dirpage = new HFPage();
+    private EHFpage dirpage = new EHFpage();
 
     /** record ID of the DataPageInfo struct (in the directory page) which
      * describes the data page where our current record lives.
      */
-    private RID datapageRid = new RID();
+    private EID datapageRid = new EID();
 
     /** the actual PageId of the data page with the current record */
     private PageId datapageId = new PageId();
 
     /** in-core copy (pinned) of the same */
-    private HFPage datapage = new HFPage();
+    private EHFpage datapage = new EHFpage();
 
     /** record ID of the current record (from the current data page) */
-    private RID userrid = new RID();
+    private EID userrid = new EID();
 
     /** Status of next user status */
     private boolean nextUserStatus;
@@ -64,11 +46,11 @@ public class Scan implements GlobalConst{
      *
      * @param hf A HeapFile object
      */
-  public Scan(Heapfile hf) 
+  public Escan(EdgeHeapFile ehf) 
     throws InvalidTupleSizeException,
 	   IOException
   {
-	init(hf);
+	init(ehf);
   }
 
 
@@ -81,11 +63,11 @@ public class Scan implements GlobalConst{
    * @param rid Record ID of the record
    * @return the Tuple of the retrieved record.
    */
-  public Tuple getNext(RID rid) 
+  public Edge getNext(EID eid) 
     throws InvalidTupleSizeException,
 	   IOException
   {
-    Tuple recptrtuple = null;
+    Edge recptrtuple = null;
     
     if (nextUserStatus != true) {
         nextDataPage();
@@ -94,11 +76,11 @@ public class Scan implements GlobalConst{
     if (datapage == null)
       return null;
     
-    rid.pageNo.pid = userrid.pageNo.pid;    
-    rid.slotNo = userrid.slotNo;
+    eid.pageNo.pid = userrid.pageNo.pid;    
+    eid.slotNo = userrid.slotNo;
          
     try {
-      recptrtuple = datapage.getRecord(rid);
+      recptrtuple = (Edge) datapage.getRecord(eid);
     }
     
     catch (Exception e) {
@@ -106,7 +88,7 @@ public class Scan implements GlobalConst{
       e.printStackTrace();
     }   
     
-    userrid = datapage.nextRecord(rid);
+    userrid = datapage.nextRecord(eid);
     if(userrid == null) nextUserStatus = false;
     else nextUserStatus = true;
      
@@ -122,21 +104,21 @@ public class Scan implements GlobalConst{
      * @return 	true if successful, 
      *			false otherwise.
      */
-  public boolean position(RID rid) 
+  public boolean position(EID eid) 
     throws InvalidTupleSizeException,
 	   IOException
   { 
-    RID    nxtrid = new RID();
+    EID    nxtrid = new EID();
     boolean bst;
 
     bst = peekNext(nxtrid);
 
-    if (nxtrid.equals(rid)==true) 
+    if (nxtrid.equals(eid)==true) 
     	return true;
 
     // This is kind lame, but otherwise it will take all day.
     PageId pgid = new PageId();
-    pgid.pid = rid.pageNo.pid;
+    pgid.pid = eid.pageNo.pid;
  
     if (!datapageId.equals(pgid)) {
 
@@ -173,7 +155,7 @@ public class Scan implements GlobalConst{
     
     bst = peekNext(nxtrid);
     
-    while ((bst == true) && (nxtrid != rid))
+    while ((bst == true) && (nxtrid != eid))
       bst = mvNext(nxtrid);
     
     return bst;
@@ -187,11 +169,11 @@ public class Scan implements GlobalConst{
      *
      * @param hf A HeapFile object
      */
-    private void init(Heapfile hf) 
+    private void init(EdgeHeapFile ehf) 
       throws InvalidTupleSizeException,
 	     IOException
   {
-	_hf = hf;
+	_ehf = ehf;
 
     	firstDataPage();
   }
@@ -249,17 +231,17 @@ public class Scan implements GlobalConst{
 	   IOException
   {
     DataPageInfo dpinfo;
-    Tuple        rectuple = null;
+    Edge        rectuple = null;
     Boolean      bst;
 
     /** copy data about first directory page */
  
-    dirpageId.pid = _hf._firstDirPageId.pid;  
+    dirpageId.pid = _ehf._firstDirPageId.pid;  
     nextUserStatus = true;
 
     /** get first directory page and pin it */
     	try {
-	   dirpage  = new HFPage();
+	   dirpage  = new EHFpage();
        	   pinPage(dirpageId, (Page) dirpage, false);	   
        }
 
@@ -297,7 +279,7 @@ public class Scan implements GlobalConst{
       
       nextDirPageId = dirpage.getNextPage();
       
-      if (nextDirPageId.pid != INVALID_PAGE) {
+      if (nextDirPageId.pid != GlobalConst.INVALID_PAGE) {
 	
 	try {
             unpinPage(dirpageId, false);
@@ -311,7 +293,7 @@ public class Scan implements GlobalConst{
         	
 	try {
 	
-           dirpage = new HFPage();
+           dirpage = new EHFpage();
 	    pinPage(nextDirPageId, (Page )dirpage, false);
 	
 	    }
@@ -330,7 +312,7 @@ public class Scan implements GlobalConst{
 	catch (Exception e) {
 	//  System.err.println("SCAN: Error in 1stdatapg 3 " + e);
 	  e.printStackTrace();
-	  datapageId.pid = INVALID_PAGE;
+	  datapageId.pid = GlobalConst.INVALID_PAGE;
 	}
        
 	if(datapageRid != null) {
@@ -353,11 +335,11 @@ public class Scan implements GlobalConst{
 	  
          } else {
 	   // heapfile empty
-           datapageId.pid = INVALID_PAGE;
+           datapageId.pid = GlobalConst.INVALID_PAGE;
          }
        }//end if01
        else {// heapfile empty
-	datapageId.pid = INVALID_PAGE;
+	datapageId.pid = GlobalConst.INVALID_PAGE;
 	}
 }	
 	
@@ -402,7 +384,7 @@ public class Scan implements GlobalConst{
     
     boolean nextDataPageStatus;
     PageId nextDirPageId = new PageId();
-    Tuple rectuple = null;
+    Edge rectuple = null;
 
   // ASSERTIONS:
   // - this->dirpageId has Id of current directory page
@@ -419,11 +401,11 @@ public class Scan implements GlobalConst{
   // (4)- if the scan had already been done,
   //        dirpage = NULL;  datapageId = INVALID_PAGE
     
-    if ((dirpage == null) && (datapageId.pid == INVALID_PAGE))
+    if ((dirpage == null) && (datapageId.pid == GlobalConst.INVALID_PAGE))
         return false;
 
     if (datapage == null) {
-      if (datapageId.pid == INVALID_PAGE) {
+      if (datapageId.pid == GlobalConst.INVALID_PAGE) {
 	// heapfile is empty to begin with
 	
 	try{
@@ -439,7 +421,7 @@ public class Scan implements GlobalConst{
 	
 	// pin first data page
 	try {
-	  datapage  = new HFPage();
+	  datapage  = new EHFpage();
 	  pinPage(datapageId, (Page) datapage, false);
 	}
 	catch (Exception e){
@@ -491,14 +473,14 @@ public class Scan implements GlobalConst{
 	unpinPage(dirpageId, false /* not dirty */);
 	dirpage = null;
 	
-	datapageId.pid = INVALID_PAGE;
+	datapageId.pid = GlobalConst.INVALID_PAGE;
       }
       
       catch (Exception e) {
 	
       }
 		    
-      if (nextDirPageId.pid == INVALID_PAGE)
+      if (nextDirPageId.pid == GlobalConst.INVALID_PAGE)
 	return false;
       else {
 	// ASSERTION:
@@ -507,7 +489,7 @@ public class Scan implements GlobalConst{
 	dirpageId = nextDirPageId;
 	
  	try { 
-	  dirpage  = new HFPage();
+	  dirpage  = new EHFpage();
 	  pinPage(dirpageId, (Page)dirpage, false);
 	}
 	
@@ -552,7 +534,7 @@ public class Scan implements GlobalConst{
 	datapageId.pid = dpinfo.pageId.pid;
 	
  	try {
-	  datapage = new HFPage();
+	  datapage = new EHFpage();
 	  pinPage(dpinfo.pageId, (Page) datapage, false);
 	}
 	
@@ -578,10 +560,10 @@ public class Scan implements GlobalConst{
   }
 
 
-  private boolean peekNext(RID rid) {
+  private boolean peekNext(EID eid) {
     
-    rid.pageNo.pid = userrid.pageNo.pid;
-    rid.slotNo = userrid.slotNo;
+    eid.pageNo.pid = userrid.pageNo.pid;
+    eid.slotNo = userrid.slotNo;
     return true;
     
   }
@@ -590,17 +572,17 @@ public class Scan implements GlobalConst{
   /** Move to the next record in a sequential scan.
    * Also returns the RID of the (new) current record.
    */
-  private boolean mvNext(RID rid) 
+  private boolean mvNext(EID eid) 
     throws InvalidTupleSizeException,
 	   IOException
   {
-    RID nextrid;
+    EID nextrid;
     boolean status;
 
     if (datapage == null)
         return false;
 
-    	nextrid = datapage.nextRecord(rid);
+    	nextrid = datapage.nextRecord(eid);
 	
 	if( nextrid != null ){
 	  userrid.pageNo.pid = nextrid.pageNo.pid;
@@ -611,8 +593,8 @@ public class Scan implements GlobalConst{
 	  status = nextDataPage();
 
 	  if (status==true){
-	    rid.pageNo.pid = userrid.pageNo.pid;
-	    rid.slotNo = userrid.slotNo;
+	    eid.pageNo.pid = userrid.pageNo.pid;
+	    eid.slotNo = userrid.slotNo;
 	  }
 	
 	}
@@ -650,6 +632,5 @@ public class Scan implements GlobalConst{
     }
 
   } // end of unpinPage
-
 
 }

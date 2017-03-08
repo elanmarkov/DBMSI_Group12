@@ -48,17 +48,17 @@ public class HFPage extends Page
   /**
    * number of slots in use
    */
-  private    short     slotCnt;  
+  protected    short     slotCnt;  
   
   /**
    * offset of first used byte by data records in data[]
    */
-  private    short     usedPtr;   
+  protected    short     usedPtr;   
   
   /**
    * number of bytes free in data[]
    */
-  private    short     freeSpace;  
+  protected    short     freeSpace;  
   
   /**
    * an arbitrary value used by subclasses as needed

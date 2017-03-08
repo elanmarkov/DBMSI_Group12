@@ -1,12 +1,14 @@
 package tests;
 
 import java.io.*; 
+
 import global.*;
 import bufmgr.*;
 import diskmgr.*;
 import heap.*;
 import iterator.*;
 import index.*;
+
 import java.util.Random;
 
 
@@ -14,36 +16,36 @@ class SORTDriver extends TestDriver
   implements GlobalConst {
 
   private static String   data1[] = {
-	"raghu", "xbao", "cychan", "leela", "ketola", "soma", "ulloa", 
-	"dhanoa", "dsilva", "kurniawa", "dissoswa", "waic", "susanc", "kinc", 
-	"marc", "scottc", "yuc", "ireland", "rathgebe", "joyce", "daode", 
-	"yuvadee", "he", "huxtable", "muerle", "flechtne", "thiodore", "jhowe",
-	"frankief", "yiching", "xiaoming", "jsong", "yung", "muthiah", "bloch",
-	"binh", "dai", "hai", "handi", "shi", "sonthi", "evgueni", "chung-pi",
-	"chui", "siddiqui", "mak", "tak", "sungk", "randal", "barthel", 
-	"newell", "schiesl", "neuman", "heitzman", "wan", "gunawan", "djensen",
-	"juei-wen", "josephin", "harimin", "xin", "zmudzin", "feldmann", 
-	"joon", "wawrzon", "yi-chun", "wenchao", "seo", "karsono", "dwiyono", 
-	"ginther", "keeler", "peter", "lukas", "edwards", "mirwais","schleis", 
-	"haris", "meyers", "azat", "shun-kit", "robert", "markert", "wlau",
-	"honghu", "guangshu", "chingju", "bradw", "andyw", "gray", "vharvey", 
-	"awny", "savoy", "meltz"}; 
+  "raghu", "xbao", "cychan", "leela", "ketola", "soma", "ulloa", 
+  "dhanoa", "dsilva", "kurniawa", "dissoswa", "waic", "susanc", "kinc", 
+  "marc", "scottc", "yuc", "ireland", "rathgebe", "joyce", "daode", 
+  "yuvadee", "he", "huxtable", "muerle", "flechtne", "thiodore", "jhowe",
+  "frankief", "yiching", "xiaoming", "jsong", "yung", "muthiah", "bloch",
+  "binh", "dai", "hai", "handi", "shi", "sonthi", "evgueni", "chung-pi",
+  "chui", "siddiqui", "mak", "tak", "sungk", "randal", "barthel", 
+  "newell", "schiesl", "neuman", "heitzman", "wan", "gunawan", "djensen",
+  "juei-wen", "josephin", "harimin", "xin", "zmudzin", "feldmann", 
+  "joon", "wawrzon", "yi-chun", "wenchao", "seo", "karsono", "dwiyono", 
+  "ginther", "keeler", "peter", "lukas", "edwards", "mirwais","schleis", 
+  "haris", "meyers", "azat", "shun-kit", "robert", "markert", "wlau",
+  "honghu", "guangshu", "chingju", "bradw", "andyw", "gray", "vharvey", 
+  "awny", "savoy", "meltz"}; 
       
   private static String   data2[] = {
-	"andyw", "awny", "azat", "barthel", "binh", "bloch", "bradw", 
-	"chingju", "chui", "chung-pi", "cychan", "dai", "daode", "dhanoa", 
-	"dissoswa", "djensen", "dsilva", "dwiyono", "edwards", "evgueni", 
-	"feldmann", "flechtne", "frankief", "ginther", "gray", "guangshu", 
-	"gunawan", "hai", "handi", "harimin", "haris", "he", "heitzman", 
-	"honghu", "huxtable", "ireland", "jhowe", "joon", "josephin", "joyce",
-	"jsong", "juei-wen", "karsono", "keeler", "ketola", "kinc", "kurniawa",
-	"leela", "lukas", "mak", "marc", "markert", "meltz", "meyers", 
-	"mirwais", "muerle", "muthiah", "neuman", "newell", "peter", "raghu", 
-	"randal", "rathgebe", "robert", "savoy", "schiesl", "schleis", 
-	"scottc", "seo", "shi", "shun-kit", "siddiqui", "soma", "sonthi", 
-	"sungk", "susanc", "tak", "thiodore", "ulloa", "vharvey", "waic",
-	"wan", "wawrzon", "wenchao", "wlau", "xbao", "xiaoming", "xin", 
-	"yi-chun", "yiching", "yuc", "yung", "yuvadee", "zmudzin" };
+  "andyw", "awny", "azat", "barthel", "binh", "bloch", "bradw", 
+  "chingju", "chui", "chung-pi", "cychan", "dai", "daode", "dhanoa", 
+  "dissoswa", "djensen", "dsilva", "dwiyono", "edwards", "evgueni", 
+  "feldmann", "flechtne", "frankief", "ginther", "gray", "guangshu", 
+  "gunawan", "hai", "handi", "harimin", "haris", "he", "heitzman", 
+  "honghu", "huxtable", "ireland", "jhowe", "joon", "josephin", "joyce",
+  "jsong", "juei-wen", "karsono", "keeler", "ketola", "kinc", "kurniawa",
+  "leela", "lukas", "mak", "marc", "markert", "meltz", "meyers", 
+  "mirwais", "muerle", "muthiah", "neuman", "newell", "peter", "raghu", 
+  "randal", "rathgebe", "robert", "savoy", "schiesl", "schleis", 
+  "scottc", "seo", "shi", "shun-kit", "siddiqui", "soma", "sonthi", 
+  "sungk", "susanc", "tak", "thiodore", "ulloa", "vharvey", "waic",
+  "wan", "wawrzon", "wenchao", "wlau", "xbao", "xiaoming", "xin", 
+  "yi-chun", "yiching", "yuc", "yung", "yuvadee", "zmudzin" };
 
   private static int   NUM_RECORDS = data2.length; 
   private static int   LARGE = 1000; 
@@ -168,19 +170,19 @@ class SORTDriver extends TestDriver
     
     for (int i=0; i<NUM_RECORDS; i++) {
       try {
-	t.setStrFld(1, data1[i]);
+  t.setStrFld(1, data1[i]);
       }
       catch (Exception e) {
-	status = FAIL;
-	e.printStackTrace();
+  status = FAIL;
+  e.printStackTrace();
       }
       
       try {
-	rid = f.insertRecord(t.returnTupleByteArray());
+  rid = f.insertRecord(t.returnTupleByteArray());
       }
       catch (Exception e) {
-	status = FAIL;
-	e.printStackTrace();
+  status = FAIL;
+  e.printStackTrace();
       }
     }
 
@@ -202,8 +204,10 @@ class SORTDriver extends TestDriver
 
     // Sort "test1.in" 
     Sort sort = null;
+    Descriptor y = new Descriptor();
+    y.set(-1,-1,-1,-1,-1);
     try {
-      sort = new Sort(attrType, (short) 2, attrSize, fscan, 1, order[0], REC_LEN1, SORTPGNUM);
+      sort = new Sort(attrType, (short) 2, attrSize, fscan, 1,10,y, order[0], REC_LEN1, SORTPGNUM);
     }
     catch (Exception e) {
       status = FAIL;
@@ -227,39 +231,39 @@ class SORTDriver extends TestDriver
     
     while (t != null) {
       if (count >= NUM_RECORDS) {
-	System.err.println("Test1 -- OOPS! too many records");
-	status = FAIL;
-	flag = false; 
-	break;
+  System.err.println("Test1 -- OOPS! too many records");
+  status = FAIL;
+  flag = false; 
+  break;
       }
       
       try {
-	outval = t.getStrFld(1);
+  outval = t.getStrFld(1);
       }
       catch (Exception e) {
-	status = FAIL;
-	e.printStackTrace();
+  status = FAIL;
+  e.printStackTrace();
       }
       
       if (outval.compareTo(data2[count]) != 0) {
-	System.err.println("outval = " + outval + "\tdata2[count] = " + data2[count]);
-	
-	System.err.println("Test1 -- OOPS! test1.out not sorted");
-	status = FAIL;
+  System.err.println("outval = " + outval + "\tdata2[count] = " + data2[count]);
+  
+  System.err.println("Test1 -- OOPS! test1.out not sorted");
+  status = FAIL;
       }
       count++;
 
       try {
-	t = sort.get_next();
+  t = sort.get_next();
       }
       catch (Exception e) {
-	status = FAIL;
-	e.printStackTrace();
+  status = FAIL;
+  e.printStackTrace();
       }
     }
     if (count < NUM_RECORDS) {
-	System.err.println("Test1 -- OOPS! too few records");
-	status = FAIL;
+  System.err.println("Test1 -- OOPS! too few records");
+  status = FAIL;
     }
     else if (flag && status) {
       System.err.println("Test1 -- Sorting OK");
@@ -327,19 +331,19 @@ class SORTDriver extends TestDriver
     
     for (int i=0; i<NUM_RECORDS; i++) {
       try {
-	t.setStrFld(1, data1[i]);
+  t.setStrFld(1, data1[i]);
       }
       catch (Exception e) {
-	status = FAIL;
-	e.printStackTrace();
+  status = FAIL;
+  e.printStackTrace();
       }
       
       try {
-	rid = f.insertRecord(t.returnTupleByteArray());
+  rid = f.insertRecord(t.returnTupleByteArray());
       }
       catch (Exception e) {
-	status = FAIL;
-	e.printStackTrace();
+  status = FAIL;
+  e.printStackTrace();
       }
     }
 
@@ -360,8 +364,10 @@ class SORTDriver extends TestDriver
      
     // Sort "test2.in"
     Sort sort = null;
+    Descriptor y = new Descriptor();
+    y.set(-1,-1,-1,-1,-1);
     try {
-      sort = new Sort(attrType, (short) 1, attrSize, fscan, 1, order[1], REC_LEN1, SORTPGNUM);
+      sort = new Sort(attrType, (short) 1, attrSize, fscan, 1,10,y, order[1], REC_LEN1, SORTPGNUM);
     }
     catch (Exception e) {
       status = FAIL;
@@ -385,37 +391,37 @@ class SORTDriver extends TestDriver
     
     while (t != null) {
       if (count >= NUM_RECORDS) {
-	System.err.println("Test2 -- OOPS! too many records");
-	status = FAIL;
-	flag = false; 
-	break;
+  System.err.println("Test2 -- OOPS! too many records");
+  status = FAIL;
+  flag = false; 
+  break;
       }
       
       try {
-	outval = t.getStrFld(1);
+  outval = t.getStrFld(1);
       }
       catch (Exception e) {
-	status = FAIL;
-	e.printStackTrace();
+  status = FAIL;
+  e.printStackTrace();
       }
 
       if (outval.compareTo(data2[NUM_RECORDS - count - 1]) != 0) {
-	System.err.println("Test2 -- OOPS! test2.out not sorted");
-	status = FAIL;
+  System.err.println("Test2 -- OOPS! test2.out not sorted");
+  status = FAIL;
       }
       count++;
 
       try {
-	t = sort.get_next();
+  t = sort.get_next();
       }
       catch (Exception e) {
-	status = FAIL;
-	e.printStackTrace();
+  status = FAIL;
+  e.printStackTrace();
       }
     }
     if (count < NUM_RECORDS) {
-	System.err.println("Test2 -- OOPS! too few records");
-	status = FAIL;
+  System.err.println("Test2 -- OOPS! too few records");
+  status = FAIL;
     }
     else if (flag && status) {
       System.err.println("Test2 -- Sorting OK");
@@ -499,21 +505,21 @@ class SORTDriver extends TestDriver
       inum = random1.nextInt();
       fnum = random2.nextFloat();
       try {
-	t.setStrFld(1, data1[i%NUM_RECORDS]);
-	t.setIntFld(3, inum);
-	t.setFloFld(4, fnum);
+  t.setStrFld(1, data1[i%NUM_RECORDS]);
+  t.setIntFld(3, inum);
+  t.setFloFld(4, fnum);
       }
       catch (Exception e) {
-	status = FAIL;
-	e.printStackTrace();
+  status = FAIL;
+  e.printStackTrace();
       }
 
       try {
-	rid = f.insertRecord(t.returnTupleByteArray());
+  rid = f.insertRecord(t.returnTupleByteArray());
       }
       catch (Exception e) {
-	status = FAIL;
-	e.printStackTrace();
+  status = FAIL;
+  e.printStackTrace();
       }
     }
 
@@ -540,8 +546,10 @@ class SORTDriver extends TestDriver
 
 
     Sort sort = null;
+    Descriptor y = new Descriptor();
+    y.set(-1,-1,-1,-1,-1);
     try {
-      sort = new Sort(attrType, (short) 4, attrSize, fscan, 3, order[0], 4, SORTPGNUM);
+      sort = new Sort(attrType, (short) 4, attrSize, fscan, 3,10,y, order[0], 4, SORTPGNUM);
     }
     catch (Exception e) {
       status = FAIL;
@@ -565,11 +573,11 @@ class SORTDriver extends TestDriver
     if (t != null) {
       // get an initial value
       try {
-	ival = t.getIntFld(3);
+  ival = t.getIntFld(3);
       }
       catch (Exception e) {
-	status = FAIL;
-	e.printStackTrace();
+  status = FAIL;
+  e.printStackTrace();
       }
     } 
 
@@ -577,41 +585,41 @@ class SORTDriver extends TestDriver
     
     while (t != null) {
       if (count >= LARGE) {
-	System.err.println("Test3 -- OOPS! too many records");
-	status = FAIL;
-	flag = false; 
-	break;
+  System.err.println("Test3 -- OOPS! too many records");
+  status = FAIL;
+  flag = false; 
+  break;
       }
       
       try {
-	iout = t.getIntFld(3);
+  iout = t.getIntFld(3);
       }
       catch (Exception e) {
-	status = FAIL;
-	e.printStackTrace();
+  status = FAIL;
+  e.printStackTrace();
       }
       
       if (iout < ival) {
-	System.err.println("count = " + count + " iout = " + iout + " ival = " + ival);
-	
-	System.err.println("Test3 -- OOPS! test3.out not sorted");
-	status = FAIL;
-	break; 
+  System.err.println("count = " + count + " iout = " + iout + " ival = " + ival);
+  
+  System.err.println("Test3 -- OOPS! test3.out not sorted");
+  status = FAIL;
+  break; 
       }
       count++;
       ival = iout;
       
       try {
-	t = sort.get_next();
+  t = sort.get_next();
       }
       catch (Exception e) {
-	status = FAIL;
-	e.printStackTrace();
+  status = FAIL;
+  e.printStackTrace();
       }
     }
     if (count < LARGE) {
-	System.err.println("Test3 -- OOPS! too few records");
-	status = FAIL;
+  System.err.println("Test3 -- OOPS! too few records");
+  status = FAIL;
     }
     else if (flag && status) {
       System.err.println("Test3 -- Sorting of int field OK\n");
@@ -638,7 +646,7 @@ class SORTDriver extends TestDriver
     }
      
     try {
-      sort = new Sort(attrType, (short) 4, attrSize, fscan, 4, order[1], 4, SORTPGNUM);
+      sort = new Sort(attrType, (short) 4, attrSize, fscan, 4,10,y, order[1], 4, SORTPGNUM);
     }
     catch (Exception e) {
       status = FAIL;
@@ -662,11 +670,11 @@ class SORTDriver extends TestDriver
     if (t != null) {
       // get an initial value
       try {
-	fval = t.getFloFld(4);
+  fval = t.getFloFld(4);
       }
       catch (Exception e) {
-	status = FAIL;
-	e.printStackTrace();
+  status = FAIL;
+  e.printStackTrace();
       }
     } 
 
@@ -674,41 +682,41 @@ class SORTDriver extends TestDriver
     
     while (t != null) {
       if (count >= LARGE) {
-	System.err.println("Test3 -- OOPS! too many records");
-	status = FAIL;
-	flag = false; 
-	break;
+  System.err.println("Test3 -- OOPS! too many records");
+  status = FAIL;
+  flag = false; 
+  break;
       }
       
       try {
-	fout = t.getFloFld(4);
+  fout = t.getFloFld(4);
       }
       catch (Exception e) {
-	status = FAIL;
-	e.printStackTrace();
+  status = FAIL;
+  e.printStackTrace();
       }
       
       if (fout > fval) {
-	System.err.println("count = " + count + " fout = " + fout + " fval = " + fval);
-	
-	System.err.println("Test3 -- OOPS! test3.out not sorted");
-	status = FAIL;
-	break; 
+  System.err.println("count = " + count + " fout = " + fout + " fval = " + fval);
+  
+  System.err.println("Test3 -- OOPS! test3.out not sorted");
+  status = FAIL;
+  break; 
       }
       count++;
       fval = fout;
       
       try {
-	t = sort.get_next();
+  t = sort.get_next();
       }
       catch (Exception e) {
-	status = FAIL;
-	e.printStackTrace();
+  status = FAIL;
+  e.printStackTrace();
       }
     }
     if (count < LARGE) {
-	System.err.println("Test3 -- OOPS! too few records");
-	status = FAIL;
+  System.err.println("Test3 -- OOPS! too few records");
+  status = FAIL;
     }
     else if (flag && status) {
       System.err.println("Test3 -- Sorting of float field OK\n");
@@ -779,20 +787,20 @@ class SORTDriver extends TestDriver
     
     for (int i=0; i<NUM_RECORDS; i++) {
       try {
-	t.setStrFld(1, data1[i]);
+  t.setStrFld(1, data1[i]);
       }
       catch (Exception e) {
-	status = FAIL;
-	e.printStackTrace();
+  status = FAIL;
+  e.printStackTrace();
       }
       
       try {
-	rid1 = f1.insertRecord(t.returnTupleByteArray());
-	rid2 = f2.insertRecord(t.returnTupleByteArray());
+  rid1 = f1.insertRecord(t.returnTupleByteArray());
+  rid2 = f2.insertRecord(t.returnTupleByteArray());
       }
       catch (Exception e) {
-	status = FAIL;
-	e.printStackTrace();
+  status = FAIL;
+  e.printStackTrace();
       }
     }
     
@@ -819,9 +827,11 @@ class SORTDriver extends TestDriver
     // Sort input files
     Sort sort1 = null;
     Sort sort2 = null;
+    Descriptor y = new Descriptor();
+    y.set(-1,-1,-1,-1,-1);
     try {
-      sort1 = new Sort(attrType, (short) 2, attrSize, fscan1, 1, order[0], REC_LEN1, SORTPGNUM);
-      sort2 = new Sort(attrType, (short) 2, attrSize, fscan2, 1, order[1], REC_LEN1, SORTPGNUM);
+      sort1 = new Sort(attrType, (short) 2, attrSize, fscan1, 1,10,y, order[0], REC_LEN1, SORTPGNUM);
+      sort2 = new Sort(attrType, (short) 2, attrSize, fscan2, 1,10,y, order[1], REC_LEN1, SORTPGNUM);
     }
     catch (Exception e) {
       status = FAIL;
@@ -847,63 +857,63 @@ class SORTDriver extends TestDriver
     
     while (t1 != null) {
       if (count >= NUM_RECORDS) {
-	System.err.println("Test4 -- OOPS! too many records");
-	status = FAIL;
-	flag = false; 
-	break;
+  System.err.println("Test4 -- OOPS! too many records");
+  status = FAIL;
+  flag = false; 
+  break;
       }
 
       try {
-	outval = t1.getStrFld(1);
+  outval = t1.getStrFld(1);
       }
       catch (Exception e) {
-	status = FAIL;
-	e.printStackTrace();
+  status = FAIL;
+  e.printStackTrace();
       }
       
       if (outval.compareTo(data2[count]) != 0) {
-	System.err.println("outval = " + outval + "\tdata2[count] = " + data2[count]);
-	
-	System.err.println("Test4 -- OOPS! test4.out not sorted");
-	status = FAIL;
+  System.err.println("outval = " + outval + "\tdata2[count] = " + data2[count]);
+  
+  System.err.println("Test4 -- OOPS! test4.out not sorted");
+  status = FAIL;
       }
       count++;
 
       if (t2 == null) {
-	System.err.println("Test4 -- t2 is null prematurely");
-	status = FAIL;
+  System.err.println("Test4 -- t2 is null prematurely");
+  status = FAIL;
       }
       else {
-	try {
-	  outval = t2.getStrFld(1);
-	}
-	catch (Exception e) {
-	  status = FAIL;
-	  e.printStackTrace();
-	}
-	
-	if (outval.compareTo(data2[NUM_RECORDS - count]) != 0) {
-	  System.err.println("outval = " + outval + "\tdata2[count] = " + data2[NUM_RECORDS - count]);
-	  
-	  System.err.println("Test4 -- OOPS! test4.out not sorted");
-	  status = FAIL;
-	}
+  try {
+    outval = t2.getStrFld(1);
+  }
+  catch (Exception e) {
+    status = FAIL;
+    e.printStackTrace();
+  }
+  
+  if (outval.compareTo(data2[NUM_RECORDS - count]) != 0) {
+    System.err.println("outval = " + outval + "\tdata2[count] = " + data2[NUM_RECORDS - count]);
+    
+    System.err.println("Test4 -- OOPS! test4.out not sorted");
+    status = FAIL;
+  }
       }
       
       try {
-	t1 = sort1.get_next();
-	t2 = sort2.get_next();
+  t1 = sort1.get_next();
+  t2 = sort2.get_next();
       }
       catch (Exception e) {
-	status = FAIL;
-	e.printStackTrace();
+  status = FAIL;
+  e.printStackTrace();
       }
     }
     if (count < NUM_RECORDS) {
       System.err.println("count = " + count);
       
-	System.err.println("Test4 -- OOPS! too few records");
-	status = FAIL;
+  System.err.println("Test4 -- OOPS! too few records");
+  status = FAIL;
     }
     else if (flag && status) {
       System.err.println("Test4 -- Sorting OK");

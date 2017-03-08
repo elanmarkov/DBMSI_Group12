@@ -33,67 +33,148 @@ public class TupleUtils
    *         -1        if the tuple is smaller,                              
    */
   public static double CompareTupleWithTuple(AttrType fldType,
-					  Tuple  t1, int t1_fld_no,
-					  Tuple  t2, int t2_fld_no)
+            Tuple  t1, int t1_fld_no,
+            Tuple  t2, int t2_fld_no)
     throws IOException,
-	   UnknowAttrType,
-	   TupleUtilsException
+     UnknowAttrType,
+     TupleUtilsException
     {
       int   t1_i,  t2_i;
       float t1_r,  t2_r;
       String t1_s, t2_s;
       Descriptor t1_d, t2_d;
       switch (fldType.attrType) 
-	{
-	case AttrType.attrInteger:                // Compare two integers.
-	  try {
-	    t1_i = t1.getIntFld(t1_fld_no);
-	    t2_i = t2.getIntFld(t2_fld_no);
-	  }catch (FieldNumberOutOfBoundException e){
-	    throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
-	  }
-	  if (t1_i == t2_i) return  0;
-	  if (t1_i <  t2_i) return -1;
-	  if (t1_i >  t2_i) return  1;
-	  
-	case AttrType.attrReal:                // Compare two floats
-	  try {
-	    t1_r = t1.getFloFld(t1_fld_no);
-	    t2_r = t2.getFloFld(t2_fld_no);
-	  }catch (FieldNumberOutOfBoundException e){
-	    throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
-	  }
-	  if (t1_r == t2_r) return  0;
-	  if (t1_r <  t2_r) return -1;
-	  if (t1_r >  t2_r) return  1;
-	  
-	case AttrType.attrString:                // Compare two strings
-	  try {
-	    t1_s = t1.getStrFld(t1_fld_no);
-	    t2_s = t2.getStrFld(t2_fld_no);
-	  }catch (FieldNumberOutOfBoundException e){
-	    throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
-	  }
-	  
-	  // Now handle the special case that is posed by the max_values for strings...
-	  if(t1_s.compareTo( t2_s)>0)return 1;
-	  if (t1_s.compareTo( t2_s)<0)return -1;
-	  return 0;
-	  
-	case AttrType.attrDesc:
-		try {
-			t1_d = t1.getDescFld(t1_fld_no);
-		    t2_d = t2.getDescFld(t2_fld_no);
-		    return t1_d.distance(t2_d);
-		} catch (FieldNumberOutOfBoundException e) {
-			throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
-		}
-	default:
-	  
-	  throw new UnknowAttrType(null, "Don't know how to handle attrSymbol, attrNull");
-	  
-	}
+  {
+  case AttrType.attrInteger:                // Compare two integers.
+    try {
+      t1_i = t1.getIntFld(t1_fld_no);
+      t2_i = t2.getIntFld(t2_fld_no);
+    }catch (FieldNumberOutOfBoundException e){
+      throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
     }
+    if (t1_i == t2_i) return  0;
+    if (t1_i <  t2_i) return -1;
+    if (t1_i >  t2_i) return  1;
+    
+  case AttrType.attrReal:                // Compare two floats
+    try {
+      t1_r = t1.getFloFld(t1_fld_no);
+      t2_r = t2.getFloFld(t2_fld_no);
+    }catch (FieldNumberOutOfBoundException e){
+      throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
+    }
+    if (t1_r == t2_r) return  0;
+    if (t1_r <  t2_r) return -1;
+    if (t1_r >  t2_r) return  1;
+    
+  case AttrType.attrString:                // Compare two strings
+    try {
+      t1_s = t1.getStrFld(t1_fld_no);
+      t2_s = t2.getStrFld(t2_fld_no);
+    }catch (FieldNumberOutOfBoundException e){
+      throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
+    }
+    
+    // Now handle the special case that is posed by the max_values for strings...
+    if(t1_s.compareTo( t2_s)>0)return 1;
+    if (t1_s.compareTo( t2_s)<0)return -1;
+    return 0;
+    
+  case AttrType.attrDesc:
+    try {
+      t1_d = t1.getDescFld(t1_fld_no);
+        t2_d = t2.getDescFld(t2_fld_no);
+        return t1_d.distance(t2_d);
+    } catch (FieldNumberOutOfBoundException e) {
+      throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
+    }
+  default:
+    
+    throw new UnknowAttrType(null, "Don't know how to handle attrSymbol, attrNull");
+    
+  }
+    }
+
+  
+  /* This function is overloaded to take two extra parameters
+*/
+
+  public static double CompareTupleWithTuple(AttrType fldType,
+            Tuple  t1, int t1_fld_no,
+            Tuple  t2, int t2_fld_no,
+            double distance,
+            Descriptor target)
+    throws IOException,
+     UnknowAttrType,
+     TupleUtilsException
+    {
+      int   t1_i,  t2_i;
+      float t1_r,  t2_r;
+      String t1_s, t2_s;
+      Descriptor t1_d, t2_d;
+      switch (fldType.attrType) 
+  {
+  case AttrType.attrInteger:                // Compare two integers.
+    try {
+      t1_i = t1.getIntFld(t1_fld_no);
+      t2_i = t2.getIntFld(t2_fld_no);
+    }catch (FieldNumberOutOfBoundException e){
+      throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
+    }
+    if (t1_i == t2_i) return  0;
+    if (t1_i <  t2_i) return -1;
+    if (t1_i >  t2_i) return  1;
+    
+  case AttrType.attrReal:                // Compare two floats
+    try {
+      t1_r = t1.getFloFld(t1_fld_no);
+      t2_r = t2.getFloFld(t2_fld_no);
+    }catch (FieldNumberOutOfBoundException e){
+      throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
+    }
+    if (t1_r == t2_r) return  0;
+    if (t1_r <  t2_r) return -1;
+    if (t1_r >  t2_r) return  1;
+    
+  case AttrType.attrString:                // Compare two strings
+    try {
+      t1_s = t1.getStrFld(t1_fld_no);
+      t2_s = t2.getStrFld(t2_fld_no);
+    }catch (FieldNumberOutOfBoundException e){
+      throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
+    }
+    
+    // Now handle the special case that is posed by the max_values for strings...
+    if(t1_s.compareTo( t2_s)>0)return 1;
+    if (t1_s.compareTo( t2_s)<0)return -1;
+    return 0;
+    
+  case AttrType.attrDesc:
+    try {
+      t1_d = t1.getDescFld(t1_fld_no);
+      t2_d = t2.getDescFld(t2_fld_no);
+      Descriptor x = new Descriptor();
+      x.set(-1, -1, -1, -1, -1);
+      if (x.equal(target)==1) {
+          if(t1_d.distance(t2_d) <= distance) return 0;
+          else return 1;
+      }
+      else
+        if (t1_d.distance(target) == t2_d.distance(target)) return 0;
+        if (t1_d.distance(target) < t2_d.distance(target)) return 1;
+        if (t1_d.distance(target) > t2_d.distance(target)) return -1;
+      
+    } catch (FieldNumberOutOfBoundException e) {
+      throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
+    }
+  default:
+    
+    throw new UnknowAttrType(null, "Don't know how to handle attrSymbol, attrNull");
+    
+  }
+    }
+
+  
   
   
   
@@ -113,14 +194,28 @@ public class TupleUtils
    *@exception TupleUtilsException exception from this class   
    */            
   public static double CompareTupleWithValue(AttrType fldType,
-					  Tuple  t1, int t1_fld_no,
-					  Tuple  value)
+            Tuple  t1, int t1_fld_no,
+            Tuple  value      
+            )
     throws IOException,
-	   UnknowAttrType,
-	   TupleUtilsException
+     UnknowAttrType,
+     TupleUtilsException
     {
       return CompareTupleWithTuple(fldType, t1, t1_fld_no, value, t1_fld_no);
     }
+  
+  public static double CompareTupleWithValue(AttrType fldType,
+      Tuple  t1, int t1_fld_no,
+      Tuple  value,
+      double distance,
+      Descriptor target
+)
+throws IOException,
+UnknowAttrType,
+TupleUtilsException
+{
+return CompareTupleWithTuple(fldType, t1, t1_fld_no, value, t1_fld_no, distance, target);
+}
   
   /**
    *This function Compares two Tuple inn all fields 
@@ -134,17 +229,28 @@ public class TupleUtils
    *@exception IOException some I/O fault
    *@exception TupleUtilsException exception from this class
    */            
-  
   public static boolean Equal(Tuple t1, Tuple t2, AttrType types[], int len)
+        throws IOException,UnknowAttrType,TupleUtilsException
+        {
+          int i;
+          
+          for (i = 1; i <= len; i++)
+      if (CompareTupleWithTuple(types[i-1], t1, i, t2, i) != 0)
+        return false;
+          return true;
+        }
+  
+  public static boolean Equal(Tuple t1, Tuple t2, AttrType types[], int len, double distance, Descriptor target)
     throws IOException,UnknowAttrType,TupleUtilsException
     {
       int i;
       
       for (i = 1; i <= len; i++)
-	if (CompareTupleWithTuple(types[i-1], t1, i, t2, i) != 0)
-	  return false;
+  if (CompareTupleWithTuple(types[i-1], t1, i, t2, i, distance, target) != 0)
+    return false;
       return true;
     }
+  
   
   /**
    *get the string specified by the field number
@@ -156,13 +262,13 @@ public class TupleUtils
    */
   public static String Value(Tuple  tuple, int fldno)
     throws IOException,
-	   TupleUtilsException
+     TupleUtilsException
     {
       String temp;
       try{
-	temp = tuple.getStrFld(fldno);
+  temp = tuple.getStrFld(fldno);
       }catch (FieldNumberOutOfBoundException e){
-	throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
+  throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
       }
       return temp;
     }
@@ -180,37 +286,37 @@ public class TupleUtils
    */  
   public static void SetValue(Tuple value, Tuple  tuple, int fld_no, AttrType fldType)
     throws IOException,
-	   UnknowAttrType,
-	   TupleUtilsException
+     UnknowAttrType,
+     TupleUtilsException
     {
       
       switch (fldType.attrType)
-	{
-	case AttrType.attrInteger:
-	  try {
-	    value.setIntFld(fld_no, tuple.getIntFld(fld_no));
-	  }catch (FieldNumberOutOfBoundException e){
-	    throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
-	  }
-	  break;
-	case AttrType.attrReal:
-	  try {
-	    value.setFloFld(fld_no, tuple.getFloFld(fld_no));
-	  }catch (FieldNumberOutOfBoundException e){
-	    throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
-	  }
-	  break;
-	case AttrType.attrString:
-	  try {
-	    value.setStrFld(fld_no, tuple.getStrFld(fld_no));
-	  }catch (FieldNumberOutOfBoundException e){
-	    throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
-	  }
-	  break;
-	default:
-	  throw new UnknowAttrType(null, "Don't know how to handle attrSymbol, attrNull");
-	  
-	}
+  {
+  case AttrType.attrInteger:
+    try {
+      value.setIntFld(fld_no, tuple.getIntFld(fld_no));
+    }catch (FieldNumberOutOfBoundException e){
+      throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
+    }
+    break;
+  case AttrType.attrReal:
+    try {
+      value.setFloFld(fld_no, tuple.getFloFld(fld_no));
+    }catch (FieldNumberOutOfBoundException e){
+      throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
+    }
+    break;
+  case AttrType.attrString:
+    try {
+      value.setStrFld(fld_no, tuple.getStrFld(fld_no));
+    }catch (FieldNumberOutOfBoundException e){
+      throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
+    }
+    break;
+  default:
+    throw new UnknowAttrType(null, "Don't know how to handle attrSymbol, attrNull");
+    
+  }
       
       return;
     }
@@ -232,12 +338,12 @@ public class TupleUtils
    *@exception TupleUtilsException exception from this class
    */
   public static short[] setup_op_tuple(Tuple Jtuple, AttrType[] res_attrs,
-				       AttrType in1[], int len_in1, AttrType in2[], 
-				       int len_in2, short t1_str_sizes[], 
-				       short t2_str_sizes[], 
-				       FldSpec proj_list[], int nOutFlds)
+               AttrType in1[], int len_in1, AttrType in2[], 
+               int len_in2, short t1_str_sizes[], 
+               short t2_str_sizes[], 
+               FldSpec proj_list[], int nOutFlds)
     throws IOException,
-	   TupleUtilsException
+     TupleUtilsException
     {
       short [] sizesT1 = new short [len_in1];
       short [] sizesT2 = new short [len_in2];
@@ -245,43 +351,43 @@ public class TupleUtils
       
       for (i = 0; i < len_in1; i++)
         if (in1[i].attrType == AttrType.attrString)
-	  sizesT1[i] = t1_str_sizes[count++];
+    sizesT1[i] = t1_str_sizes[count++];
       
       for (count = 0, i = 0; i < len_in2; i++)
-	if (in2[i].attrType == AttrType.attrString)
-	  sizesT2[i] = t2_str_sizes[count++];
+  if (in2[i].attrType == AttrType.attrString)
+    sizesT2[i] = t2_str_sizes[count++];
       
       int n_strs = 0; 
       for (i = 0; i < nOutFlds; i++)
-	{
-	  if (proj_list[i].relation.key == RelSpec.outer)
-	    res_attrs[i] = new AttrType(in1[proj_list[i].offset-1].attrType);
-	  else if (proj_list[i].relation.key == RelSpec.innerRel)
-	    res_attrs[i] = new AttrType(in2[proj_list[i].offset-1].attrType);
-	}
+  {
+    if (proj_list[i].relation.key == RelSpec.outer)
+      res_attrs[i] = new AttrType(in1[proj_list[i].offset-1].attrType);
+    else if (proj_list[i].relation.key == RelSpec.innerRel)
+      res_attrs[i] = new AttrType(in2[proj_list[i].offset-1].attrType);
+  }
       
       // Now construct the res_str_sizes array.
       for (i = 0; i < nOutFlds; i++)
-	{
-	  if (proj_list[i].relation.key == RelSpec.outer && in1[proj_list[i].offset-1].attrType == AttrType.attrString)
+  {
+    if (proj_list[i].relation.key == RelSpec.outer && in1[proj_list[i].offset-1].attrType == AttrType.attrString)
             n_strs++;
-	  else if (proj_list[i].relation.key == RelSpec.innerRel && in2[proj_list[i].offset-1].attrType == AttrType.attrString)
+    else if (proj_list[i].relation.key == RelSpec.innerRel && in2[proj_list[i].offset-1].attrType == AttrType.attrString)
             n_strs++;
-	}
+  }
       
       short[] res_str_sizes = new short [n_strs];
       count         = 0;
       for (i = 0; i < nOutFlds; i++)
-	{
-	  if (proj_list[i].relation.key == RelSpec.outer && in1[proj_list[i].offset-1].attrType ==AttrType.attrString)
+  {
+    if (proj_list[i].relation.key == RelSpec.outer && in1[proj_list[i].offset-1].attrType ==AttrType.attrString)
             res_str_sizes[count++] = sizesT1[proj_list[i].offset-1];
-	  else if (proj_list[i].relation.key == RelSpec.innerRel && in2[proj_list[i].offset-1].attrType ==AttrType.attrString)
+    else if (proj_list[i].relation.key == RelSpec.innerRel && in2[proj_list[i].offset-1].attrType ==AttrType.attrString)
             res_str_sizes[count++] = sizesT2[proj_list[i].offset-1];
-	}
+  }
       try {
-	Jtuple.setHdr((short)nOutFlds, res_attrs, res_str_sizes);
+  Jtuple.setHdr((short)nOutFlds, res_attrs, res_str_sizes);
       }catch (Exception e){
-	throw new TupleUtilsException(e,"setHdr() failed");
+  throw new TupleUtilsException(e,"setHdr() failed");
       }
       return res_str_sizes;
     }
@@ -302,49 +408,49 @@ public class TupleUtils
    */
 
   public static short[] setup_op_tuple(Tuple Jtuple, AttrType res_attrs[],
-				       AttrType in1[], int len_in1,
-				       short t1_str_sizes[], 
-				       FldSpec proj_list[], int nOutFlds)
+               AttrType in1[], int len_in1,
+               short t1_str_sizes[], 
+               FldSpec proj_list[], int nOutFlds)
     throws IOException,
-	   TupleUtilsException, 
-	   InvalidRelation
+     TupleUtilsException, 
+     InvalidRelation
     {
       short [] sizesT1 = new short [len_in1];
       int i, count = 0;
       
       for (i = 0; i < len_in1; i++)
         if (in1[i].attrType == AttrType.attrString)
-	  sizesT1[i] = t1_str_sizes[count++];
+    sizesT1[i] = t1_str_sizes[count++];
       
       int n_strs = 0; 
       for (i = 0; i < nOutFlds; i++)
-	{
-	  if (proj_list[i].relation.key == RelSpec.outer) 
+  {
+    if (proj_list[i].relation.key == RelSpec.outer) 
             res_attrs[i] = new AttrType(in1[proj_list[i].offset-1].attrType);
-	  
-	  else throw new InvalidRelation("Invalid relation -innerRel");
-	}
+    
+    else throw new InvalidRelation("Invalid relation -innerRel");
+  }
       
       // Now construct the res_str_sizes array.
       for (i = 0; i < nOutFlds; i++)
-	{
-	  if (proj_list[i].relation.key == RelSpec.outer
-	      && in1[proj_list[i].offset-1].attrType == AttrType.attrString)
-	    n_strs++;
-	}
+  {
+    if (proj_list[i].relation.key == RelSpec.outer
+        && in1[proj_list[i].offset-1].attrType == AttrType.attrString)
+      n_strs++;
+  }
       
       short[] res_str_sizes = new short [n_strs];
       count         = 0;
       for (i = 0; i < nOutFlds; i++) {
-	if (proj_list[i].relation.key ==RelSpec.outer
-	    && in1[proj_list[i].offset-1].attrType ==AttrType.attrString)
-	  res_str_sizes[count++] = sizesT1[proj_list[i].offset-1];
+  if (proj_list[i].relation.key ==RelSpec.outer
+      && in1[proj_list[i].offset-1].attrType ==AttrType.attrString)
+    res_str_sizes[count++] = sizesT1[proj_list[i].offset-1];
       }
      
       try {
-	Jtuple.setHdr((short)nOutFlds, res_attrs, res_str_sizes);
+  Jtuple.setHdr((short)nOutFlds, res_attrs, res_str_sizes);
       }catch (Exception e){
-	throw new TupleUtilsException(e,"setHdr() failed");
+  throw new TupleUtilsException(e,"setHdr() failed");
       } 
       return res_str_sizes;
     }

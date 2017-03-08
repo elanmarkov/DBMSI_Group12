@@ -4,7 +4,7 @@ public class Descriptor {
     
     private int[] value;
     	
-    	Descriptor() {
+    	public Descriptor() {
         	value = new int[5];
     		value[0] = 0;
     	    value[1] = 0;

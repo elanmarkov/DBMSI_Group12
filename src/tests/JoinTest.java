@@ -150,7 +150,7 @@ class JoinsDriver implements GlobalConst {
     /*
     ExtendedSystemDefs extSysDef = 
       new ExtendedSystemDefs( "/tmp/minibase.jointestdb", "/tmp/joinlog",
-			      1000,500,200,"Clock");
+            1000,500,200,"Clock");
     */
 
     SystemDefs sysdef = new SystemDefs( dbpath, 1000, NUMBUF, "Clock" );
@@ -202,24 +202,24 @@ class JoinsDriver implements GlobalConst {
     
     for (int i=0; i<numsailors; i++) {
       try {
-	t.setIntFld(1, ((Sailor)sailors.elementAt(i)).sid);
-	t.setStrFld(2, ((Sailor)sailors.elementAt(i)).sname);
-	t.setIntFld(3, ((Sailor)sailors.elementAt(i)).rating);
-	t.setFloFld(4, (float)((Sailor)sailors.elementAt(i)).age);
+  t.setIntFld(1, ((Sailor)sailors.elementAt(i)).sid);
+  t.setStrFld(2, ((Sailor)sailors.elementAt(i)).sname);
+  t.setIntFld(3, ((Sailor)sailors.elementAt(i)).rating);
+  t.setFloFld(4, (float)((Sailor)sailors.elementAt(i)).age);
       }
       catch (Exception e) {
-	System.err.println("*** Heapfile error in Tuple.setStrFld() ***");
-	status = FAIL;
-	e.printStackTrace();
+  System.err.println("*** Heapfile error in Tuple.setStrFld() ***");
+  status = FAIL;
+  e.printStackTrace();
       }
       
       try {
-	rid = f.insertRecord(t.returnTupleByteArray());
+  rid = f.insertRecord(t.returnTupleByteArray());
       }
       catch (Exception e) {
-	System.err.println("*** error in Heapfile.insertRecord() ***");
-	status = FAIL;
-	e.printStackTrace();
+  System.err.println("*** error in Heapfile.insertRecord() ***");
+  status = FAIL;
+  e.printStackTrace();
       }      
     }
     if (status != OK) {
@@ -274,23 +274,23 @@ class JoinsDriver implements GlobalConst {
     
     for (int i=0; i<numboats; i++) {
       try {
-	t.setIntFld(1, ((Boats)boats.elementAt(i)).bid);
-	t.setStrFld(2, ((Boats)boats.elementAt(i)).bname);
-	t.setStrFld(3, ((Boats)boats.elementAt(i)).color);
+  t.setIntFld(1, ((Boats)boats.elementAt(i)).bid);
+  t.setStrFld(2, ((Boats)boats.elementAt(i)).bname);
+  t.setStrFld(3, ((Boats)boats.elementAt(i)).color);
       }
       catch (Exception e) {
-	System.err.println("*** error in Tuple.setStrFld() ***");
-	status = FAIL;
-	e.printStackTrace();
+  System.err.println("*** error in Tuple.setStrFld() ***");
+  status = FAIL;
+  e.printStackTrace();
       }
       
       try {
-	rid = f.insertRecord(t.returnTupleByteArray());
+  rid = f.insertRecord(t.returnTupleByteArray());
       }
       catch (Exception e) {
-	System.err.println("*** error in Heapfile.insertRecord() ***");
-	status = FAIL;
-	e.printStackTrace();
+  System.err.println("*** error in Heapfile.insertRecord() ***");
+  status = FAIL;
+  e.printStackTrace();
       }      
     }
     if (status != OK) {
@@ -343,24 +343,24 @@ class JoinsDriver implements GlobalConst {
     
     for (int i=0; i<numreserves; i++) {
       try {
-	t.setIntFld(1, ((Reserves)reserves.elementAt(i)).sid);
-	t.setIntFld(2, ((Reserves)reserves.elementAt(i)).bid);
-	t.setStrFld(3, ((Reserves)reserves.elementAt(i)).date);
+  t.setIntFld(1, ((Reserves)reserves.elementAt(i)).sid);
+  t.setIntFld(2, ((Reserves)reserves.elementAt(i)).bid);
+  t.setStrFld(3, ((Reserves)reserves.elementAt(i)).date);
 
       }
       catch (Exception e) {
-	System.err.println("*** error in Tuple.setStrFld() ***");
-	status = FAIL;
-	e.printStackTrace();
+  System.err.println("*** error in Tuple.setStrFld() ***");
+  status = FAIL;
+  e.printStackTrace();
       }      
       
       try {
-	rid = f.insertRecord(t.returnTupleByteArray());
+  rid = f.insertRecord(t.returnTupleByteArray());
       }
       catch (Exception e) {
-	System.err.println("*** error in Heapfile.insertRecord() ***");
-	status = FAIL;
-	e.printStackTrace();
+  System.err.println("*** error in Heapfile.insertRecord() ***");
+  status = FAIL;
+  e.printStackTrace();
       }      
     }
     if (status != OK) {
@@ -533,11 +533,11 @@ class JoinsDriver implements GlobalConst {
     
     // Sailors, Boats, Reserves Queries.
     System.out.print ("Query: Find the names of sailors who have reserved "
-		      + "boat number 1.\n"
-		      + "       and print out the date of reservation.\n\n"
-		      + "  SELECT S.sname, R.date\n"
-		      + "  FROM   Sailors S, Reserves R\n"
-		      + "  WHERE  S.sid = R.sid AND R.bid = 1\n\n");
+          + "boat number 1.\n"
+          + "       and print out the date of reservation.\n\n"
+          + "  SELECT S.sname, R.date\n"
+          + "  FROM   Sailors S, Reserves R\n"
+          + "  WHERE  S.sid = R.sid AND R.bid = 1\n\n");
     
     System.out.print ("\n(Tests FileScan, Projection, and Sort-Merge Join)\n");
  
@@ -573,8 +573,8 @@ class JoinsDriver implements GlobalConst {
     FileScan am = null;
     try {
       am  = new FileScan("sailors.in", Stypes, Ssizes, 
-				  (short)4, (short)4,
-				  Sprojection, null);
+          (short)4, (short)4,
+          Sprojection, null);
     }
     catch (Exception e) {
       status = FAIL;
@@ -602,8 +602,8 @@ class JoinsDriver implements GlobalConst {
     FileScan am2 = null;
     try {
       am2 = new FileScan("reserves.in", Rtypes, Rsizes, 
-				  (short)3, (short) 3,
-				  Rprojection, null);
+          (short)3, (short) 3,
+          Rprojection, null);
     }
     catch (Exception e) {
       status = FAIL;
@@ -627,15 +627,17 @@ class JoinsDriver implements GlobalConst {
  
     TupleOrder ascending = new TupleOrder(TupleOrder.Ascending);
     SortMerge sm = null;
+    Descriptor y = new Descriptor();
+    y.set(-1,-1,-1,-1,-1);
     try {
       sm = new SortMerge(Stypes, 4, Ssizes,
-			 Rtypes, 3, Rsizes,
-			 1, 4, 
-			 1, 4, 
-			 10,
-			 am, am2, 
-			 false, false, ascending,
-			 outFilter, proj_list, 2);
+       Rtypes, 3, Rsizes,
+       1, 4, 
+       1, 4, 
+       10,
+       am, am2, 
+       false, false, ascending,10, y,
+       outFilter, proj_list, 2);
     }
     catch (Exception e) {
       System.err.println("*** join error in SortMerge constructor ***"); 
@@ -874,27 +876,27 @@ class JoinsDriver implements GlobalConst {
       tt.tupleCopy(temp);
       
       try {
-	key = tt.getIntFld(1);
+  key = tt.getIntFld(1);
       }
       catch (Exception e) {
-	status = FAIL;
-	e.printStackTrace();
+  status = FAIL;
+  e.printStackTrace();
       }
       
       try {
-	btf.insert(new IntegerKey(key), rid); 
+  btf.insert(new IntegerKey(key), rid); 
       }
       catch (Exception e) {
-	status = FAIL;
-	e.printStackTrace();
+  status = FAIL;
+  e.printStackTrace();
       }
 
       try {
-	temp = scan.getNext(rid);
+  temp = scan.getNext(rid);
       }
       catch (Exception e) {
-	status = FAIL;
-	e.printStackTrace();
+  status = FAIL;
+  e.printStackTrace();
       }
     }
     
@@ -909,8 +911,8 @@ class JoinsDriver implements GlobalConst {
     System.out.print ("After Building btree index on sailors.sid.\n\n");
     try {
       am = new IndexScan ( b_index, "sailors.in",
-			   "BTreeIndex", Stypes, Ssizes, 4, 2,
-			   Sprojection, null, 1, false);
+         "BTreeIndex", Stypes, Ssizes, 4, 2,
+         Sprojection, null, 1, false);
     }
     
     catch (Exception e) {
@@ -923,10 +925,10 @@ class JoinsDriver implements GlobalConst {
     NestedLoopsJoins nlj = null;
     try {
       nlj = new NestedLoopsJoins (Stypes2, 2, Ssizes,
-				  Rtypes, 3, Rsizes,
-				  10,
-				  am, "reserves.in",
-				  outFilter, null, proj1, 2);
+          Rtypes, 3, Rsizes,
+          10,
+          am, "reserves.in",
+          outFilter, null, proj1, 2);
     }
     catch (Exception e) {
       System.err.println ("*** Error preparing for nested_loop_join");
@@ -938,10 +940,10 @@ class JoinsDriver implements GlobalConst {
      NestedLoopsJoins nlj2 = null ; 
     try {
       nlj2 = new NestedLoopsJoins (Jtypes, 2, Jsizes,
-				   Btypes, 3, Bsizes,
-				   10,
-				   nlj, "boats.in",
-				   outFilter2, null, proj2, 1);
+           Btypes, 3, Bsizes,
+           10,
+           nlj, "boats.in",
+           outFilter2, null, proj2, 1);
     }
     catch (Exception e) {
       System.err.println ("*** Error preparing for nested_loop_join");
@@ -951,9 +953,11 @@ class JoinsDriver implements GlobalConst {
     
     TupleOrder ascending = new TupleOrder(TupleOrder.Ascending);
     Sort sort_names = null;
+    Descriptor z = new Descriptor();
+    z.set(-1,-1,-1,-1,-1);
     try {
       sort_names = new Sort (JJtype,(short)1, JJsize,
-			     (iterator.Iterator) nlj2, 1, ascending, JJsize[0], 10);
+           (iterator.Iterator) nlj2, 1,10,z, ascending, JJsize[0], 10);
     }
     catch (Exception e) {
       System.err.println ("*** Error preparing for nested_loop_join");
@@ -1005,10 +1009,10 @@ class JoinsDriver implements GlobalConst {
  
     System.out.print 
       ( "Query: Find the names of sailors who have reserved a boat.\n\n"
-	+ "  SELECT S.sname\n"
-	+ "  FROM   Sailors S, Reserves R\n"
-	+ "  WHERE  S.sid = R.sid\n\n"
-	+ "(Tests FileScan, Projection, and SortMerge Join.)\n\n");
+  + "  SELECT S.sname\n"
+  + "  FROM   Sailors S, Reserves R\n"
+  + "  WHERE  S.sid = R.sid\n\n"
+  + "(Tests FileScan, Projection, and SortMerge Join.)\n\n");
     
     CondExpr [] outFilter = new CondExpr[2];
     outFilter[0] = new CondExpr();
@@ -1049,8 +1053,8 @@ class JoinsDriver implements GlobalConst {
     iterator.Iterator am = null;
     try {
       am  = new FileScan("sailors.in", Stypes, Ssizes,
-				  (short)4, (short) 4,
-				  Sprojection, null);
+          (short)4, (short) 4,
+          Sprojection, null);
     }
     catch (Exception e) {
       status = FAIL;
@@ -1072,8 +1076,8 @@ class JoinsDriver implements GlobalConst {
     iterator.Iterator am2 = null;
     try {
       am2 = new FileScan("reserves.in", Rtypes, Rsizes, 
-				  (short)3, (short)3,
-				  Rprojection, null);
+          (short)3, (short)3,
+          Rprojection, null);
     }
     catch (Exception e) {
       status = FAIL;
@@ -1094,15 +1098,17 @@ class JoinsDriver implements GlobalConst {
  
     TupleOrder ascending = new TupleOrder(TupleOrder.Ascending);
     SortMerge sm = null;
+    Descriptor y = new Descriptor();
+    y.set(-1,-1,-1,-1,-1);
     try {
       sm = new SortMerge(Stypes, 4, Ssizes,
-			 Rtypes, 3, Rsizes,
-			 1, 4,
-			 1, 4,
-			 10,
-			 am, am2,
-			 false, false, ascending,
-			 outFilter, proj_list, 1);
+       Rtypes, 3, Rsizes,
+       1, 4,
+       1, 4,
+       10,
+       am, am2,
+       false, false, ascending,10,y,
+       outFilter, proj_list, 1);
     }
     catch (Exception e) {
       status = FAIL;
@@ -1205,8 +1211,8 @@ class JoinsDriver implements GlobalConst {
     iterator.Iterator am = null;
     try {
       am  = new FileScan("sailors.in", Stypes, Ssizes,
-				  (short)4, (short) 4,
-				  Sprojection, null);
+          (short)4, (short) 4,
+          Sprojection, null);
     }
     catch (Exception e) {
       status = FAIL;
@@ -1228,8 +1234,8 @@ class JoinsDriver implements GlobalConst {
     iterator.Iterator am2 = null;
     try {
       am2 = new FileScan("reserves.in", Rtypes, Rsizes, 
-				  (short)3, (short)3,
-				  Rprojection, null);
+          (short)3, (short)3,
+          Rprojection, null);
     }
     catch (Exception e) {
       status = FAIL;
@@ -1252,15 +1258,17 @@ class JoinsDriver implements GlobalConst {
     SortMerge sm = null;
     short  []  jsizes    = new short[1];
     jsizes[0] = 30;
+    Descriptor y = new Descriptor();
+    y.set(-1,-1,-1,-1,-1);
     try {
       sm = new SortMerge(Stypes, 4, Ssizes,
-			 Rtypes, 3, Rsizes,
-			 1, 4,
-			 1, 4,
-			 10,
-			 am, am2,
-			 false, false, ascending,
-			 outFilter, proj_list, 1);
+       Rtypes, 3, Rsizes,
+       1, 4,
+       1, 4,
+       10,
+       am, am2,
+       false, false, ascending,10,y,
+       outFilter, proj_list, 1);
     }
     catch (Exception e) {
       status = FAIL;
@@ -1389,8 +1397,8 @@ class JoinsDriver implements GlobalConst {
     iterator.Iterator am = null;
     try {
       am  = new FileScan("sailors.in", Stypes, Ssizes, 
-				  (short)4, (short)4,
-				  Sprojection, null);
+          (short)4, (short)4,
+          Sprojection, null);
     }
     catch (Exception e) {
       status = FAIL;
@@ -1406,8 +1414,8 @@ class JoinsDriver implements GlobalConst {
     iterator.Iterator am2 = null;
     try {
       am2 = new FileScan("reserves.in", Rtypes, Rsizes, 
-			 (short)3, (short)3,
-			 Rprojection, null);
+       (short)3, (short)3,
+       Rprojection, null);
     }
     catch (Exception e) {
       status = FAIL;
@@ -1422,15 +1430,17 @@ class JoinsDriver implements GlobalConst {
  
     TupleOrder ascending = new TupleOrder(TupleOrder.Ascending);
     SortMerge sm = null;
+    Descriptor y = new Descriptor();
+    y.set(-1,-1,-1,-1,-1);
     try {
       sm = new SortMerge(Stypes, 4, Ssizes,
-			 Rtypes, 3, Rsizes,
-			 1, 4,
-			 1, 4,
-			 10,
-			 am, am2,
-			 false, false, ascending,
-			 outFilter, proj_list, 3);
+       Rtypes, 3, Rsizes,
+       1, 4,
+       1, 4,
+       10,
+       am, am2,
+       false, false, ascending,10, y,
+       outFilter, proj_list, 3);
     }
     catch (Exception e) {
       status = FAIL;
@@ -1480,17 +1490,17 @@ class JoinsDriver implements GlobalConst {
       boolean status = OK;
       // Sailors, Boats, Reserves Queries.
       System.out.print( "Query: Find the names of sailors with a rating greater than 7\n"
-			+ "  who have reserved a red boat, and print them out in sorted order.\n\n"
-			+ "  SELECT   S.sname\n"
-			+ "  FROM     Sailors S, Boats B, Reserves R\n"
-			+ "  WHERE    S.sid = R.sid AND S.rating > 7 AND R.bid = B.bid \n"
-			+ "           AND B.color = 'red'\n"
-			+ "  ORDER BY S.name\n\n"
-			
-			+ "Plan used:\n"
-			+" Sort(Pi(sname) (Sigma(B.color='red')  |><|  Pi(sname, bid) (Sigma(S.rating > 7)  |><|  R)))\n\n"
-			
-			+ "(Tests FileScan, Multiple Selection, Projection,sort and nested-loop join.)\n\n");
+      + "  who have reserved a red boat, and print them out in sorted order.\n\n"
+      + "  SELECT   S.sname\n"
+      + "  FROM     Sailors S, Boats B, Reserves R\n"
+      + "  WHERE    S.sid = R.sid AND S.rating > 7 AND R.bid = B.bid \n"
+      + "           AND B.color = 'red'\n"
+      + "  ORDER BY S.name\n\n"
+      
+      + "Plan used:\n"
+      +" Sort(Pi(sname) (Sigma(B.color='red')  |><|  Pi(sname, bid) (Sigma(S.rating > 7)  |><|  R)))\n\n"
+      
+      + "(Tests FileScan, Multiple Selection, Projection,sort and nested-loop join.)\n\n");
       
       CondExpr [] outFilter  = new CondExpr[3];
       outFilter[0] = new CondExpr();
@@ -1506,10 +1516,10 @@ class JoinsDriver implements GlobalConst {
       t = null;
       
       AttrType [] Stypes = {
-	new AttrType(AttrType.attrInteger), 
-	new AttrType(AttrType.attrString), 
-	new AttrType(AttrType.attrInteger), 
-	new AttrType(AttrType.attrReal)
+  new AttrType(AttrType.attrInteger), 
+  new AttrType(AttrType.attrString), 
+  new AttrType(AttrType.attrInteger), 
+  new AttrType(AttrType.attrReal)
       };
       
       
@@ -1517,17 +1527,17 @@ class JoinsDriver implements GlobalConst {
       short []   Ssizes = new short[1];
       Ssizes[0] = 30;
       AttrType [] Rtypes = {
-	new AttrType(AttrType.attrInteger), 
-	new AttrType(AttrType.attrInteger), 
-	new AttrType(AttrType.attrString), 
+  new AttrType(AttrType.attrInteger), 
+  new AttrType(AttrType.attrInteger), 
+  new AttrType(AttrType.attrString), 
       };
       
       short  []  Rsizes = new short[1] ;
       Rsizes[0] = 15;
       AttrType [] Btypes = {
-	new AttrType(AttrType.attrInteger), 
-	new AttrType(AttrType.attrString), 
-	new AttrType(AttrType.attrString), 
+  new AttrType(AttrType.attrInteger), 
+  new AttrType(AttrType.attrString), 
+  new AttrType(AttrType.attrString), 
       };
       
       short  []  Bsizes = new short[2];
@@ -1536,14 +1546,14 @@ class JoinsDriver implements GlobalConst {
       
       
       AttrType [] Jtypes = {
-	new AttrType(AttrType.attrString), 
-	new AttrType(AttrType.attrInteger), 
+  new AttrType(AttrType.attrString), 
+  new AttrType(AttrType.attrInteger), 
       };
       
       short  []  Jsizes = new short[1];
       Jsizes[0] = 30;
       AttrType [] JJtype = {
-	new AttrType(AttrType.attrString), 
+  new AttrType(AttrType.attrString), 
       };
       
       short [] JJsize = new short[1];
@@ -1552,17 +1562,17 @@ class JoinsDriver implements GlobalConst {
       
       
       FldSpec []  proj1 = {
-	new FldSpec(new RelSpec(RelSpec.outer), 2),
-	new FldSpec(new RelSpec(RelSpec.innerRel), 2)
+  new FldSpec(new RelSpec(RelSpec.outer), 2),
+  new FldSpec(new RelSpec(RelSpec.innerRel), 2)
       }; // S.sname, R.bid
       
       FldSpec [] proj2  = {
-	new FldSpec(new RelSpec(RelSpec.outer), 1)
+  new FldSpec(new RelSpec(RelSpec.outer), 1)
       };
       
       FldSpec [] Sprojection = {
-	new FldSpec(new RelSpec(RelSpec.outer), 1),
-	new FldSpec(new RelSpec(RelSpec.outer), 2),
+  new FldSpec(new RelSpec(RelSpec.outer), 1),
+  new FldSpec(new RelSpec(RelSpec.outer), 2),
         new FldSpec(new RelSpec(RelSpec.outer), 3),
         new FldSpec(new RelSpec(RelSpec.outer), 4)
       };
@@ -1573,69 +1583,71 @@ class JoinsDriver implements GlobalConst {
       
       FileScan am = null;
       try {
-	am  = new FileScan("sailors.in", Stypes, Ssizes, 
-			   (short)4, (short)4,
-			   Sprojection, null);
+  am  = new FileScan("sailors.in", Stypes, Ssizes, 
+         (short)4, (short)4,
+         Sprojection, null);
       }
       catch (Exception e) {
-	status = FAIL;
-	System.err.println (""+e);
-	e.printStackTrace();
+  status = FAIL;
+  System.err.println (""+e);
+  e.printStackTrace();
       }
       
       if (status != OK) {
-	//bail out
-	
-	System.err.println ("*** Error setting up scan for sailors");
-	Runtime.getRuntime().exit(1);
+  //bail out
+  
+  System.err.println ("*** Error setting up scan for sailors");
+  Runtime.getRuntime().exit(1);
       }
       
   
       
       NestedLoopsJoins inl = null;
       try {
-	inl = new NestedLoopsJoins (Stypes, 4, Ssizes,
-				    Rtypes, 3, Rsizes,
-				    10,
-				  am, "reserves.in",
-				    outFilter, null, proj1, 2);
+  inl = new NestedLoopsJoins (Stypes, 4, Ssizes,
+            Rtypes, 3, Rsizes,
+            10,
+          am, "reserves.in",
+            outFilter, null, proj1, 2);
       }
       catch (Exception e) {
-	System.err.println ("*** Error preparing for nested_loop_join");
-	System.err.println (""+e);
-	e.printStackTrace();
-	Runtime.getRuntime().exit(1);
+  System.err.println ("*** Error preparing for nested_loop_join");
+  System.err.println (""+e);
+  e.printStackTrace();
+  Runtime.getRuntime().exit(1);
       }
      
       System.out.print( "After nested loop join S.sid|><|R.sid.\n");
-	
+  
       NestedLoopsJoins nlj = null;
       try {
-	nlj = new NestedLoopsJoins (Jtypes, 2, Jsizes,
-				    Btypes, 3, Bsizes,
-				    10,
-				    inl, "boats.in",
-				    outFilter2, null, proj2, 1);
+  nlj = new NestedLoopsJoins (Jtypes, 2, Jsizes,
+            Btypes, 3, Bsizes,
+            10,
+            inl, "boats.in",
+            outFilter2, null, proj2, 1);
       }
       catch (Exception e) {
-	System.err.println ("*** Error preparing for nested_loop_join");
-	System.err.println (""+e);
-	e.printStackTrace();
-	Runtime.getRuntime().exit(1);
+  System.err.println ("*** Error preparing for nested_loop_join");
+  System.err.println (""+e);
+  e.printStackTrace();
+  Runtime.getRuntime().exit(1);
       }
       
       System.out.print( "After nested loop join R.bid|><|B.bid AND B.color=red.\n");
       
       TupleOrder ascending = new TupleOrder(TupleOrder.Ascending);
       Sort sort_names = null;
+      Descriptor y = new Descriptor();
+      y.set(-1,-1,-1,-1,-1);
       try {
-	sort_names = new Sort (JJtype,(short)1, JJsize,
-			       (iterator.Iterator) nlj, 1, ascending, JJsize[0], 10);
+  sort_names = new Sort (JJtype,(short)1, JJsize,
+             (iterator.Iterator) nlj, 1,10,y, ascending, JJsize[0], 10);
       }
       catch (Exception e) {
-	System.err.println ("*** Error preparing for sorting");
-	System.err.println (""+e);
-	Runtime.getRuntime().exit(1);
+  System.err.println ("*** Error preparing for sorting");
+  System.err.println (""+e);
+  Runtime.getRuntime().exit(1);
       }
       
       
@@ -1645,31 +1657,31 @@ class JoinsDriver implements GlobalConst {
       QueryCheck qcheck6 = new QueryCheck(6);
       
       try {
-	while ((t =sort_names.get_next()) !=null) {
-	  t.print(JJtype);
-	  qcheck6.Check(t);
-	}
+  while ((t =sort_names.get_next()) !=null) {
+    t.print(JJtype);
+    qcheck6.Check(t);
+  }
       }catch (Exception e) {
-	System.err.println ("*** Error preparing for get_next tuple");
-	System.err.println (""+e);
-	Runtime.getRuntime().exit(1);
+  System.err.println ("*** Error preparing for get_next tuple");
+  System.err.println (""+e);
+  Runtime.getRuntime().exit(1);
       }
       
       qcheck6.report(6);
       
       System.out.println ("\n"); 
       try {
-	sort_names.close();
+  sort_names.close();
       }
       catch (Exception e) {
-	status = FAIL;
-	e.printStackTrace();
+  status = FAIL;
+  e.printStackTrace();
       }
       
       if (status != OK) {
-	//bail out
-	
-	Runtime.getRuntime().exit(1);
+  //bail out
+  
+  Runtime.getRuntime().exit(1);
       }
       
     }

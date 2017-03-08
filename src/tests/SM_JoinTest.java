@@ -5,9 +5,11 @@ import iterator.*;
 import heap.*;
 import global.*;
 import index.*;
+
 import java.io.*;
 import java.util.*;
 import java.lang.*;
+
 import diskmgr.*;
 import bufmgr.*;
 import btree.*; 
@@ -149,7 +151,7 @@ class JoinsDriver implements GlobalConst {
     /*
     ExtendedSystemDefs extSysDef = 
       new ExtendedSystemDefs( "/tmp/minibase.jointestdb", "/tmp/joinlog",
-			      1000,500,200,"Clock");
+            1000,500,200,"Clock");
     */
 
     SystemDefs sysdef = new SystemDefs( dbpath, 1000, NUMBUF, "Clock" );
@@ -201,24 +203,24 @@ class JoinsDriver implements GlobalConst {
     
     for (int i=0; i<numsailors; i++) {
       try {
-	t.setIntFld(1, ((Sailor)sailors.elementAt(i)).sid);
-	t.setStrFld(2, ((Sailor)sailors.elementAt(i)).sname);
-	t.setIntFld(3, ((Sailor)sailors.elementAt(i)).rating);
-	t.setFloFld(4, (float)((Sailor)sailors.elementAt(i)).age);
+  t.setIntFld(1, ((Sailor)sailors.elementAt(i)).sid);
+  t.setStrFld(2, ((Sailor)sailors.elementAt(i)).sname);
+  t.setIntFld(3, ((Sailor)sailors.elementAt(i)).rating);
+  t.setFloFld(4, (float)((Sailor)sailors.elementAt(i)).age);
       }
       catch (Exception e) {
-	System.err.println("*** Heapfile error in Tuple.setStrFld() ***");
-	status = FAIL;
-	e.printStackTrace();
+  System.err.println("*** Heapfile error in Tuple.setStrFld() ***");
+  status = FAIL;
+  e.printStackTrace();
       }
       
       try {
-	rid = f.insertRecord(t.returnTupleByteArray());
+  rid = f.insertRecord(t.returnTupleByteArray());
       }
       catch (Exception e) {
-	System.err.println("*** error in Heapfile.insertRecord() ***");
-	status = FAIL;
-	e.printStackTrace();
+  System.err.println("*** error in Heapfile.insertRecord() ***");
+  status = FAIL;
+  e.printStackTrace();
       }      
     }
     if (status != OK) {
@@ -273,23 +275,23 @@ class JoinsDriver implements GlobalConst {
     
     for (int i=0; i<numboats; i++) {
       try {
-	t.setIntFld(1, ((Boats)boats.elementAt(i)).bid);
-	t.setStrFld(2, ((Boats)boats.elementAt(i)).bname);
-	t.setStrFld(3, ((Boats)boats.elementAt(i)).color);
+  t.setIntFld(1, ((Boats)boats.elementAt(i)).bid);
+  t.setStrFld(2, ((Boats)boats.elementAt(i)).bname);
+  t.setStrFld(3, ((Boats)boats.elementAt(i)).color);
       }
       catch (Exception e) {
-	System.err.println("*** error in Tuple.setStrFld() ***");
-	status = FAIL;
-	e.printStackTrace();
+  System.err.println("*** error in Tuple.setStrFld() ***");
+  status = FAIL;
+  e.printStackTrace();
       }
       
       try {
-	rid = f.insertRecord(t.returnTupleByteArray());
+  rid = f.insertRecord(t.returnTupleByteArray());
       }
       catch (Exception e) {
-	System.err.println("*** error in Heapfile.insertRecord() ***");
-	status = FAIL;
-	e.printStackTrace();
+  System.err.println("*** error in Heapfile.insertRecord() ***");
+  status = FAIL;
+  e.printStackTrace();
       }      
     }
     if (status != OK) {
@@ -342,24 +344,24 @@ class JoinsDriver implements GlobalConst {
     
     for (int i=0; i<numreserves; i++) {
       try {
-	t.setIntFld(1, ((Reserves)reserves.elementAt(i)).sid);
-	t.setIntFld(2, ((Reserves)reserves.elementAt(i)).bid);
-	t.setStrFld(3, ((Reserves)reserves.elementAt(i)).date);
+  t.setIntFld(1, ((Reserves)reserves.elementAt(i)).sid);
+  t.setIntFld(2, ((Reserves)reserves.elementAt(i)).bid);
+  t.setStrFld(3, ((Reserves)reserves.elementAt(i)).date);
 
       }
       catch (Exception e) {
-	System.err.println("*** error in Tuple.setStrFld() ***");
-	status = FAIL;
-	e.printStackTrace();
+  System.err.println("*** error in Tuple.setStrFld() ***");
+  status = FAIL;
+  e.printStackTrace();
       }      
       
       try {
-	rid = f.insertRecord(t.returnTupleByteArray());
+  rid = f.insertRecord(t.returnTupleByteArray());
       }
       catch (Exception e) {
-	System.err.println("*** error in Heapfile.insertRecord() ***");
-	status = FAIL;
-	e.printStackTrace();
+  System.err.println("*** error in Heapfile.insertRecord() ***");
+  status = FAIL;
+  e.printStackTrace();
       }      
     }
     if (status != OK) {
@@ -532,11 +534,11 @@ class JoinsDriver implements GlobalConst {
     
     // Sailors, Boats, Reserves Queries.
     System.out.print ("Query: Find the names of sailors who have reserved "
-		      + "boat number 1.\n"
-		      + "       and print out the date of reservation.\n\n"
-		      + "  SELECT S.sname, R.date\n"
-		      + "  FROM   Sailors S, Reserves R\n"
-		      + "  WHERE  S.sid = R.sid AND R.bid = 1\n\n");
+          + "boat number 1.\n"
+          + "       and print out the date of reservation.\n\n"
+          + "  SELECT S.sname, R.date\n"
+          + "  FROM   Sailors S, Reserves R\n"
+          + "  WHERE  S.sid = R.sid AND R.bid = 1\n\n");
     
     System.out.print ("\n(Tests FileScan, Projection, and Sort-Merge Join)\n");
  
@@ -572,8 +574,8 @@ class JoinsDriver implements GlobalConst {
     FileScan am = null;
     try {
       am  = new FileScan("sailors.in", Stypes, Ssizes, 
-				  (short)4, (short)4,
-				  Sprojection, null);
+          (short)4, (short)4,
+          Sprojection, null);
     }
     catch (Exception e) {
       status = FAIL;
@@ -601,8 +603,8 @@ class JoinsDriver implements GlobalConst {
     FileScan am2 = null;
     try {
       am2 = new FileScan("reserves.in", Rtypes, Rsizes, 
-				  (short)3, (short) 3,
-				  Rprojection, null);
+          (short)3, (short) 3,
+          Rprojection, null);
     }
     catch (Exception e) {
       status = FAIL;
@@ -626,15 +628,17 @@ class JoinsDriver implements GlobalConst {
  
     TupleOrder ascending = new TupleOrder(TupleOrder.Ascending);
     SortMerge sm = null;
+    Descriptor y = new Descriptor();
+    y.set(-1,-1,-1,-1,-1);
     try {
       sm = new SortMerge(Stypes, 4, Ssizes,
-			 Rtypes, 3, Rsizes,
-			 1, 4, 
-			 1, 4, 
-			 10,
-			 am, am2, 
-			 false, false, ascending,
-			 outFilter, proj_list, 2);
+       Rtypes, 3, Rsizes,
+       1, 4, 
+       1, 4, 
+       10,
+       am, am2, 
+       false, false, ascending,10,y,
+       outFilter, proj_list, 2);
     }
     catch (Exception e) {
       System.err.println("*** join error in SortMerge constructor ***"); 
@@ -701,10 +705,10 @@ class JoinsDriver implements GlobalConst {
  
     System.out.print 
       ( "Query: Find the names of sailors who have reserved a boat.\n\n"
-	+ "  SELECT S.sname\n"
-	+ "  FROM   Sailors S, Reserves R\n"
-	+ "  WHERE  S.sid = R.sid\n\n"
-	+ "(Tests FileScan, Projection, and SortMerge Join.)\n\n");
+  + "  SELECT S.sname\n"
+  + "  FROM   Sailors S, Reserves R\n"
+  + "  WHERE  S.sid = R.sid\n\n"
+  + "(Tests FileScan, Projection, and SortMerge Join.)\n\n");
     
     CondExpr [] outFilter = new CondExpr[2];
     outFilter[0] = new CondExpr();
@@ -745,8 +749,8 @@ class JoinsDriver implements GlobalConst {
     iterator.Iterator am = null;
     try {
       am  = new FileScan("sailors.in", Stypes, Ssizes,
-				  (short)4, (short) 4,
-				  Sprojection, null);
+          (short)4, (short) 4,
+          Sprojection, null);
     }
     catch (Exception e) {
       status = FAIL;
@@ -768,8 +772,8 @@ class JoinsDriver implements GlobalConst {
     iterator.Iterator am2 = null;
     try {
       am2 = new FileScan("reserves.in", Rtypes, Rsizes, 
-				  (short)3, (short)3,
-				  Rprojection, null);
+          (short)3, (short)3,
+          Rprojection, null);
     }
     catch (Exception e) {
       status = FAIL;
@@ -790,15 +794,17 @@ class JoinsDriver implements GlobalConst {
  
     TupleOrder ascending = new TupleOrder(TupleOrder.Ascending);
     SortMerge sm = null;
+    Descriptor y = new Descriptor();
+    y.set(-1,-1,-1,-1,-1);
     try {
       sm = new SortMerge(Stypes, 4, Ssizes,
-			 Rtypes, 3, Rsizes,
-			 1, 4,
-			 1, 4,
-			 10,
-			 am, am2,
-			 false, false, ascending,
-			 outFilter, proj_list, 1);
+       Rtypes, 3, Rsizes,
+       1, 4,
+       1, 4,
+       10,
+       am, am2,
+       false, false, ascending,10,y,
+       outFilter, proj_list, 1);
     }
     catch (Exception e) {
       status = FAIL;
@@ -901,8 +907,8 @@ class JoinsDriver implements GlobalConst {
     iterator.Iterator am = null;
     try {
       am  = new FileScan("sailors.in", Stypes, Ssizes,
-				  (short)4, (short) 4,
-				  Sprojection, null);
+          (short)4, (short) 4,
+          Sprojection, null);
     }
     catch (Exception e) {
       status = FAIL;
@@ -924,8 +930,8 @@ class JoinsDriver implements GlobalConst {
     iterator.Iterator am2 = null;
     try {
       am2 = new FileScan("reserves.in", Rtypes, Rsizes, 
-				  (short)3, (short)3,
-				  Rprojection, null);
+          (short)3, (short)3,
+          Rprojection, null);
     }
     catch (Exception e) {
       status = FAIL;
@@ -948,15 +954,17 @@ class JoinsDriver implements GlobalConst {
     SortMerge sm = null;
     short  []  jsizes    = new short[1];
     jsizes[0] = 30;
+    Descriptor y = new Descriptor();
+    y.set(-1,-1,-1,-1,-1);
     try {
       sm = new SortMerge(Stypes, 4, Ssizes,
-			 Rtypes, 3, Rsizes,
-			 1, 4,
-			 1, 4,
-			 10,
-			 am, am2,
-			 false, false, ascending,
-			 outFilter, proj_list, 1);
+       Rtypes, 3, Rsizes,
+       1, 4,
+       1, 4,
+       10,
+       am, am2,
+       false, false, ascending,10,y,
+       outFilter, proj_list, 1);
     }
     catch (Exception e) {
       status = FAIL;
@@ -1084,8 +1092,8 @@ class JoinsDriver implements GlobalConst {
     iterator.Iterator am = null;
     try {
       am  = new FileScan("sailors.in", Stypes, Ssizes, 
-				  (short)4, (short)4,
-				  Sprojection, null);
+          (short)4, (short)4,
+          Sprojection, null);
     }
     catch (Exception e) {
       status = FAIL;
@@ -1101,8 +1109,8 @@ class JoinsDriver implements GlobalConst {
     iterator.Iterator am2 = null;
     try {
       am2 = new FileScan("reserves.in", Rtypes, Rsizes, 
-			 (short)3, (short)3,
-			 Rprojection, null);
+       (short)3, (short)3,
+       Rprojection, null);
     }
     catch (Exception e) {
       status = FAIL;
@@ -1117,15 +1125,17 @@ class JoinsDriver implements GlobalConst {
  
     TupleOrder ascending = new TupleOrder(TupleOrder.Ascending);
     SortMerge sm = null;
+    Descriptor y = new Descriptor();
+    y.set(-1,-1,-1,-1,-1);
     try {
       sm = new SortMerge(Stypes, 4, Ssizes,
-			 Rtypes, 3, Rsizes,
-			 1, 4,
-			 1, 4,
-			 10,
-			 am, am2,
-			 false, false, ascending,
-			 outFilter, proj_list, 3);
+       Rtypes, 3, Rsizes,
+       1, 4,
+       1, 4,
+       10,
+       am, am2,
+       false, false, ascending,10,y,
+       outFilter, proj_list, 3);
     }
     catch (Exception e) {
       status = FAIL;

@@ -1,5 +1,7 @@
 package global;
 
+import java.util.Arrays;
+
 public class Descriptor {
     
     private int[] value;
@@ -43,5 +45,10 @@ public class Descriptor {
     		
     		return Math.sqrt(v1+v2+v3+v4+v5);
     }
+    
+    @Override
+	public String toString() {
+		return "Descriptor [value=" + Arrays.toString(value) + "]";
+	}
 }
     

@@ -7,6 +7,9 @@ import catalog.*;
 public interface Catalogglobal {
   
    final static int MINIBASE_MAXARRSIZE = 50;
+   public static final String ZERO_STRING = "0";
+   public static final int NUMBER_OF_BITS_IN_VECTOR = 16;
+   public static final int NUMBER_OF_DIMENSIONS = 5;
 
    // Global constants defined in CATALOG
 

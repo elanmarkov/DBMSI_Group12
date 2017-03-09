@@ -10,12 +10,13 @@ import java.io.*;
 import bufmgr.*;
 import global.*;
 import heap.*;
+import zindex.DescriptorKey;
 import diskmgr.*;
 import btree.*;
 
 public class Utility implements Catalogglobal{
 
- // WRAPS DELETE UTILITY IN TX
+// WRAPS DELETE UTILITY IN TX
  void deleteRecordUT(String relation, attrNode item){};
 
  // DELETES RECORDS
@@ -356,5 +357,67 @@ static boolean check_string(attrNode N)
   return true;
 }
 
+public static StringKey conver5Dto1D(KeyClass key){
+	Descriptor vector5d = ((DescriptorKey)key).getKey();
+	String[] vectors = new String[5]; 
+	//System.out.println("Utility.conver5Dto1D() 1");
+	for(int i=0;i<vectors.length;i++){
+		
+		vectors[i]=get8BitStringRepresentation(vector5d.get(i));
+		System.out.println("Utility.conver5Dto1D() i "+vector5d.get(i)+"="+vectors[i]);
+	}
+	//System.out.println("Utility.conver5Dto1D() 2" );
+	StringBuffer StringKey = new StringBuffer();
+	for(int i=0;i<NUMBER_OF_BITS_IN_VECTOR;i++){
+		//System.out.println("Utility.conver5Dto1D() 3 i "+i);
+		for(int j=0;j<NUMBER_OF_DIMENSIONS;j++){
+			//System.out.println("Utility.conver5Dto1D() 4 j "+j);
+			StringKey.append(vectors[j].charAt(i));
+		}
+	}
+	return new StringKey(StringKey.toString());
+}
+
+public static String get8BitStringRepresentation(int val) {
+	String binaryString = Integer.toBinaryString(val);
+	int len = binaryString.length();
+	StringBuffer sb = new StringBuffer();
+	while(len<NUMBER_OF_BITS_IN_VECTOR){
+		sb.append(ZERO_STRING);
+		len++;
+	}
+	return sb.append(binaryString).toString();
+}
+
+public static Descriptor convert1Dto5D(String key){
+	int i=0;
+	StringBuffer[] sb = new StringBuffer[5];
+	for(int j=0;j<sb.length;j++){
+		sb[j] = new StringBuffer();
+	}
+	while(i<key.length()){
+		for(int j=0;j<NUMBER_OF_DIMENSIONS;j++){
+			sb[j].append(key.charAt(i));
+			i++;
+		}
+	}
+	Descriptor desc= new Descriptor();
+	desc.set(Integer.parseInt(sb[0].toString(), 2)
+			, Integer.parseInt(sb[1].toString(), 2)
+			, Integer.parseInt(sb[2].toString(), 2)
+			, Integer.parseInt(sb[3].toString(), 2)
+			, Integer.parseInt(sb[4].toString(), 2));
+	
+	return desc;
+}
+
+public static boolean checkIfPointFallsWithInRange(Descriptor lowKey, Descriptor highKey, Descriptor desc) {
+	for(int i =0 ; i<NUMBER_OF_DIMENSIONS;i++){
+		if(!(lowKey.get(i)<=desc.get(i) && highKey.get(i) >=desc.get(i))){
+			return false;
+		}
+	}
+	return true;
+}
 
 }

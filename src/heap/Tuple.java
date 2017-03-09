@@ -123,9 +123,9 @@ public class Tuple implements GlobalConst{
 
  /**
   * Set a tuple with the given tuple length and offset
-  * @param	record	a byte array contains the tuple
-  * @param	offset  the offset of the tuple ( =0 by default)
-  * @param	length	the length of the tuple
+  * @param  record  a byte array contains the tuple
+  * @param  offset  the offset of the tuple ( =0 by default)
+  * @param  length  the length of the tuple
   */
  public void tupleSet(byte [] record, int offset, int length)  
   {
@@ -136,7 +136,7 @@ public class Tuple implements GlobalConst{
   
  /** get the length of a tuple, call this method if you did not 
   *  call setHdr () before
-  * @return 	length of this tuple in bytes
+  * @return   length of this tuple in bytes
   */   
   public int getLength()
    {
@@ -162,7 +162,7 @@ public class Tuple implements GlobalConst{
    
    /** Copy the tuple byte array out
     *  @return  byte[], a byte array contains the tuple
-    *		the length of byte[] = length of the tuple
+    *   the length of byte[] = length of the tuple
     */
     
    public byte [] getTupleByteArray() 
@@ -173,7 +173,7 @@ public class Tuple implements GlobalConst{
    }
    
    /** return the data byte array 
-    *  @return  data byte array 		
+    *  @return  data byte array     
     */
     
    public byte [] returnTupleByteArray()
@@ -184,15 +184,15 @@ public class Tuple implements GlobalConst{
    /**
     * Convert this field into integer 
     * 
-    * @param	fldNo	the field number
-    * @return		the converted integer if success
-    *			
+    * @param  fldNo the field number
+    * @return   the converted integer if success
+    *     
     * @exception   IOException I/O errors
     * @exception   FieldNumberOutOfBoundException Tuple field number out of bound
     */
 
   public int getIntFld(int fldNo) 
-  	throws IOException, FieldNumberOutOfBoundException
+    throws IOException, FieldNumberOutOfBoundException
   {           
     int val;
     if ( (fldNo > 0) && (fldNo <= fldCnt))
@@ -209,15 +209,15 @@ public class Tuple implements GlobalConst{
     *
     * @param    fldNo   the field number
     * @return           the converted float number  if success
-    *			
+    *     
     * @exception   IOException I/O errors
     * @exception   FieldNumberOutOfBoundException Tuple field number out of bound
     */
 
     public float getFloFld(int fldNo) 
-    	throws IOException, FieldNumberOutOfBoundException
+      throws IOException, FieldNumberOutOfBoundException
      {
-	float val;
+  float val;
       if ( (fldNo > 0) && (fldNo <= fldCnt))
        {
         val = Convert.getFloValue(fldOffset[fldNo -1], data);
@@ -233,19 +233,19 @@ public class Tuple implements GlobalConst{
     *
     * @param    fldNo   the field number
     * @return           the converted string if success
-    *			
+    *     
     * @exception   IOException I/O errors
     * @exception   FieldNumberOutOfBoundException Tuple field number out of bound
     */
 
    public String getStrFld(int fldNo) 
-   	throws IOException, FieldNumberOutOfBoundException 
+    throws IOException, FieldNumberOutOfBoundException 
    { 
          String val;
     if ( (fldNo > 0) && (fldNo <= fldCnt))      
      {
         val = Convert.getStrValue(fldOffset[fldNo -1], data, 
-		fldOffset[fldNo] - fldOffset[fldNo -1]); //strlen+2
+    fldOffset[fldNo] - fldOffset[fldNo -1]); //strlen+2
         return val;
      }
     else 
@@ -257,13 +257,13 @@ public class Tuple implements GlobalConst{
     *
     * @param    fldNo   the field number
     * @return           the character if success
-    *			
+    *     
     * @exception   IOException I/O errors
     * @exception   FieldNumberOutOfBoundException Tuple field number out of bound
     */
 
    public char getCharFld(int fldNo) 
-   	throws IOException, FieldNumberOutOfBoundException 
+    throws IOException, FieldNumberOutOfBoundException 
     {   
        char val;
       if ( (fldNo > 0) && (fldNo <= fldCnt))      
@@ -275,28 +275,50 @@ public class Tuple implements GlobalConst{
        throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
  
     }
-
+   public Descriptor getDescFld(int fldNo) 
+        throws IOException, FieldNumberOutOfBoundException 
+        {   
+           Descriptor dVal;
+          if ( (fldNo > 0) && (fldNo <= fldCnt))      
+           {
+            dVal = Convert.getDescValue(fldOffset[fldNo -1], data);
+            return dVal;
+           }
+          else 
+           throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
+     
+        }
   /**
    * Set this field to integer value
    *
-   * @param	fldNo	the field number
-   * @param	val	the integer value
+   * @param fldNo the field number
+   * @param val the integer value
    * @exception   IOException I/O errors
    * @exception   FieldNumberOutOfBoundException Tuple field number out of bound
    */
 
   public Tuple setIntFld(int fldNo, int val) 
-  	throws IOException, FieldNumberOutOfBoundException
+    throws IOException, FieldNumberOutOfBoundException
   { 
     if ( (fldNo > 0) && (fldNo <= fldCnt))
      {
-	Convert.setIntValue (val, fldOffset[fldNo -1], data);
-	return this;
+  Convert.setIntValue (val, fldOffset[fldNo -1], data);
+  return this;
      }
     else 
      throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND"); 
   }
-
+  public Tuple setDescFld(int fldNo, Descriptor dVal) 
+        throws IOException, FieldNumberOutOfBoundException
+      { 
+        if ( (fldNo > 0) && (fldNo <= fldCnt))
+         {
+      Convert.setDescValue (dVal, fldOffset[fldNo -1], data);
+      return this;
+         }
+        else 
+         throw new FieldNumberOutOfBoundException (null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND"); 
+      }
   /**
    * Set this field to float value
    *
@@ -307,7 +329,7 @@ public class Tuple implements GlobalConst{
    */
 
   public Tuple setFloFld(int fldNo, float val) 
-  	throws IOException, FieldNumberOutOfBoundException
+    throws IOException, FieldNumberOutOfBoundException
   { 
    if ( (fldNo > 0) && (fldNo <= fldCnt))
     {
@@ -329,7 +351,7 @@ public class Tuple implements GlobalConst{
    */
 
    public Tuple setStrFld(int fldNo, String val) 
-		throws IOException, FieldNumberOutOfBoundException  
+    throws IOException, FieldNumberOutOfBoundException  
    {
      if ( (fldNo > 0) && (fldNo <= fldCnt))        
       {
@@ -344,10 +366,10 @@ public class Tuple implements GlobalConst{
    /**
     * setHdr will set the header of this tuple.   
     *
-    * @param	numFlds	  number of fields
-    * @param	types[]	  contains the types that will be in this tuple
-    * @param	strSizes[]      contains the sizes of the string 
-    *				
+    * @param  numFlds   number of fields
+    * @param  types[]   contains the types that will be in this tuple
+    * @param  strSizes[]      contains the sizes of the string 
+    *       
     * @exception IOException I/O errors
     * @exception InvalidTypeException Invalid tupe type
     * @exception InvalidTupleSizeException Tuple size too big
@@ -355,7 +377,7 @@ public class Tuple implements GlobalConst{
     */
 
 public void setHdr (short numFlds,  AttrType types[], short strSizes[])
- throws IOException, InvalidTypeException, InvalidTupleSizeException		
+ throws IOException, InvalidTypeException, InvalidTupleSizeException    
 {
   if((numFlds +2)*2 > max_size)
     throw new InvalidTupleSizeException (null, "TUPLE: TUPLE_TOOBIG_ERROR");
@@ -525,7 +547,7 @@ public void setHdr (short numFlds,  AttrType types[], short strSizes[])
    * private method
    * Padding must be used when storing different types.
    * 
-   * @param	offset
+   * @param offset
    * @param type   the type of tuple
    * @return short typle
    */

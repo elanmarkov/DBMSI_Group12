@@ -4,10 +4,14 @@ import java.io.IOException;
 
 import global.AttrType;
 import global.Convert;
+import global.Descriptor;
 
 public class Node extends Tuple {
 
 	private String label;
+	
+	private Descriptor attrDesc;
+
 	public Node()
 	{
 		data = new byte[max_size];
@@ -15,12 +19,12 @@ public class Node extends Tuple {
 	       tuple_length = max_size;
 		
 	}
-    public void Node(byte[] anode, int offset)
+    public Node(byte[] anode, int offset)
     {
     	 data = anode;
          tuple_offset = offset;	
     }
-	public void Node(Node fromNode)
+	public Node(Node fromNode)
 	{
 		data = fromNode.getTupleByteArray();
 	       tuple_length = fromNode.getLength();
@@ -34,7 +38,7 @@ public class Node extends Tuple {
 	}
 	public Descriptor getDesc()
 	{
-		
+		return attrDesc;
 	}
 	public Node setLabel(String Label)
 	{
@@ -43,6 +47,7 @@ public class Node extends Tuple {
 	}
 	public Node setDesc(Descriptor Desc)
 	{
+		attrDesc=Desc;
 		return null;
 	}
 	public byte[] getNodeByteArray()
@@ -56,12 +61,18 @@ public class Node extends Tuple {
 		int i, val;
 		  float fval;
 		  String sval;
+		  Descriptor dVal;
 
 		  System.out.print("[");
 		  for (i=0; i< fldCnt-1; i++)
 		   {
 		    switch(type[i].attrType) {
 
+		    case AttrType.attrDesc:
+			     dVal = Convert.getDescValue(fldOffset[i], data);
+			     System.out.print(dVal);
+			     break;
+			     
 		   case AttrType.attrInteger:
 		     val = Convert.getIntValue(fldOffset[i], data);
 		     System.out.print(val);
@@ -86,6 +97,10 @@ public class Node extends Tuple {
 		 
 		 switch(type[fldCnt-1].attrType) {
 
+		   case AttrType.attrDesc:
+		     dVal = Convert.getDescValue(fldOffset[i], data);
+		     System.out.print(dVal);
+		     break;
 		   case AttrType.attrInteger:
 		     val = Convert.getIntValue(fldOffset[i], data);
 		     System.out.print(val);

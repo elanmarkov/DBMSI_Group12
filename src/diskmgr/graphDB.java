@@ -98,4 +98,22 @@ public class graphDB extends DB {
 		return 0;
 		//return ???
 	}
+	public void insertNode(Node node) {
+		return;
+	}
+	public void insertEdge(Edge edge) {
+		return;
+	}
+	public void deleteNode(String node) {
+		return;
+	}
+	public void deleteEdge(String edge) {
+		return;
+	}	
+	public NodeHeapFile getNodes() {
+		return nodes;
+	}
+	public EdgeHeapFile getEdges() {
+		return edges;
+	}
 }

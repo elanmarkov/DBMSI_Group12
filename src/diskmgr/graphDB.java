@@ -10,6 +10,8 @@ import java.io.*;
 import bufmgr.*;
 import global.*;
 import btree.*;
+import zindex.*;
+import iterator.*;
 
 public class graphDB extends DB {
 	static int numGraphDB = 0;
@@ -32,7 +34,7 @@ public class graphDB extends DB {
 	public graphDB(int type) {
 		super();
 		this.type = type; 
-		String fileName = "GraphDB" + numGraphDB;
+		String filename = "GraphDB" + numGraphDB;
 		numGraphDB++;
 		switch(type) {
 		case 0:	

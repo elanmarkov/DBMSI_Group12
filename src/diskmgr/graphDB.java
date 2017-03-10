@@ -11,7 +11,7 @@ import bufmgr.*;
 import global.*;
 import btree.*;
 import zindex.*;
-import iterator.*;
+import heap.*;
 
 public class graphDB extends DB {
 	static int numGraphDB = 0;
@@ -31,11 +31,19 @@ public class graphDB extends DB {
 	2 for string key, naive delete
 	3 for string key, full delete
 	*/
-	public graphDB(int type) {
+	public graphDB(int type) 
+		throws InvalidSlotNumberException, 
+	   	InvalidTupleSizeException, 
+	   	HFException,
+	   	HFBufMgrException,
+	   	HFDiskMgrException,
+	   	Exception {
 		super();
 		this.type = type; 
 		String filename = "GraphDB" + numGraphDB;
 		numGraphDB++;
+		nodes = new NodeHeapFile(filename + "NODES");
+		edges = new EdgeHeapFile(filename + "EDGES");
 		switch(type) {
 		case 0:	
 		// integer key, naive delete
@@ -67,11 +75,11 @@ public class graphDB extends DB {
 		// initialize each method; to be implemented when combined
 	}
 
-	public int getNodeCnt() {
+	public int getNodeCnt() throws HFBufMgrException, InvalidSlotNumberException, InvalidTupleSizeException, IOException {
 		return nodes.getNodeCnt();
 	}
 	
-	public int getEdgeCnt() {
+	public int getEdgeCnt() throws HFBufMgrException, InvalidSlotNumberException, IOException, InvalidTupleSizeException {
 		return edges.getEdgeCnt();
 	}
 	

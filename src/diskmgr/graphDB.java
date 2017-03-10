@@ -44,6 +44,7 @@ public class graphDB extends DB {
 		numGraphDB++;
 		nodes = new NodeHeapFile(filename + "NODES");
 		edges = new EdgeHeapFile(filename + "EDGES");
+		nodeDesc = new ZCurve(filename + "NODEDESC");
 		switch(type) {
 		case 0:	
 		// integer key, naive delete

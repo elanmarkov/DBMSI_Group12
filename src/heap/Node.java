@@ -14,23 +14,24 @@ public class Node extends Tuple {
 
 	public Node()
 	{
-		data = new byte[max_size];
-	       tuple_offset = 0;
-	       tuple_length = max_size;
+		super();
 		
 	}
     public Node(byte[] anode, int offset)
     {
-    	 data = anode;
-         tuple_offset = offset;	
+    	super(anode, offset, anode.length);
     }
+    
+    public Node(byte[] anode, int offset, int length)
+    {
+    	super(anode, offset, length);
+    }
+    
 	public Node(Node fromNode)
 	{
-		data = fromNode.getTupleByteArray();
-	       tuple_length = fromNode.getLength();
-	       tuple_offset = 0;
-	       fldCnt = fromNode.noOfFlds(); 
-	       fldOffset = fromNode.copyFldOffset();
+		super(fromNode);
+		this.attrDesc= fromNode.attrDesc;
+		this.label=fromNode.label;
 	}
 	public String getLabel()
 	{
@@ -43,105 +44,55 @@ public class Node extends Tuple {
 	public Node setLabel(String Label)
 	{
 	 label=Label;
-	return null;	
+	 try {
+		Convert.setStrValue(Label, 10, data);
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	tuple_length = 10+label.length();
+	return this;	
 	}
 	public Node setDesc(Descriptor Desc)
 	{
 		attrDesc=Desc;
-		return null;
+		try {
+			Convert.setDescValue(Desc, 0, data);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		tuple_length = 10+label.length();
+		return this;
 	}
 	public byte[] getNodeByteArray()
 	{
-		 byte [] nodecopy = new byte [tuple_length];
-	       System.arraycopy(data, tuple_offset, nodecopy, 0, tuple_length);
-	       return nodecopy;
+		 return getTupleByteArray();
 	}
 	public void print(AttrType type[]) throws IOException
 	{
-		int i, val;
-		  float fval;
-		  String sval;
-		  Descriptor dVal;
-
 		  System.out.print("[");
-		  for (i=0; i< fldCnt-1; i++)
-		   {
-		    switch(type[i].attrType) {
-
-		    case AttrType.attrDesc:
-			     dVal = Convert.getDescValue(fldOffset[i], data);
-			     System.out.print(dVal);
-			     break;
-			     
-		   case AttrType.attrInteger:
-		     val = Convert.getIntValue(fldOffset[i], data);
-		     System.out.print(val);
-		     break;
-
-		   case AttrType.attrReal:
-		     fval = Convert.getFloValue(fldOffset[i], data);
-		     System.out.print(fval);
-		     break;
-
-		   case AttrType.attrString:
-		     sval = Convert.getStrValue(fldOffset[i], data,fldOffset[i+1] - fldOffset[i]);
-		     System.out.print(sval);
-		     break;
-		  
-		   case AttrType.attrNull:
-		   case AttrType.attrSymbol:
-		     break;
-		   }
-		   System.out.print(", ");
-		 } 
-		 
-		 switch(type[fldCnt-1].attrType) {
-
-		   case AttrType.attrDesc:
-		     dVal = Convert.getDescValue(fldOffset[i], data);
-		     System.out.print(dVal);
-		     break;
-		   case AttrType.attrInteger:
-		     val = Convert.getIntValue(fldOffset[i], data);
-		     System.out.print(val);
-		     break;
-
-		   case AttrType.attrReal:
-		     fval = Convert.getFloValue(fldOffset[i], data);
-		     System.out.print(fval);
-		     break;
-
-		   case AttrType.attrString:
-		     sval = Convert.getStrValue(fldOffset[i], data,fldOffset[i+1] - fldOffset[i]);
-		     System.out.print(sval);
-		     break;
-
-		   case AttrType.attrNull:
-		   case AttrType.attrSymbol:
-		     break;
-		   }
-		   System.out.println("]");
+		  Descriptor desc = Convert.getDescValue(0, this.data);
+		  System.out.print(desc);
+		  String nodeLbl = Convert.getStrValue(10, data, data.length-10+2);
+		  System.out.print(", "+nodeLbl);
+		  System.out.println("]");
 	}
-	public short size()
-	{
-		 return ((short) (fldOffset[fldCnt] - tuple_offset));
-	}
+	
 	public void nodeCopy(Node fromNode)
 	{
-		 byte [] temparray = fromNode.getTupleByteArray();
-	       System.arraycopy(temparray, 0, data, tuple_offset, tuple_length);  
+		 byte [] temparray = fromNode.getNodeByteArray();
+	     System.arraycopy(temparray, 0, data, tuple_offset, tuple_length);  
 		
 	}
 	public void nodeInit(byte[] anode, int offset)
 	{
-		 data = anode;
-	      tuple_offset = offset;
+		 tupleInit(anode, offset, anode.length);
 	
 	}
 	public void nodeSet(byte[] fromnode, int offset)
 	{
-		System.arraycopy(fromnode, offset, data, 0, offset);
-	      tuple_offset = 0;
+		tupleSet(fromnode, offset, fromnode.length);
 	     
 	}
 	

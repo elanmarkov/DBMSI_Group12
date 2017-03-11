@@ -181,6 +181,7 @@ public class Convert{
           instr = new DataInputStream(in);
           val[i] = instr.readShort();
           position += 2;
+          i++;
       }
       value.set(val[0],val[1],val[2],val[3],val[4]);
       return value;
@@ -356,7 +357,7 @@ public class Convert{
           DataOutputStream outstr = new DataOutputStream (out);
           
           // write the value to the output stream
-          outstr.writeInt(value.get(i));
+          outstr.writeShort(value.get(i));
           
           // creates a byte array with this output stream size and the
           // valid contents of the buffer have been copied into it
@@ -365,6 +366,7 @@ public class Convert{
           // copies contents of this byte array into data[]
           System.arraycopy (B, 0, data, position, 2);
           position += 2;
+          i++;
       }
       
     }

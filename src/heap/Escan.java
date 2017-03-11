@@ -2,7 +2,7 @@ package heap;
 
 import java.io.IOException;
 
-import global.NID;
+import global.EID;
 
 public class Escan extends Scan{
 
@@ -10,18 +10,18 @@ public class Escan extends Scan{
 		super(hf);
 	}
 	
-	public Node getNext(NID nid) 
+	public Edge getNext(EID eid) 
 		    throws InvalidTupleSizeException,
 			   IOException{
-			Tuple tp = super.getNext(nid);
-			Node node = new Node(tp.data, 0);
-			return node;
+			Tuple tp = super.getNext(eid);
+			Edge edge = new Edge(tp.data, 0);
+			return edge;
 		  }
 	
-	public boolean position(NID nid) 
+	public boolean position(EID eid) 
 		    throws InvalidTupleSizeException,
 			   IOException{ 
-			return position(nid);
+			return position(eid);
 		  }
 
 }

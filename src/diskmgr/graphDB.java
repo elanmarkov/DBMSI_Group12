@@ -77,11 +77,23 @@ public class graphDB extends DB {
 	}
 
 	public int getNodeCnt() throws HFBufMgrException, InvalidSlotNumberException, InvalidTupleSizeException, IOException {
-		return nodes.getNodeCnt();
+		try {
+			return nodes.getNodeCnt();
+		} catch (HFDiskMgrException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
 	}
 	
 	public int getEdgeCnt() throws HFBufMgrException, InvalidSlotNumberException, IOException, InvalidTupleSizeException {
-		return edges.getEdgeCnt();
+		try {
+			return edges.getEdgeCnt();
+		} catch (HFDiskMgrException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
 	}
 	
 	public int getSourceCnt() {

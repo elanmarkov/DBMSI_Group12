@@ -16,23 +16,26 @@ public class Edge extends Tuple{
 	private int weight;
 	public Edge()
 	{
-		 data = new byte[max_size];
-	       tuple_offset = 0;
-	       tuple_length = max_size;
+		super();
+		
 	}
-	public void Edge(byte[] aedge, int offset)
+    public Edge(byte[] anode, int offset)
+    {
+    	super(anode, offset, anode.length);
+    }
+    
+    public Edge(byte[] anode, int offset, int length)
+    {
+    	super(anode, offset, length);
+    }
+    
+	public Edge(Edge fromEdge)
 	{
-		 data = aedge;
-	      tuple_offset = offset;
-	      
-	}
-	public void Edge(Edge fromEdge)
-	{
-		data = fromEdge.getTupleByteArray();
-	       tuple_length = fromEdge.getLength();
-	       tuple_offset = 0;
-	       fldCnt = fromEdge.noOfFlds(); 
-	       fldOffset = fromEdge.copyFldOffset(); 
+		super(fromEdge);
+		this.source=fromEdge.source;
+		this.label=fromEdge.label;
+		this.destination=fromEdge.destination;
+		this.weight=fromEdge.weight;
 	}
 	public String getLabel()
 	{
@@ -71,11 +74,9 @@ public class Edge extends Tuple{
 		destination=destID;
 		return null;
 	}
-	byte[] getNodeByteArray()
+	public byte[] getEdgeByteArray()
 	{
-		byte [] tuplecopy = new byte [tuple_length];
-	       System.arraycopy(data, tuple_offset, tuplecopy, 0, tuple_length);
-	       return tuplecopy;
+		 return getTupleByteArray();
 	}
 	public void print(AttrType type[]) throws IOException
 	{
@@ -133,25 +134,20 @@ public class Edge extends Tuple{
 		   }
 		   System.out.println("]");
 	}
-	public short size()
+	public void edgeCopy(Node fromNode)
 	{
-		return ((short) (fldOffset[fldCnt] - tuple_offset));
+		 byte [] temparray = fromNode.getNodeByteArray();
+	     System.arraycopy(temparray, 0, data, tuple_offset, tuple_length);  
+		
 	}
-	public void edgeCopy(Edge fromEdge)
+	public void edgeInit(byte[] aEdge, int offset)
 	{
-		byte [] temparray = fromEdge.getTupleByteArray();
-	       System.arraycopy(temparray, 0, data, tuple_offset, tuple_length);
+		 tupleInit(aEdge, offset, aEdge.length);
+	
 	}
-	public void edgeInit(byte[] aedge, int offset)
+	public void edgeSet(byte[] fromEdge, int offset)
 	{
-		data = aedge;
-	      tuple_offset = offset;
-	      
-	}
-	public void edgeSet(byte[] fromedge, int offset)
-	{
-		System.arraycopy(fromedge, offset, data, 0, offset);
-	      tuple_offset = 0;
+		tupleSet(fromEdge, offset, fromEdge.length);
 	     
 	}
 }

@@ -2,6 +2,8 @@ package heap;
 
 import java.io.IOException;
 
+import global.Convert;
+import global.Descriptor;
 import global.NID;
 import global.RID;
 
@@ -37,8 +39,16 @@ public class NodeHeapFile extends Heapfile{
 	public Node getNode(NID nid) throws InvalidSlotNumberException, InvalidTupleSizeException, HFException,
 	HFDiskMgrException, HFBufMgrException, Exception {
 		Tuple tp= super.getRecord(nid);
-		Node node = new Node(tp.data, 0);
-		return node;
+		if(tp!=null){
+			Node node = new Node(tp.data, 0);
+			Descriptor desc = Convert.getDescValue(Node.LABEL_MAX_LENGTH+2, tp.data);
+			String nodeLbl = Convert.getStrValue(0, tp.data, Node.LABEL_MAX_LENGTH+2);
+			node.setDesc(desc);
+			node.setLabel(nodeLbl);
+			return node;
+		}else{
+			return null;
+		}
 	}
 	
 	public Nscan openScan() throws InvalidTupleSizeException, IOException {

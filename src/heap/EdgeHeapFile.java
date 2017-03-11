@@ -2,7 +2,9 @@ package heap;
 
 import java.io.IOException;
 
+import global.Convert;
 import global.EID;
+import global.NID;
 import global.RID;
 
 public class EdgeHeapFile extends Heapfile{
@@ -29,16 +31,38 @@ public class EdgeHeapFile extends Heapfile{
 		return super.deleteRecord(eid);
 	}
 	
-	public boolean updateNode(EID eid, Edge edge) throws InvalidSlotNumberException, InvalidUpdateException,
+	public boolean updateEdge(EID eid, Edge edge) throws InvalidSlotNumberException, InvalidUpdateException,
 	InvalidTupleSizeException, HFException, HFDiskMgrException, HFBufMgrException, Exception {
 		return updateRecord(eid, edge);
 	}
 	
-	public Edge getNode(EID nid) throws InvalidSlotNumberException, InvalidTupleSizeException, HFException,
+	public Edge getEdge(EID eid) throws InvalidSlotNumberException, InvalidTupleSizeException, HFException,
 	HFDiskMgrException, HFBufMgrException, Exception {
-		Tuple tp= super.getRecord(nid);
-		Edge edge = new Edge(tp.data, 0);
-		return edge;
+		Tuple tp= super.getRecord(eid);
+		if(tp!=null){
+			Edge edge = new Edge(tp.data, 0);
+			try {
+				String eLbl = Convert.getStrValue(0, edge.data, Edge.LABEL_MAX_LENGTH+2);
+				
+				NID srcId = new NID();
+				srcId.pageNo.pid = Convert.getIntValue(Edge.LABEL_MAX_LENGTH+2, edge.data);
+				srcId.slotNo=Convert.getIntValue(Edge.LABEL_MAX_LENGTH+2+4, edge.data);
+				NID destId = new NID();
+				destId.pageNo.pid = Convert.getIntValue(Edge.LABEL_MAX_LENGTH+2+4+4, edge.data);
+				destId.slotNo=Convert.getIntValue(Edge.LABEL_MAX_LENGTH+2+4+4+4, edge.data);
+				int weight=Convert.getIntValue(Edge.LABEL_MAX_LENGTH+2+4+4+4+4, edge.data);
+				edge.setLabel(eLbl);
+				edge.setSource(srcId);
+				edge.setDestination(destId);
+				edge.setWeight(weight);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return edge;
+		}else{
+			return null;
+		}
 	}
 	
 	public Escan openScan() throws InvalidTupleSizeException, IOException {

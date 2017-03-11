@@ -41,29 +41,34 @@ public class Node extends Tuple {
 	{
 		return attrDesc;
 	}
-	public Node setLabel(String Label)
+	public Node setLabel(String label)
 	{
-	 label=Label;
+	 this.label=getFixedLengthLable(label);
 	 try {
-		Convert.setStrValue(Label, 10, data);
+		Convert.setStrValue(this.label, 0, data);
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-	tuple_length = 10+label.length();
+	tuple_length = getNodeLength();
 	return this;	
 	}
+	
+	
 	public Node setDesc(Descriptor Desc)
 	{
 		attrDesc=Desc;
 		try {
-			Convert.setDescValue(Desc, 0, data);
+			Convert.setDescValue(Desc, LABEL_MAX_LENGTH+2, data);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		tuple_length = 10+label.length();
+		tuple_length = getNodeLength();
 		return this;
+	}
+	private int getNodeLength() {
+		return 10+LABEL_MAX_LENGTH+2;
 	}
 	public byte[] getNodeByteArray()
 	{
@@ -72,10 +77,10 @@ public class Node extends Tuple {
 	public void print(AttrType type[]) throws IOException
 	{
 		  System.out.print("[");
-		  Descriptor desc = Convert.getDescValue(0, this.data);
-		  System.out.print(desc);
-		  String nodeLbl = Convert.getStrValue(10, data, data.length-10+2);
-		  System.out.print(", "+nodeLbl);
+		 // Descriptor desc = Convert.getDescValue(LABEL_MAX_LENGTH+2, this.data);
+		  System.out.print(this.attrDesc);
+		  //String nodeLbl = Convert.getStrValue(0, data, LABEL_MAX_LENGTH+2);
+		  System.out.print(", "+this.label);
 		  System.out.println("]");
 	}
 	

@@ -54,25 +54,58 @@ public class Edge extends Tuple{
 	{
 		return destination;
 	}
-	public Edge setLabel(String Label)
+	public Edge setLabel(String label)
 	{
-		label=Label;
-		return null;
+		this.label=getFixedLengthLable(label);
+		 try {
+			Convert.setStrValue(this.label, 0, data);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		tuple_length = getEdgeLength();
+		return this;
+	}
+	private int getEdgeLength() {
+		// lable (length +2) + (src.pageId+src.slotNo)+(dest.pageId+dest.slotNo)+ weight
+		return (LABEL_MAX_LENGTH+2) + 4+4 +4+4 +4;
 	}
 	public Edge setWeight(int Weight)
 	{
-		weight=Weight;
-		return null;
+		this.weight=Weight;
+		 try {
+				Convert.setIntValue(weight, LABEL_MAX_LENGTH+2+4+4+4+4, data);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			tuple_length = getEdgeLength();
+		return this;
 	}
 	public Edge setSource(NID sourceID)
 	{
-		source=sourceID;
-		return null;
+		this.source=sourceID;
+		 try {
+			 	sourceID.pageNo.writeToByteArray(data, LABEL_MAX_LENGTH+2);
+				Convert.setIntValue(sourceID.slotNo, LABEL_MAX_LENGTH+2+4, data);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			tuple_length = getEdgeLength();
+		return this;
 	}
 	public Edge setDestination(NID destID )
 	{
 		destination=destID;
-		return null;
+		try {
+			destination.pageNo.writeToByteArray(data, LABEL_MAX_LENGTH+2+4+4);
+			Convert.setIntValue(destination.slotNo, LABEL_MAX_LENGTH+2+4+4+4, data);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return this;
 	}
 	public byte[] getEdgeByteArray()
 	{
@@ -80,59 +113,12 @@ public class Edge extends Tuple{
 	}
 	public void print(AttrType type[]) throws IOException
 	{
-		 int i, val;
-		  float fval;
-		  String sval;
-
 		  System.out.print("[");
-		  for (i=0; i< fldCnt-1; i++)
-		   {
-		    switch(type[i].attrType) {
-
-		   case AttrType.attrInteger:
-		     val = Convert.getIntValue(fldOffset[i], data);
-		     System.out.print(val);
-		     break;
-
-		   case AttrType.attrReal:
-		     fval = Convert.getFloValue(fldOffset[i], data);
-		     System.out.print(fval);
-		     break;
-
-		   case AttrType.attrString:
-		     sval = Convert.getStrValue(fldOffset[i], data,fldOffset[i+1] - fldOffset[i]);
-		     System.out.print(sval);
-		     break;
-		  
-		   case AttrType.attrNull:
-		   case AttrType.attrSymbol:
-		     break;
-		   }
-		   System.out.print(", ");
-		 } 
-		 
-		 switch(type[fldCnt-1].attrType) {
-
-		   case AttrType.attrInteger:
-		     val = Convert.getIntValue(fldOffset[i], data);
-		     System.out.print(val);
-		     break;
-
-		   case AttrType.attrReal:
-		     fval = Convert.getFloValue(fldOffset[i], data);
-		     System.out.print(fval);
-		     break;
-
-		   case AttrType.attrString:
-		     sval = Convert.getStrValue(fldOffset[i], data,fldOffset[i+1] - fldOffset[i]);
-		     System.out.print(sval);
-		     break;
-
-		   case AttrType.attrNull:
-		   case AttrType.attrSymbol:
-		     break;
-		   }
-		   System.out.println("]");
+		  	System.out.print("edge label : "+this.label);
+		  	System.out.print("source : slotNo : "+this.source.slotNo +", pageNo :"+this.source.pageNo);
+		  	System.out.print("Destination : slotNo : "+this.destination.slotNo +", pageNo :"+this.destination.pageNo);
+		  	System.out.print("weight : "+this.weight);
+		  	System.out.println("]");
 	}
 	public void edgeCopy(Node fromNode)
 	{

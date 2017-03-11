@@ -9,7 +9,9 @@ import global.*;
 
 public class Tuple implements GlobalConst{
 
-
+	public static final String LABEL_CONSTANT = "A";
+	public static final int LABEL_MAX_LENGTH =6; 
+	
  /** 
   * Maximum size of any tuple
   */
@@ -556,5 +558,21 @@ public void setHdr (short numFlds,  AttrType types[], short strSizes[])
    {
       return 0;
    }
+  
+  
+  protected String getFixedLengthLable(String label) {
+		if(label.length() >LABEL_MAX_LENGTH){
+			return label.substring(0,LABEL_MAX_LENGTH);
+		}else{
+			StringBuffer sb = new StringBuffer();
+			int len = label.length();
+			while(len<LABEL_MAX_LENGTH){
+				sb.append(LABEL_CONSTANT);
+				len++;
+			}
+			sb.append(label);
+			return sb.toString();
+		}
+	}
 }
 

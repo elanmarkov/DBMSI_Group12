@@ -12,16 +12,41 @@ import global.*;
 import btree.*;
 import zindex.*;
 import heap.*;
+import java.util.ArrayList;
+
+class nodeRef{
+// Tracks number of references to a given node.
+	public NID node;
+	int ref;
+	public nodeRef(NID node) {
+		this.node = node;
+		ref = 1;
+	}
+}
+class labelRef{
+	public String label;
+	int ref;
+	public labelRef(String label) {
+		this.label = label;
+		ref = 1;
+	}
+}
 
 public class graphDB extends DB {
-	static int numGraphDB = 0;
+	static int numGraphDB = 0;//Global tracker of DB identification number, for file names.
 	NodeHeapFile nodes;
 	EdgeHeapFile edges;
 	BTreeFile nodeLabels;
 	ZCurve nodeDesc;
 	BTreeFile edgeLabels;
 	BTreeFile edgeWeights;
+
+	// Track unique source/destination/label values
+	ArrayList<nodeRef> sourceNodes;
+	ArrayList<nodeRef> destNodes;
+	ArrayList<labelRef> labelNames;
 	int type; // Clustering/indexing strategy descriptor
+	int graphNum;//Local graph ID number
 	final int KEY_SIZE = 80;
 	
 	/**
@@ -40,8 +65,12 @@ public class graphDB extends DB {
 	   	Exception {
 		super();
 		this.type = type; 
-		String filename = "GraphDB" + numGraphDB;
+		graphNum = numGraphDB;
+		String filename = "GraphDB" + graphNum;
 		numGraphDB++;
+		sourceNodes = new ArrayList<nodeRef>();
+		destNodes = new ArrayList<nodeRef>();
+		labelNames = new ArrayList<labelRef>();
 		nodes = new NodeHeapFile(filename + "NODES");
 		edges = new EdgeHeapFile(filename + "EDGES");
 		nodeDesc = new ZCurve(filename + "NODEDESC");
@@ -76,50 +105,57 @@ public class graphDB extends DB {
 		// initialize each method; to be implemented when combined
 	}
 
-	public int getNodeCnt() throws HFBufMgrException, InvalidSlotNumberException, InvalidTupleSizeException, IOException {
-		try {
-			return nodes.getNodeCnt();
-		} catch (HFDiskMgrException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return 0;
+	public int getNodeCnt() throws HFBufMgrException, InvalidSlotNumberException, InvalidTupleSizeException, IOException, HFDiskMgrException {
+		return nodes.getNodeCnt();
 	}
 	
-	public int getEdgeCnt() throws HFBufMgrException, InvalidSlotNumberException, IOException, InvalidTupleSizeException {
-		try {
-			return edges.getEdgeCnt();
-		} catch (HFDiskMgrException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return 0;
+	public int getEdgeCnt() throws HFBufMgrException, InvalidSlotNumberException, IOException, InvalidTupleSizeException, HFDiskMgrException {
+		return edges.getEdgeCnt();
 	}
 	
 	public int getSourceCnt() {
-		return 0;
-		//return ???
+		return sourceNodes.size(); 
 	}
 
 	public int getDestinationCnt() {
-		return 0;
-		//return ???
+		return destNodes.size();
 	}
 
 	public int getLabelCnt() {
-		return 0;
-		//return ???
+		return labelNames.size();
 	}
-	public void insertNode(Node node) {
+	public void insertNode(Node node) throws IOException, Exception {
+		NID id = nodes.insertNode(Serialize.serialize(node));
+		nodeLabels.insert(new StringKey(node.getLabel()), id);
+		nodeDesc.insert(new StringKey(node.getDesc().toString()), id);
+		addLabelNoDuplicate(labelNames, node.getLabel());
 		return;
 	}
-	public void insertEdge(Edge edge) {
+	public void insertEdge(Edge edge) throws IOException, Exception {
+		EID id = edges.insertEdge(Serialize.serialize(edge));
+		edgeLabels.insert(new StringKey(edge.getLabel()), id);
+		edgeWeights.insert(new IntegerKey(edge.getWeight()), id);
+		addNodeNoDuplicate(sourceNodes, edge.getSource());
+		addNodeNoDuplicate(destNodes, edge.getDestination());
+		addLabelNoDuplicate(labelNames, edge.getLabel());
 		return;
 	}
-	public void deleteNode(String node) {
+	public void deleteNode(NID id) throws IOException, Exception {
+		Node node = nodes.getNode(id);
+		nodeLabels.Delete(new StringKey(node.getLabel()), id);
+		nodeDesc.Delete(new StringKey(node.getDesc().toString()), id);
+		removeLabel(labelNames, node.getLabel());
+		nodes.deleteNode(id);
 		return;
 	}
-	public void deleteEdge(String edge) {
+	public void deleteEdge(EID id) throws IOException, Exception {
+		Edge edge = edges.getEdge(id);
+		edgeLabels.Delete(new StringKey(edge.getLabel()), id);
+		edgeWeights.Delete(new IntegerKey(edge.getWeight()), id);
+		removeNode(sourceNodes, edge.getSource());
+		removeNode(destNodes, edge.getDestination());
+		removeLabel(labelNames, edge.getLabel());
+		edges.deleteEdge(id);
 		return;
 	}	
 	public NodeHeapFile getNodes() {
@@ -127,5 +163,85 @@ public class graphDB extends DB {
 	}
 	public EdgeHeapFile getEdges() {
 		return edges;
+	}
+	public BTreeFile getNodeLabels() {
+		return nodeLabels;
+	}
+	public ZCurve getNodeDesc() {
+		return nodeDesc;
+	}
+	public BTreeFile getEdgeLabels() {
+		return edgeLabels;
+	}
+	public BTreeFile getEdgeWeights() {
+		return edgeWeights;
+	}
+	private void addNodeNoDuplicate(ArrayList<nodeRef> list, NID newNode) {
+		boolean duplicate = false;
+		nodeRef item;
+		int iter = 0;		
+		while(!duplicate && iter < list.size()){
+			item = list.get(iter);
+			if(item.node.equals(newNode)) {
+				duplicate = true;
+				item.ref++;
+			}
+			else {
+				iter++;
+			}
+		}
+		if(!duplicate) {
+			list.add(new nodeRef(newNode));
+		}
+	}
+	private void addLabelNoDuplicate(ArrayList<labelRef> list, String newLabel) {
+		boolean duplicate = false;
+		labelRef item;
+		int iter = 0;		
+		while(!duplicate && iter < list.size()){
+			item = list.get(iter);
+			if(item.label.equals(newLabel)) {
+				duplicate = true;
+				item.ref++;
+			}
+			iter++;
+		}
+		if(!duplicate) {
+			list.add(new labelRef(newLabel));
+		}
+	}
+	private boolean removeNode(ArrayList<nodeRef> list, NID rmNode) {
+		boolean found = false;
+		int iter = 0;
+		nodeRef item;		
+		while(!found && iter < list.size()){
+			item = list.get(iter);
+			if(item.node.equals(rmNode)) {
+				found = true;
+				item.ref--;
+				if(item.ref==0) {
+					list.remove(iter); // Delete unreferenced object
+				}
+			}
+			iter++;
+		}
+		return found;
+	}
+	private boolean removeLabel(ArrayList<labelRef> list, String rmLabel) {
+		boolean found = false;
+		int iter = 0;
+		labelRef item;		
+		while(!found && iter < list.size()){
+			item = list.get(iter);
+			if(item.label.equals(rmLabel)) {
+				found = true;
+				item.ref--;
+				if(item.ref==0) {
+					list.remove(iter); // Delete unreferenced object
+				}
+			}
+			iter++;
+		}
+		return found;
 	}
 }

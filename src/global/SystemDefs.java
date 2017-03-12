@@ -23,6 +23,7 @@ public class SystemDefs {
       
       String real_logname = new String(dbname);
       String real_dbname = new String(dbname);
+      int type = 1; //Default as 1
       
       if (num_pgs == 0) {
 	logsize = 500;
@@ -36,13 +37,37 @@ public class SystemDefs {
       }
       
       init(real_dbname,real_logname, num_pgs, logsize,
-	   bufpoolsize, replacement_policy);
+	   bufpoolsize, replacement_policy,type);
     }
+
+  public SystemDefs(String dbname, int num_pgs, int bufpoolsize,
+		    String replacement_policy, int type )
+    {
+      int logsize;
+      
+      String real_logname = new String(dbname);
+      String real_dbname = new String(dbname);
+      
+      if (num_pgs == 0) {
+	logsize = 500;
+      }
+      else {
+	logsize = 3*num_pgs;
+      }
+      
+      if (replacement_policy == null) {
+	replacement_policy = new String("Clock");
+      }
+      
+      init(real_dbname,real_logname, num_pgs, logsize,
+	   bufpoolsize, replacement_policy,type);
+    }
+  
   
   
   public void init( String dbname, String logname,
 		    int num_pgs, int maxlogsize,
-		    int bufpoolsize, String replacement_policy )
+		    int bufpoolsize, String replacement_policy,int type )
     {
       
       boolean status = true;
@@ -54,7 +79,7 @@ public class SystemDefs {
       
       try {
 	JavabaseBM = new BufMgr(bufpoolsize, replacement_policy);
-	JavabaseDB = new graphDB();
+	JavabaseDB = new graphDB(type);
 /*
 	JavabaseCatalog = new Catalog(); 
 */

@@ -41,6 +41,7 @@ public class graphDB extends DB {
 	BTreeFile edgeLabels;
 	BTreeFile edgeWeights;
 	String filename;
+	NodeQueryHandler nodeQuery;
 
 	// Track unique source/destination/label values
 	ArrayList<nodeRef> sourceNodes;
@@ -87,6 +88,7 @@ public class graphDB extends DB {
 			edgeLabels = new BTreeFile(filename + "EDGELABEL", 1, KEY_SIZE, 0);
 			edgeWeights = new BTreeFile(filename + "EDGEWEIGHT", 0, KEY_SIZE, 0);
 		}
+		nodeQuery = new NodeQueryHandler(nodes, edges, NodeLabels, NodeDesc, edgeLabels, edgeWeights);
 	}
 	public int getNodeCnt() throws HFBufMgrException, InvalidSlotNumberException, InvalidTupleSizeException, IOException, HFDiskMgrException {
 		return nodes.getNodeCnt();
@@ -141,23 +143,8 @@ public class graphDB extends DB {
 		edges.deleteEdge(id);
 		return;
 	}	
-	public NodeHeapFile getNodes() {
-		return nodes;
-	}
-	public EdgeHeapFile getEdges() {
-		return edges;
-	}
-	public BTreeFile getNodeLabels() {
-		return nodeLabels;
-	}
-	public ZCurve getNodeDesc() {
-		return nodeDesc;
-	}
-	public BTreeFile getEdgeLabels() {
-		return edgeLabels;
-	}
-	public BTreeFile getEdgeWeights() {
-		return edgeWeights;
+	public NodeQueryHandler getNodeQueryHandler() {
+		return nodeQuery;
 	}
 	private void addNodeNoDuplicate(ArrayList<nodeRef> list, NID newNode) {
 		boolean duplicate = false;

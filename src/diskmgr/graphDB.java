@@ -40,6 +40,7 @@ public class graphDB extends DB {
 	ZCurve nodeDesc;
 	BTreeFile edgeLabels;
 	BTreeFile edgeWeights;
+	String filename;
 
 	// Track unique source/destination/label values
 	ArrayList<nodeRef> sourceNodes;
@@ -64,11 +65,13 @@ public class graphDB extends DB {
 		super();
 		this.type = type; 
 		graphNum = numGraphDB;
-		String filename = "GraphDB" + graphNum;
+		filename = "GraphDB" + graphNum;
 		numGraphDB++;
 		sourceNodes = new ArrayList<nodeRef>();
 		destNodes = new ArrayList<nodeRef>();
 		labelNames = new ArrayList<labelRef>();
+	}
+	public void init() {
 		nodes = new NodeHeapFile(null);
 		edges = new EdgeHeapFile(null);
 		nodeDesc = new ZCurve(filename + "NODEDESC");
@@ -79,12 +82,12 @@ public class graphDB extends DB {
 			edgeWeights = new BTreeFile(filename + "EDGEWEIGHT", 0, KEY_SIZE, 1);
 		}
 		else {
+		// Otherwise, naive delete
 			nodeLabels = new BTreeFile(filename + "NODELABEL", 1, KEY_SIZE, 0);
 			edgeLabels = new BTreeFile(filename + "EDGELABEL", 1, KEY_SIZE, 0);
 			edgeWeights = new BTreeFile(filename + "EDGEWEIGHT", 0, KEY_SIZE, 0);
 		}
 	}
-
 	public int getNodeCnt() throws HFBufMgrException, InvalidSlotNumberException, InvalidTupleSizeException, IOException, HFDiskMgrException {
 		return nodes.getNodeCnt();
 	}

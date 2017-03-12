@@ -92,7 +92,7 @@ public class NodeQueryHandler {
 		}
 
 	}
-	private boolean nodeIndexTest0(String argv[]){
+	public boolean nodeIndexTest0(String argv[]){
 		boolean status = OK;
 		AttrType[] attrType = new AttrType[2];
 	    attrType[0] = new AttrType(AttrType.attrString);
@@ -149,7 +149,7 @@ public class NodeQueryHandler {
 		}
 		return true;
 	}
-	private boolean nodeIndexTest1(String argv[]){
+	public boolean nodeIndexTest1(String argv[]){
 		boolean status = OK;
 		AttrType[] attrType = new AttrType[2];
 	    attrType[0] = new AttrType(AttrType.attrString);
@@ -210,7 +210,7 @@ public class NodeQueryHandler {
 		}
 		return status;
 	}
-	private boolean nodeIndexTest2(String argv[]){
+	public boolean nodeIndexTest2(String argv[]){
 		boolean status = OK;
 		AttrType[] attrType = new AttrType[2];
 	    attrType[0] = new AttrType(AttrType.attrString);
@@ -271,7 +271,7 @@ public class NodeQueryHandler {
 		}
 		return status;
 	}
-	private boolean nodeIndexTest3(String argv[]){
+	public boolean nodeIndexTest3(String argv[]){
 		Descriptor desc = new Descriptor();
 		desc.set(Integer.parseInt(argv[4]), Integer.parseInt(argv[5]), Integer.parseInt(argv[6]), Integer.parseInt(argv[7]), Integer.parseInt(argv[8]));
 		double distance = Double.parseDouble(argv[9]);
@@ -323,13 +323,13 @@ public class NodeQueryHandler {
 		}
 		return status;
 	}
-	private boolean nodeIndexTest4(String argv[]){
+	public boolean nodeIndexTest4(String argv[]){
 		return true;
 	}
-	private boolean nodeIndexTest5(String argv[]){
+	public boolean nodeIndexTest5(String argv[]){
 		return true;
 	}
-	private boolean nodeHeapTest0(String argv[]){
+	public boolean nodeHeapTest0(String argv[]){
 		boolean status = OK;
 		NID nid = new NID();
 		NodeHeapFile f = nodes;
@@ -386,7 +386,7 @@ public class NodeQueryHandler {
 		}
 		return status;
 	}
-	private boolean nodeHeapTest1(String argv[]){
+	public boolean nodeHeapTest1(String argv[]){
 		boolean status = OK;
 		int i = 0;
 		NID nid = new NID();
@@ -465,7 +465,7 @@ public class NodeQueryHandler {
 
 		return status;
 	}
-	private boolean nodeHeapTest2(String argv[]){
+	public boolean nodeHeapTest2(String argv[]){
 		boolean status = OK;
 		int i = 0;
 		NID nid = new NID();
@@ -520,7 +520,7 @@ public class NodeQueryHandler {
 		}
 		return status;
 	}
-	private boolean nodeHeapTest3(String argv[]){
+	public boolean nodeHeapTest3(String argv[]){
 		Descriptor desc = new Descriptor();
 		desc.set(Integer.parseInt(argv[4]), Integer.parseInt(argv[5]), Integer.parseInt(argv[6]), Integer.parseInt(argv[7]), Integer.parseInt(argv[8]));
 		double distance = Double.parseDouble(argv[9]);
@@ -574,7 +574,7 @@ public class NodeQueryHandler {
 		}
 		return status;
 	}
-	private boolean nodeHeapTest4(String argv[]){
+	public boolean nodeHeapTest4(String argv[]){
 		boolean status = OK;
 		NID nid = new NID();
 		NodeHeapFile f = nodes;
@@ -719,7 +719,7 @@ public class NodeQueryHandler {
 		}
 		return status;
 	}
-	private boolean nodeHeapTest5(String argv[]){
+	public boolean nodeHeapTest5(String argv[]){
 		Descriptor desc = new Descriptor();
 		desc.set(Integer.parseInt(argv[4]), Integer.parseInt(argv[5]), Integer.parseInt(argv[6]), Integer.parseInt(argv[7]), Integer.parseInt(argv[8]));
 		double distance = Double.parseDouble(argv[9]);

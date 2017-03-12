@@ -66,15 +66,21 @@ public class graphDB extends DB {
 		super();
 		this.type = type; 
 		graphNum = numGraphDB;
-		String filename = "GraphDB" + graphNum;
 		numGraphDB++;
 		sourceNodes = new ArrayList<nodeRef>();
 		destNodes = new ArrayList<nodeRef>();
 		labelNames = new ArrayList<labelRef>();
-		nodes = new NodeHeapFile(null);
-		edges = new EdgeHeapFile(null);
+		//init(type, filename);
+		// initialize each method; to be implemented when combined
+	}
+
+	public void init() throws HFException, HFBufMgrException, HFDiskMgrException, IOException,
+			GetFileEntryException, ConstructPageException, AddFileEntryException {
+		String filename = "GraphDB" + graphNum;
+		nodes = new NodeHeapFile(filename + "NODES");
+		edges = new EdgeHeapFile(filename + "EDGES");
 		nodeDesc = new ZCurve(filename + "NODEDESC");
-		switch(type) {
+		switch(this.type) {
 		case 0:	
 		// integer key, naive delete
 			nodeLabels = new BTreeFile(filename + "NODELABEL", 0, KEY_SIZE, 0);
@@ -102,7 +108,6 @@ public class graphDB extends DB {
 		default:
 			throw new ClassCastException("No such type for keytype/delete_fashion (in GraphDB.java)");
 		}
-		// initialize each method; to be implemented when combined
 	}
 
 	public int getNodeCnt() throws HFBufMgrException, InvalidSlotNumberException, InvalidTupleSizeException, IOException, HFDiskMgrException {

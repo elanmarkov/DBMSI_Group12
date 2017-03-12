@@ -15,6 +15,7 @@ import btree.UnpinPageException;
 import diskmgr.DiskMgrException;
 import diskmgr.FileIOException;
 import diskmgr.InvalidPageNumberException;
+import diskmgr.NodeQueryHandler;
 import diskmgr.graphDB;
 import global.AttrType;
 import global.Descriptor;
@@ -62,9 +63,10 @@ class NQDriver extends TestDriver implements GlobalConst
 		dbpath = argv[0];
 		SystemDefs sysdef = new SystemDefs(dbpath,1000,Integer.parseInt(argv[1]),"Clock");
 		graphDB database = SystemDefs.JavabaseDB;
+		NodeQueryHandler queries = null;
 		try {
 			database.init();
-			NodeQueryHandler queries = database.getNodeQueryHandler();
+			queries = database.getNodeQueryHandler();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

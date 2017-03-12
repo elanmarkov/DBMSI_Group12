@@ -72,7 +72,12 @@ public class graphDB extends DB {
 		destNodes = new ArrayList<nodeRef>();
 		labelNames = new ArrayList<labelRef>();
 	}
-	public void init() {
+	public void init() throws InvalidSlotNumberException, 
+	   	InvalidTupleSizeException, 
+	   	HFException,
+	   	HFBufMgrException,
+	   	HFDiskMgrException,
+	   	Exception {
 		nodes = new NodeHeapFile(null);
 		edges = new EdgeHeapFile(null);
 		nodeDesc = new ZCurve(filename + "NODEDESC");
@@ -88,7 +93,7 @@ public class graphDB extends DB {
 			edgeLabels = new BTreeFile(filename + "EDGELABEL", 1, KEY_SIZE, 0);
 			edgeWeights = new BTreeFile(filename + "EDGEWEIGHT", 0, KEY_SIZE, 0);
 		}
-		nodeQuery = new NodeQueryHandler(nodes, edges, NodeLabels, NodeDesc, edgeLabels, edgeWeights);
+		nodeQuery = new NodeQueryHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights);
 	}
 	public int getNodeCnt() throws HFBufMgrException, InvalidSlotNumberException, InvalidTupleSizeException, IOException, HFDiskMgrException {
 		return nodes.getNodeCnt();

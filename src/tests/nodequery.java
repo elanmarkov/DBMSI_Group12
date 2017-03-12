@@ -36,11 +36,13 @@ import heap.Node;
 import heap.NodeHeapFile;
 import heap.Nscan;
 import heap.Tuple;
+import index.IndexException;
 import index.IndexScan;
 import iterator.FileScan;
 import iterator.FldSpec;
 import iterator.RelSpec;
 import iterator.Sort;
+import iterator.UnknownKeyTypeException;
 import zindex.ZCurve;
 
 class NQDriver extends TestDriver implements GlobalConst
@@ -118,7 +120,6 @@ class NQDriver extends TestDriver implements GlobalConst
 	}
 	private boolean nodeIndexTest0(graphDB database, String argv[]){
 		boolean status = OK;
-		ZCurve zcurve = database.nodeDesc;
 		AttrType[] attrType = new AttrType[2];
 	    attrType[0] = new AttrType(AttrType.attrString);
 	    attrType[1] = new AttrType(AttrType.attrDesc);
@@ -127,44 +128,226 @@ class NQDriver extends TestDriver implements GlobalConst
 	    projlist[0] = new FldSpec(rel, 1);
 	    projlist[1] = new FldSpec(rel, 2);
 	    short[] attrSize = new short[2];
-	    attrSize[0] = 6;
+	    attrSize[0] = 8;
 	    attrSize[1] = 10;
 		IndexScan iscan = null;
+		String filename = database.getNodes()._fileName;
 		//need to change test1.in to actual rel name
 	    try {
-	      iscan = new IndexScan(new IndexType(IndexType.Z_Index), "test1.in", "ZTreeIndex", attrType, attrSize, 2, 2, projlist, null, 2, false);
+	      iscan = new IndexScan(new IndexType(IndexType.Z_Index), filename, "ZTreeIndex", attrType, attrSize, 2, 2, projlist, null, 2, false);
 	    }
 	    catch (Exception e) {
 	      status = FAIL;
 	      e.printStackTrace();
 	    }
 		boolean done = false;
-		while(!done) {
-			Tuple t = new Tuple();
-			try {
-				t = iscan.get_next();
-			} catch (ScanIteratorException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		if(status == OK) {
+			while(!done) {
+				Tuple t = new Tuple();
+				try {
+					t = iscan.get_next();
+				} catch (IndexException e1) {
+					// TODO Auto-generated catch block
+					status = FAIL;
+					e1.printStackTrace();
+				} catch (UnknownKeyTypeException e1) {
+					// TODO Auto-generated catch block
+					status = FAIL;
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					status = FAIL;
+					e1.printStackTrace();
+				}
+				if(t == null) {
+					done = true;
+					break;
+				}
+				Node n = new Node(t);
+				try {
+					n.print(attrType);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					status = FAIL;
+					e.printStackTrace();
+				}
 			}
-			if(t == null) {
-				done = true;
-				break;
-			}
-			Node n = new Node(t);
-			n.print(attrType);
 		}
-
 		return true;
 	}
 	private boolean nodeIndexTest1(graphDB database, String argv[]){
-		return true;
+		boolean status = OK;
+		AttrType[] attrType = new AttrType[2];
+	    attrType[0] = new AttrType(AttrType.attrString);
+	    attrType[1] = new AttrType(AttrType.attrDesc);
+	    FldSpec[] projlist = new FldSpec[2];
+	    RelSpec rel = new RelSpec(RelSpec.outer); 
+	    projlist[0] = new FldSpec(rel, 1);
+	    projlist[1] = new FldSpec(rel, 2);
+	    short[] attrSize = new short[2];
+	    attrSize[0] = 8;
+	    attrSize[1] = 10;
+		IndexScan iscan = null;
+		String filename = database.getNodes()._fileName;
+		int nodeCount = 0, i = 0;
+		try {
+			nodeCount = database.getNodeCnt();
+		} catch (Exception e) {
+			status = FAIL;
+			e.printStackTrace();
+		}
+		Node nodes[] = new Node[nodeCount];
+		//need to change test1.in to actual rel name
+	    try {
+	      iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "BTreeIndex", attrType, attrSize, 2, 2, projlist, null, 1, false);
+	    }
+	    catch (Exception e) {
+	      status = FAIL;
+	      e.printStackTrace();
+	    }
+		boolean done = false;
+		if(status == OK) {
+			while(!done) {
+				Tuple t = new Tuple();
+				try {
+					t = iscan.get_next();
+				} catch (IndexException e) {
+					// TODO Auto-generated catch block
+					status = FAIL;
+					e.printStackTrace();
+				} catch (UnknownKeyTypeException e) {
+					// TODO Auto-generated catch block
+					status = FAIL;
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					status = FAIL;
+					e.printStackTrace();
+					
+				}
+				if(t == null) {
+					done = true;
+					break;
+				}
+				nodes[i] = new Node(t);
+				i++;
+			}
+			sortNodes(nodes);
+		}
+		return status;
 	}
 	private boolean nodeIndexTest2(graphDB database, String argv[]){
-		return true;
+		boolean status = OK;
+		AttrType[] attrType = new AttrType[2];
+	    attrType[0] = new AttrType(AttrType.attrString);
+	    attrType[1] = new AttrType(AttrType.attrDesc);
+	    FldSpec[] projlist = new FldSpec[2];
+	    RelSpec rel = new RelSpec(RelSpec.outer); 
+	    projlist[0] = new FldSpec(rel, 1);
+	    projlist[1] = new FldSpec(rel, 2);
+	    short[] attrSize = new short[2];
+	    attrSize[0] = 8;
+	    attrSize[1] = 10;
+		IndexScan iscan = null;
+		String filename = database.getNodes()._fileName;
+		int nodeCount = 0, i = 0;
+		try {
+			nodeCount = database.getNodeCnt();
+		} catch (Exception e) {
+			status = FAIL;
+			e.printStackTrace();
+		}
+		Node nodes[] = new Node[nodeCount];
+		//need to change test1.in to actual rel name
+	    try {
+	      iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "BTreeIndex", attrType, attrSize, 2, 2, projlist, null, 1, false);
+	    }
+	    catch (Exception e) {
+	      status = FAIL;
+	      e.printStackTrace();
+	    }
+		boolean done = false;
+		if(status == OK) {
+			while(!done) {
+				Tuple t = new Tuple();
+				try {
+					t = iscan.get_next();
+				} catch (IndexException e) {
+					// TODO Auto-generated catch block
+					status = FAIL;
+					e.printStackTrace();
+				} catch (UnknownKeyTypeException e) {
+					// TODO Auto-generated catch block
+					status = FAIL;
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					status = FAIL;
+					e.printStackTrace();
+					
+				}
+				if(t == null) {
+					done = true;
+					break;
+				}
+				nodes[i] = new Node(t);
+				i++;
+			}
+			sortNodes1(nodes,argv);
+		}
+		return status;
 	}
 	private boolean nodeIndexTest3(graphDB database, String argv[]){
-		return true;
+		Descriptor desc = new Descriptor();
+		desc.set(Integer.parseInt(argv[4]), Integer.parseInt(argv[5]), Integer.parseInt(argv[6]), Integer.parseInt(argv[7]), Integer.parseInt(argv[8]));
+		double distance = Double.parseDouble(argv[9]);
+		boolean status = OK;
+		AttrType[] attrType = new AttrType[2];
+	    attrType[0] = new AttrType(AttrType.attrString);
+	    attrType[1] = new AttrType(AttrType.attrDesc);
+	    FldSpec[] projlist = new FldSpec[2];
+	    RelSpec rel = new RelSpec(RelSpec.outer); 
+	    projlist[0] = new FldSpec(rel, 1);
+	    projlist[1] = new FldSpec(rel, 2);
+	    short[] attrSize = new short[2];
+	    attrSize[0] = 8;
+	    attrSize[1] = 10;
+		IndexScan iscan = null;
+		String filename = database.getNodes()._fileName;
+		//need to change test1.in to actual rel name
+	    try {
+	      iscan = new IndexScan(new IndexType(IndexType.Z_Index), filename, "ZTreeIndex", attrType, attrSize, 2, 2, projlist, null, 2, false);
+	    }
+	    catch (Exception e) {
+	      status = FAIL;
+	      e.printStackTrace();
+	    }
+		boolean done = false;
+		if(status == OK) {
+			while(!done) {
+				Tuple t = new Tuple();
+				try {
+					t = iscan.get_next();
+				} catch (IndexException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (UnknownKeyTypeException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				if(t == null) {
+					done = true;
+					break;
+				}
+				Node n = new Node(t);
+				if(n.getDesc().distance(desc) == distance)
+					System.out.println(n.getLabel());
+			}
+		}
+		return status;
 	}
 	private boolean nodeIndexTest4(graphDB database, String argv[]){
 		return true;
@@ -314,28 +497,11 @@ class NQDriver extends TestDriver implements GlobalConst
 		int nodeCount = 0;
 		try {
 			nodeCount = database.getNodeCnt();
-		} catch (HFBufMgrException e1) {
-			// TODO Auto-generated catch block
+		} catch (Exception e1) {
 			e1.printStackTrace();
-		} catch (InvalidSlotNumberException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidTupleSizeException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		} 
 		Node[] nodes = new Node[nodeCount];
-		try {
-			//f = new NodeHeapFile("priyekant");
-		}
-		catch (Exception e) {
-			status = FAIL;
-			System.err.println ("*** Could not create heap file\n");
-			e.printStackTrace();
-		}
+		
 		Nscan scan = null;
 		if ( status == OK ) {	
 			System.out.println ("  - Scan the records\n");
@@ -389,14 +555,7 @@ class NQDriver extends TestDriver implements GlobalConst
 		AttrType [] jtype = new AttrType[2];
 		jtype[0] = new AttrType (AttrType.attrString);
 		jtype[1] = new AttrType (AttrType.attrDesc);
-		try {
-			//f = new NodeHeapFile("priyekant");
-		}
-		catch (Exception e) {
-			status = FAIL;
-			System.err.println ("*** Could not create heap file\n");
-			e.printStackTrace();
-		}
+		
 		Nscan scan = null;
 		if ( status == OK ) {	
 			System.out.println ("  - Scan the records\n");

@@ -117,47 +117,42 @@ class NQDriver extends TestDriver implements GlobalConst
 
 	}
 	private boolean nodeIndexTest0(graphDB database, String argv[]){
-
+		boolean status = OK;
 		ZCurve zcurve = database.nodeDesc;
-		IndexFileScan indexScan = null;
-		try {
-			IndexScan iscan=new IndexScan(IndexType.Z_Index, relName, indName, types, str_sizes, noInFlds, noOutFlds, outFlds, selects, fldNum, indexOnly);
-			iscan.get_next();	
-			indexScan = zcurve.newZFileScan(null, null);
-		} catch (KeyNotMatchException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IteratorException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ConstructPageException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (PinPageException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnpinPageException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		AttrType[] attrType = new AttrType[2];
+	    attrType[0] = new AttrType(AttrType.attrString);
+	    attrType[1] = new AttrType(AttrType.attrDesc);
+	    FldSpec[] projlist = new FldSpec[2];
+	    RelSpec rel = new RelSpec(RelSpec.outer); 
+	    projlist[0] = new FldSpec(rel, 1);
+	    projlist[1] = new FldSpec(rel, 2);
+	    short[] attrSize = new short[2];
+	    attrSize[0] = 6;
+	    attrSize[1] = 10;
+		IndexScan iscan = null;
+		//need to change test1.in to actual rel name
+	    try {
+	      iscan = new IndexScan(new IndexType(IndexType.Z_Index), "test1.in", "ZTreeIndex", attrType, attrSize, 2, 2, projlist, null, 2, false);
+	    }
+	    catch (Exception e) {
+	      status = FAIL;
+	      e.printStackTrace();
+	    }
 		boolean done = false;
 		while(!done) {
-			KeyDataEntry entry = null;
+			Tuple t = new Tuple();
 			try {
-				entry = indexScan.get_next();
+				t = iscan.get_next();
 			} catch (ScanIteratorException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			if(entry == null) {
+			if(t == null) {
 				done = true;
 				break;
 			}
-			entry.
-
+			Node n = new Node(t);
+			n.print(attrType);
 		}
 
 		return true;
@@ -230,6 +225,7 @@ class NQDriver extends TestDriver implements GlobalConst
 					e.printStackTrace();
 				}
 			}
+			scan.closescan();
 		}
 		return status;
 	}
@@ -377,6 +373,7 @@ class NQDriver extends TestDriver implements GlobalConst
 					e.printStackTrace();
 				}
 			}
+			scan.closescan();
 			sortNodes1(nodes,argv);
 		}
 		return status;
@@ -438,6 +435,7 @@ class NQDriver extends TestDriver implements GlobalConst
 					e.printStackTrace();
 				}
 			}
+			scan.closescan();
 		}
 		return status;
 	}
@@ -497,8 +495,9 @@ class NQDriver extends TestDriver implements GlobalConst
 					e.printStackTrace();
 				}
 			}
+			scan.closescan();
 		}
-		
+
 		try {
 			incomingEdges = new String[database.getEdgeCnt()];
 			outgoingEdges = new String[database.getEdgeCnt()];
@@ -562,6 +561,7 @@ class NQDriver extends TestDriver implements GlobalConst
 						e.printStackTrace();
 					}
 				}
+				escan.closescan();
 				try {
 					refNode.print(jtype);
 				} catch (IOException e) {
@@ -583,7 +583,146 @@ class NQDriver extends TestDriver implements GlobalConst
 		return status;
 	}
 	private boolean nodeHeapTest5(graphDB database, String argv[]){
-		return true;
+		Descriptor desc = new Descriptor();
+		desc.set(Integer.parseInt(argv[4]), Integer.parseInt(argv[5]), Integer.parseInt(argv[6]), Integer.parseInt(argv[7]), Integer.parseInt(argv[8]));
+		double distance = Double.parseDouble(argv[9]);
+		boolean status = OK;
+		NID nid = new NID();
+		NodeHeapFile f = database.getNodes();
+		int nodeCount = 0;
+		int i =0;
+		String outgoingEdges[][] = null;
+		String incomingEdges[][] = null;
+		int outgoingEdgeCount[] = null;
+		int incomingEdgeCount[] = null;
+		try{
+			nodeCount = database.getNodeCnt();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Node[] nodes = new Node[nodeCount];
+
+		AttrType [] jtype = new AttrType[2];
+		jtype[0] = new AttrType (AttrType.attrString);
+		jtype[1] = new AttrType (AttrType.attrDesc);
+
+		Nscan scan = null;
+		if ( status == OK ) {	
+			System.out.println ("  - Scan the records\n");
+			try {
+				scan = f.openScan();
+			}
+			catch (Exception e) {
+				status = FAIL;
+				System.err.println ("*** Error opening scan\n");
+				e.printStackTrace();
+			}
+
+			if ( status == OK &&  SystemDefs.JavabaseBM.getNumUnpinnedBuffers() 
+					== SystemDefs.JavabaseBM.getNumBuffers() ) {
+				System.err.println ("*** The heap-file scan has not pinned the first page\n");
+				status = FAIL;
+			}
+		}
+
+		if ( status == OK ) {
+			Node node = new Node();
+
+			boolean done = false;
+			while (!done) { 
+				try {
+					node = scan.getNext(nid);
+					if (node == null) {
+						done = true;
+						break;
+					}
+					if(node.getDesc().distance(desc) == distance) {
+						nodes[i] = node;
+						i++;
+					}
+				}
+				catch (Exception e) {
+					status = FAIL;
+					e.printStackTrace();
+				}
+			}
+			scan.closescan();
+		}
+		incomingEdges = new String[nodes.length][];
+		outgoingEdges = new String[nodes.length][];
+		incomingEdgeCount = new int[nodes.length];
+		outgoingEdgeCount = new int[nodes.length];
+		if(i > 0) {
+			status = OK;
+			EID eid = new EID();
+			EdgeHeapFile f1 = database.getEdges();
+
+			Escan escan = null;
+			if ( status == OK ) {
+				System.out.println ("  - Scan the records\n");
+				try {
+					escan = f1.openScan();
+				}
+				catch (Exception e) {
+					status = FAIL;
+					System.err.println ("*** Error opening scan\n");
+					e.printStackTrace();
+				}
+
+				if ( status == OK &&  SystemDefs.JavabaseBM.getNumUnpinnedBuffers() 
+						== SystemDefs.JavabaseBM.getNumBuffers() ) {
+					System.err.println ("*** The heap-file scan has not pinned the first page\n");
+					status = FAIL;
+				}
+			}
+
+			if ( status == OK ) {
+				Edge edge = new Edge();
+				boolean done = false;
+				while (!done) { 
+					try {
+						edge = escan.getNext(eid);
+						if (edge == null) {
+							done = true;
+							break;
+						}
+						for(int j = 0; j < nodes.length; j++) {
+							if(f.getNode(edge.getSource()).getLabel().equals(nodes[i].getLabel())) {
+								outgoingEdges[j][outgoingEdgeCount[j]] = edge.getLabel();
+								outgoingEdgeCount[j]++;
+							} else if(f.getNode(edge.getDestination()).getLabel().equals(nodes[i].getLabel())) {
+								incomingEdges[j][incomingEdgeCount[j]] = edge.getLabel();
+								incomingEdgeCount[j]++;
+							}
+						}
+					}
+					catch (Exception e) {
+						status = FAIL;
+						e.printStackTrace();
+					}
+				}
+				escan.closescan();
+				for(int j = 0;j < nodes.length; j++) {
+					try {
+						nodes[j].print(jtype);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					System.out.println("Incoming Edges are:");
+					for(int i1 = 0; i1 < incomingEdgeCount[j]; i1++) {
+						System.out.print(incomingEdges[j][i1] + "	");
+					}
+					System.out.println("Outgoing Edges are:");
+					for(int i1 = 0; i1 < outgoingEdgeCount[j]; i1++) {
+						System.out.print(outgoingEdges[j][i1] + "	");
+					}
+				}
+			}
+		} else {
+			System.out.println("There is no node which has the given distance from the target descriptor");
+		}
+		return status;
 	}
 
 	public boolean runTests(String argv[]) {
@@ -627,7 +766,7 @@ class NQDriver extends TestDriver implements GlobalConst
 
 		// Commands here is very machine dependent.  We assume
 		// user are on UNIX system here
-		try {
+		/*try {
 			Runtime.getRuntime().exec(remove_logcmd);
 			Runtime.getRuntime().exec(remove_dbcmd);
 		}
@@ -644,7 +783,7 @@ class NQDriver extends TestDriver implements GlobalConst
 		}
 		catch (IOException e) {
 			System.err.println ("IO error: "+e);
-		}
+		}*/
 
 		/////////////////////////////////
 		boolean _pass = false;
@@ -696,13 +835,13 @@ class NQDriver extends TestDriver implements GlobalConst
 		}
 		//////////////////////////////////
 		//Clean up again
-		try {
+		/*try {
 			Runtime.getRuntime().exec(remove_logcmd);
 			Runtime.getRuntime().exec(remove_dbcmd);
 		}
 		catch (IOException e) {
 			System.err.println ("IO error: "+e);
-		}
+		}*/
 		return _pass;
 	}
 

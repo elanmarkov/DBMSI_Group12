@@ -9,7 +9,7 @@ import heap.*;
 import iterator.*;
 import index.*;
 
-public class NodeQueryHandler {
+public class EdgeQueryHandler {
 	private final static boolean OK = true;
 	private final static boolean FAIL = false;
 	NodeHeapFile nodes;
@@ -18,7 +18,7 @@ public class NodeQueryHandler {
 	ZCurve nodeDesc;
 	BTreeFile edgeLabels;
 	BTreeFile edgeWeights;
-	public NodeQueryHandler(NodeHeapFile nodes, EdgeHeapFile edges, BTreeFile nodeLabels, 
+	public EdgeQueryHandler(NodeHeapFile nodes, EdgeHeapFile edges, BTreeFile nodeLabels, 
 		ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights) {
 		this.nodes = nodes;
 		this.edges = edges;

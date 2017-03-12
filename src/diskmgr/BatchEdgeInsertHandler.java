@@ -76,13 +76,13 @@ public class BatchEdgeInsertHandler {
 				}
 				else
 				{
-					if(Objects.equals(scanned_node.getLabel(),getFixedLengthLable(srcLabel)))
+					if(scanned_node.getLabel().equals(getFixedLengthLable(srcLabel)))
 					{
 						System.out.println("Source Node found");
 						sourceNid = nid; 
 						srcFound = true;
 					}
-					if (Objects.equals(scanned_node.getLabel(),getFixedLengthLable(destLabel)))
+					if (scanned_node.getLabel().equals(getFixedLengthLable(destLabel)))
 					{
 						System.out.println("Dest found");
 						desNid = nid;
@@ -129,5 +129,4 @@ public class BatchEdgeInsertHandler {
 		}
 	}
 
-	}
 }

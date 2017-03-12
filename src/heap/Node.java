@@ -17,6 +17,19 @@ public class Node extends Tuple {
 		super();
 		
 	}
+	
+	public Node(Tuple tp){
+		this.data=tp.data;
+		try {
+			this.attrDesc = Convert.getDescValue(Node.LABEL_MAX_LENGTH+2, tp.data);
+			this.label = Convert.getStrValue(0, tp.data, Node.LABEL_MAX_LENGTH+2);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
     public Node(byte[] anode, int offset)
     {
     	super(anode, offset, anode.length);

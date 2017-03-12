@@ -42,6 +42,8 @@ public class graphDB extends DB {
 	BTreeFile edgeWeights;
 	String filename;
 	NodeQueryHandler nodeQuery;
+	BatchNodeDeleteHandler batchNodeDelete;
+	BatchEdgeDeleteHandler batchEdgeDelete;
 
 	// Track unique source/destination/label values
 	ArrayList<nodeRef> sourceNodes;

@@ -4,11 +4,14 @@
  * Creates database with given name
  * Reads data file given and inserts the edges from the file in the database
  */
-
 package tests;
+
 import java.io.*;
 import java.util.*;
 
+import btree.AddFileEntryException;
+import btree.ConstructPageException;
+import btree.GetFileEntryException;
 import global.*;
 import diskmgr.*;
 import heap.*;
@@ -25,12 +28,12 @@ class BatchEdgeInsertDriver extends TestDriver implements GlobalConst {
 	}
 
 
-	public boolean runTests(String dbpath, String edgeFile) throws FileNotFoundException, IOException, SpaceNotAvailableException, HFBufMgrException, InvalidSlotNumberException, InvalidTupleSizeException, HFException, HFDiskMgrException {
+	public boolean runTests(String dbpath, String edgeFile) throws FileNotFoundException, IOException, SpaceNotAvailableException, HFBufMgrException, InvalidSlotNumberException, InvalidTupleSizeException, HFException, HFDiskMgrException, GetFileEntryException, ConstructPageException, AddFileEntryException {
 
 		System.out.println ("\n" + "Running " + testName() + " tests...." + "\n");
 
 		SystemDefs sysdef = new SystemDefs(dbpath,1000,100,"Clock");
-		graphDB graphdb = sysdef.JavabaseDB;
+		SystemDefs.JavabaseDB.init();
 
 		// Kill anything that might be hanging around
 		String newdbpath;
@@ -47,7 +50,7 @@ class BatchEdgeInsertDriver extends TestDriver implements GlobalConst {
 
 		// Commands here is very machine dependent.  We assume
 		// user are on UNIX system here
-		try {
+		/*try {
 	      Runtime.getRuntime().exec(remove_logcmd);
 	      Runtime.getRuntime().exec(remove_dbcmd);
 	    }
@@ -64,10 +67,10 @@ class BatchEdgeInsertDriver extends TestDriver implements GlobalConst {
 	    }
 	    catch (IOException e) {
 	      System.err.println ("IO error: "+e);
-	    }
+	    }*/
 
 		//Run the tests. Return type different from C++
-		boolean _pass = test1(edgeFile, graphdb);
+		boolean _pass = test1(edgeFile, sysdef);
 
 		//Clean up again
 		/*try {
@@ -85,7 +88,7 @@ class BatchEdgeInsertDriver extends TestDriver implements GlobalConst {
 		return _pass;
 	}
 
-	public boolean test1(String edgeFileName, graphDB graphdb) 
+	public boolean test1(String edgeFileName, SystemDefs sysdef) 
 			throws FileNotFoundException, IOException, SpaceNotAvailableException, 
 			HFBufMgrException, InvalidSlotNumberException, InvalidTupleSizeException, 
 			HFException, HFDiskMgrException
@@ -100,8 +103,8 @@ class BatchEdgeInsertDriver extends TestDriver implements GlobalConst {
 		NodeHeapFile nodeHeapFile;
 		EdgeHeapFile edgeHeapFile;
 		
-		nodeHeapFile = graphdb.nodes;
-		edgeHeapFile = graphdb.edges;
+		nodeHeapFile = sysdef.JavabaseDB.getNodes();
+		edgeHeapFile = sysdef.JavabaseDB.getEdges();
 		
 		BufferedReader br = new BufferedReader(new FileReader(System.getProperty("user.dir")
 				+ "/tests/" + edgeFileName + ".txt"));
@@ -127,7 +130,6 @@ class BatchEdgeInsertDriver extends TestDriver implements GlobalConst {
 			{
 				if (scanned_node == null)
 				{
-					System.out.println("break");
 					srcFound = true;
 					destFound = true;
 				}
@@ -161,10 +163,10 @@ class BatchEdgeInsertDriver extends TestDriver implements GlobalConst {
 		System.out.println("Rec count " + edgeHeapFile.getRecCnt());
 		
 		// Output releavant statistics
-		System.out.println("Node Count after batch insertion on graph database: " + graphDB.getNodeCnt());
-		System.out.println("Edge Count after batch insertion on graph database: " + graphDB.getEdgeCnt());
-		System.out.println("No. of disk pages read during batch insertion on graph database: " + graphDB.pageRW.rcounter);
-		System.out.println("No. of disk pages written during batch insertion on graph database: " + graphDB.pageRW.wcounter);
+		System.out.println("Node Count after batch insertion on graph database: " + sysdef.JavabaseDB.getNodeCnt());
+		System.out.println("Edge Count after batch insertion on graph database: " + sysdef.JavabaseDB.getEdgeCnt());
+		System.out.println("No. of disk pages read during batch insertion on graph database: " /*+ sysdef.JavabaseDB.pageRW.rcounter*/);
+		System.out.println("No. of disk pages written during batch insertion on graph database: " /*+ sysdef.JavabaseDB.pageRW.wcounter*/);
 
 		if ( status == OK )
 			System.out.println ("  Test completed successfully.\n");
@@ -190,7 +192,10 @@ class BatchEdgeInsertDriver extends TestDriver implements GlobalConst {
 
 	public class batchedgeinsert {
 
-		public static void main (String argv[]) throws FileNotFoundException, IOException, SpaceNotAvailableException, HFBufMgrException, InvalidSlotNumberException, InvalidTupleSizeException, HFException, HFDiskMgrException {
+		public static void main (String argv[]) throws FileNotFoundException, IOException, 
+		SpaceNotAvailableException, HFBufMgrException, InvalidSlotNumberException, 
+		InvalidTupleSizeException, HFException, HFDiskMgrException, GetFileEntryException, 
+		ConstructPageException, AddFileEntryException {
 
 			BatchEdgeInsertDriver hd = new BatchEdgeInsertDriver();
 			boolean dbstatus;

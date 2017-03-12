@@ -51,10 +51,8 @@ public class graphDB extends DB {
 	
 	/**
 	Default constructor. Type specifies parameters for keytype and delete_fashion
-	0 for integer key, naive delete
-	1 for integer key, full delete
-	2 for string key, naive delete
-	3 for string key, full delete
+	0 for naive delete
+	1 for full delete
 	*/
 	public graphDB(int type) 
 		throws InvalidSlotNumberException, 
@@ -74,35 +72,17 @@ public class graphDB extends DB {
 		nodes = new NodeHeapFile(null);
 		edges = new EdgeHeapFile(null);
 		nodeDesc = new ZCurve(filename + "NODEDESC");
-		switch(type) {
-		case 0:	
-		// integer key, naive delete
-			nodeLabels = new BTreeFile(filename + "NODELABEL", 0, KEY_SIZE, 0);
-			edgeLabels = new BTreeFile(filename + "EDGELABEL", 0, KEY_SIZE, 0);
-			edgeWeights = new BTreeFile(filename + "EDGEWEIGHT", 0, KEY_SIZE, 0);
-			break;
-		case 1:
-		// integer key, full delete
-			nodeLabels = new BTreeFile(filename + "NODELABEL", 0, KEY_SIZE, 1);
-			edgeLabels = new BTreeFile(filename + "EDGELABEL", 0, KEY_SIZE, 1);
-			edgeWeights = new BTreeFile(filename + "EDGEWEIGHT", 0, KEY_SIZE, 1);
-			break;
-		case 2:
-		// string key, naive delete
-			nodeLabels = new BTreeFile(filename + "NODELABEL", 1, KEY_SIZE, 0);
-			edgeLabels = new BTreeFile(filename + "EDGELABEL", 1, KEY_SIZE, 0);
-			edgeWeights = new BTreeFile(filename + "EDGEWEIGHT", 1, KEY_SIZE, 0);
-			break;
-		case 3:
-		// string key, full delete
+		if(type == 1) {
+		// full delete
 			nodeLabels = new BTreeFile(filename + "NODELABEL", 1, KEY_SIZE, 1);
 			edgeLabels = new BTreeFile(filename + "EDGELABEL", 1, KEY_SIZE, 1);
-			edgeWeights = new BTreeFile(filename + "EDGEWEIGHT", 1, KEY_SIZE, 1);
-			break;
-		default:
-			throw new ClassCastException("No such type for keytype/delete_fashion (in GraphDB.java)");
+			edgeWeights = new BTreeFile(filename + "EDGEWEIGHT", 0, KEY_SIZE, 1);
 		}
-		// initialize each method; to be implemented when combined
+		else {
+			nodeLabels = new BTreeFile(filename + "NODELABEL", 1, KEY_SIZE, 0);
+			edgeLabels = new BTreeFile(filename + "EDGELABEL", 1, KEY_SIZE, 0);
+			edgeWeights = new BTreeFile(filename + "EDGEWEIGHT", 0, KEY_SIZE, 0);
+		}
 	}
 
 	public int getNodeCnt() throws HFBufMgrException, InvalidSlotNumberException, InvalidTupleSizeException, IOException, HFDiskMgrException {
@@ -125,14 +105,14 @@ public class graphDB extends DB {
 		return labelNames.size();
 	}
 	public void insertNode(Node node) throws IOException, Exception {
-		NID id = nodes.insertNode(Serialize.serialize(node));
+		NID id = nodes.insertNode(node.getNodeByteArray());
 		nodeLabels.insert(new StringKey(node.getLabel()), id);
 		nodeDesc.insert(new StringKey(node.getDesc().toString()), id);
 		addLabelNoDuplicate(labelNames, node.getLabel());
 		return;
 	}
 	public void insertEdge(Edge edge) throws IOException, Exception {
-		EID id = edges.insertEdge(Serialize.serialize(edge));
+		EID id = edges.insertEdge(edge.getEdgeByteArray());
 		edgeLabels.insert(new StringKey(edge.getLabel()), id);
 		edgeWeights.insert(new IntegerKey(edge.getWeight()), id);
 		addNodeNoDuplicate(sourceNodes, edge.getSource());

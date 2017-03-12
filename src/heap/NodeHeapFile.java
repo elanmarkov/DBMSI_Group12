@@ -55,4 +55,8 @@ public class NodeHeapFile extends Heapfile{
 		Nscan newscan = new Nscan(this);
 		return newscan;
 	}
+
+	public String getFileName() {
+		return _fileName;
+	}
 }

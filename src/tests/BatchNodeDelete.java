@@ -18,20 +18,21 @@ class BatchNodeDelete implements GlobalConst
   public void runbatchnodedelete(String dbname, String filename) throws FileNotFoundException{
 
 	SystemDefs   sysdefs     = new SystemDefs(dbname,100, 100, "Clock");
+	PCounter     pageRW      = new PCounter();
 	int          pages_read  = pageRW.rcounter;
-	int 	     Pages_write = pageRW.wcounter;
+	int 	     pages_write = pageRW.wcounter;
 	NodeHeapFile nodeheap    = sysdefs.JavabaseDB.getNodes();
-
+    File         file;
 	try{
-	 File file = new File(filename);
+	 file = new File(filename);
 	}
-	catch(){
+	catch(Exception e){
 	 System.out.println("Could not open the InputFile.");
 	 FAIL = true;
 	}
 
         Scanner      inputFile    = new Scanner(file);
-	EdgeHeapFile edgeheapfile = sysdefs.JavabaseDB.getEdges();
+	EdgeHeapFile     edgeheap     = sysdefs.JavabaseDB.getEdges();
         
 
       	// Read lines from the file until no more are left.
@@ -41,7 +42,7 @@ class BatchNodeDelete implements GlobalConst
          {
  	   // Read the next name.
  	   String inputnodelabel = inputFile.nextLine();
-	   Nscan           nscan = nodeheap.openNodeScan();
+	   Nscan           nscan = nodeheap.openScan();
 	   Node             node = new Node();
 	   NID               nid = new NID();
                             node = nscan.getNext(nid);
@@ -49,9 +50,9 @@ class BatchNodeDelete implements GlobalConst
 
 	      String label = node.getLabel();
 
-	      if(Objects.equals(label,inputlabel)){	// nid with the given nodelabel found
+	      if(Objects.equals(label,inputnodelabel)){	// nid with the given nodelabel found
           	 	 
-	       Escan escan = edgeheap.openEdgeScan();
+	       Escan escan = edgeheap.openScan();
 	       EID eid = new EID();
 	       Edge edge = new Edge();
                edge = escan.getNext(eid);
@@ -67,7 +68,7 @@ class BatchNodeDelete implements GlobalConst
 	       } 
 
 	      sysdefs.JavabaseDB.deleteNode(nid);
-              node = getNext(nid);
+              node = nscan.getNext(nid);
 	   }
 
 	  nscan.closescan();
@@ -76,17 +77,17 @@ class BatchNodeDelete implements GlobalConst
          inputFile.close();
 	 pages_read  = pageRW.rcounter - pages_read;
 	 pages_write = pageRW.wcounter - pages_write;
-	 System.out.println("Number of Pages Read: "+String(pages_read)+" Number of Page writes performed: "+String(pages_write));
+	 System.out.println("Number of Pages Read: "+pages_read+" Number of Page writes performed: "+pages_write);
         }
 
    }
 
    public static void main (String[] args) throws FileNotFoundException
    {
-    
+    BatchNodeDelete BN = new BatchNodeDelete();
 	if(args.length==2){
 	 try{
-	  runbatchnodedelete(args[0],args[1]);
+	  BN.runbatchnodedelete(args[0],args[1]);
 	  }
 	 catch(Exception e){
 	  System.out.println (""+e);	

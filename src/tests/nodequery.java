@@ -2,7 +2,9 @@ package tests;
 
 import java.io.IOException;
 
+import btree.AddFileEntryException;
 import btree.ConstructPageException;
+import btree.GetFileEntryException;
 import btree.IndexFileScan;
 import btree.IteratorException;
 import btree.KeyDataEntry;
@@ -420,16 +422,7 @@ class NQDriver extends TestDriver implements GlobalConst
 		int nodeCount = 0;
 		try {
 			nodeCount = database.getNodeCnt();
-		} catch (HFBufMgrException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidSlotNumberException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidTupleSizeException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
+		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
@@ -656,23 +649,15 @@ class NQDriver extends TestDriver implements GlobalConst
 			}
 			scan.closescan();
 		}
-
+		int edgeCount = 0;
 		try {
-			incomingEdges = new String[database.getEdgeCnt()];
-			outgoingEdges = new String[database.getEdgeCnt()];
-		} catch (HFBufMgrException e1) {
+			edgeCount = database.getEdgeCnt();
+		} catch (Exception e2) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidSlotNumberException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidTupleSizeException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			e2.printStackTrace();
 		}
+		incomingEdges = new String[edgeCount];
+		outgoingEdges = new String[edgeCount];
 		if(nodeExists) {
 			status = OK;
 			EID eid = new EID();
@@ -890,6 +875,12 @@ class NQDriver extends TestDriver implements GlobalConst
 		dbpath = argv[0];
 		SystemDefs sysdef = new SystemDefs(dbpath,1000,Integer.parseInt(argv[1]),"Clock");
 		graphDB database = SystemDefs.JavabaseDB;
+		try {
+			database.init();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		try {
 			database = new graphDB(0);
 		} catch (InvalidSlotNumberException e2) {

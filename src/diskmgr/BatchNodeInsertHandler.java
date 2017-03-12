@@ -18,7 +18,7 @@ public class BatchNodeInsertHandler {
 	ZCurve nodeDesc;
 	BTreeFile edgeLabels;
 	BTreeFile edgeWeights;
-	public BatchNodeInsertQueryHandler(NodeHeapFile nodes, EdgeHeapFile edges, BTreeFile nodeLabels, 
+	public BatchNodeInsertHandler(NodeHeapFile nodes, EdgeHeapFile edges, BTreeFile nodeLabels, 
 		ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights) {
 		this.nodes = nodes;
 		this.edges = edges;
@@ -82,8 +82,8 @@ public class BatchNodeInsertHandler {
 		// Output relevant statistics
 		int rcount = pc.rcounter;
 		int wcount = pc.wcounter;
-		System.out.println("Node Count after batch insertion on graph database: " + sysdef.JavabaseDB.getNodeCnt());
-		System.out.println("Edge Count after batch insertion on graph database: " + sysdef.JavabaseDB.getEdgeCnt());
+		System.out.println("Node Count after batch insertion on graph database: " + nodes.getNodeCnt());
+		System.out.println("Edge Count after batch insertion on graph database: " + edges.getEdgeCnt());
 		System.out.println("No. of disk pages read during batch insertion on graph database: " + rcount);
 		System.out.println("No. of disk pages written during batch insertion on graph database: " + rcount);
 		

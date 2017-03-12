@@ -99,6 +99,11 @@ public class graphDB extends DB {
 			edgeWeights = new BTreeFile(filename + "EDGEWEIGHT", 0, KEY_SIZE, 0);
 		}
 		nodeQuery = new NodeQueryHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights);
+		edgeQuery = new EdgeQueryHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights);
+		batchNodeDelete = new BatchNodeDeleteHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights);
+		batchEdgeDelete = new BatchEdgeDeleteHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights);
+		batchNodeInsert = new BatchNodeInsertHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights);
+		batchEdgeInsert = new BatchEdgeInsertHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights);
 	}
 	public int getNodeCnt() throws HFBufMgrException, InvalidSlotNumberException, InvalidTupleSizeException, IOException, HFDiskMgrException {
 		return nodes.getNodeCnt();

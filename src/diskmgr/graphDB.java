@@ -71,8 +71,8 @@ public class graphDB extends DB {
 		sourceNodes = new ArrayList<nodeRef>();
 		destNodes = new ArrayList<nodeRef>();
 		labelNames = new ArrayList<labelRef>();
-		nodes = new NodeHeapFile(filename + "NODES");
-		edges = new EdgeHeapFile(filename + "EDGES");
+		nodes = new NodeHeapFile(null);
+		edges = new EdgeHeapFile(null);
 		nodeDesc = new ZCurve(filename + "NODEDESC");
 		switch(type) {
 		case 0:	

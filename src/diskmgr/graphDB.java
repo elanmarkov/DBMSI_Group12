@@ -42,8 +42,11 @@ public class graphDB extends DB {
 	BTreeFile edgeWeights;
 	String filename;
 	NodeQueryHandler nodeQuery;
+	EdgeQueryHandler edgeQuery;
 	BatchNodeDeleteHandler batchNodeDelete;
 	BatchEdgeDeleteHandler batchEdgeDelete;
+	BatchNodeInsertHandler batchNodeInsert;
+	BatchEdgeInsertHandler batchEdgeInsert;
 
 	// Track unique source/destination/label values
 	ArrayList<nodeRef> sourceNodes;
@@ -152,6 +155,21 @@ public class graphDB extends DB {
 	}	
 	public NodeQueryHandler getNodeQueryHandler() {
 		return nodeQuery;
+	}
+	public EdgeQueryHandler getEdgeQueryHandler() {
+		return edgeQuery;
+	}
+	public BatchNodeDeleteHandler getBatchNodeDeleteHandler() {
+		return batchNodeDelete;
+	}
+	public BatchEdgeDeleteHandler getBatchEdgeDeleteHandler() {
+		return batchEdgeDelete;
+	}
+	public BatchNodeInsertHandler getBatchNodeInsertHandler() {
+		return batchNodeInsert;
+	}
+	public BatchEdgeInsertHandler getBatchEdgeInsertHandler() {
+		return batchEdgeInsert;
 	}
 	private void addNodeNoDuplicate(ArrayList<nodeRef> list, NID newNode) {
 		boolean duplicate = false;

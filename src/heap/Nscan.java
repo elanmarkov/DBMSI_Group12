@@ -16,7 +16,10 @@ public class Nscan extends Scan{
 	public Node getNext(NID nid) 
 		    throws InvalidTupleSizeException,
 			   IOException{
-			Tuple tp = super.getNext(new RID(nid.pageNo,nid.slotNo));
+			RID rid = new RID(nid.pageNo,nid.slotNo);
+			Tuple tp = super.getNext(rid);
+			nid.pageNo.pid=rid.pageNo.pid;
+			nid.slotNo = rid.slotNo;
 			if(tp!=null){
 				Node node = new Node(tp.data, 0);
 				Descriptor desc = Convert.getDescValue(Node.LABEL_MAX_LENGTH+2, tp.data);

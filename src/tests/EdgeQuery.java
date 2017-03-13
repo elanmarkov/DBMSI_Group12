@@ -1,4 +1,5 @@
-package tests;
+
+
 
 import java.io.IOException;
 
@@ -11,6 +12,7 @@ import btree.PinPageException;
 import btree.ScanIteratorException;
 import btree.UnpinPageException;
 import diskmgr.DiskMgrException;
+import diskmgr.EdgeQueryHandler;
 import diskmgr.FileIOException;
 import diskmgr.InvalidPageNumberException;
 import diskmgr.graphDB;
@@ -45,845 +47,27 @@ import iterator.Sort;
 import iterator.UnknownKeyTypeException;
 import zindex.ZCurve;
 
-class NQDriver extends TestDriver implements GlobalConst
+class EQDriver extends TestDriver implements GlobalConst
 {
 
 	private final static boolean OK = true;
 	private final static boolean FAIL = false;
 
-	public NQDriver () {
+	public EQDriver () {
 		super("nodequerytest");      
 	}
-	private void sortNodes(Node nodes[]) {
-		Node temp;
-		AttrType [] jtype = new AttrType[2];
-		jtype[1] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrDesc);
-		for (int i = 0; i < nodes.length; i++) 
-		{
-			for (int j = i + 1; j < nodes.length; j++) 
-			{
-				if (nodes[i].getLabel().compareTo(nodes[j].getLabel()) > 0) 
-				{
-					temp = nodes[i];
-					nodes[i] = nodes[j];
-					nodes[j] = temp;
-				}
-			}
-		}
-		for(int i = 0; i < nodes.length; i++) {
-			try {
-				nodes[i].print(jtype);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
 	
-	private void sortEdges(Edge edges[]) {
-		Edge temp;
-		AttrType [] jtype = new AttrType[2];
-		jtype[1] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrDesc);
-		for (int i = 0; i < edges.length; i++) 
-		{
-			for (int j = i + 1; j < edges.length; j++) 
-			{
-				if (edges[i].getLabel().compareTo(edges[j].getLabel()) > 0) 
-				{
-					temp = edges[i];
-					edges[i] = edges[j];
-					edges[j] = temp;
-				}
-			}
-		}
-		for(int i = 0; i < edges.length; i++) {
-			try {
-				edges[i].print(jtype);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-
-       private void sortWeights(Edge edges[]) {
-		Edge temp;
-		AttrType [] jtype = new AttrType[2];
-		jtype[1] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrDesc);
-		for (int i = 0; i < edges.length; i++) 
-		{
-			for (int j = i + 1; j < edges.length; j++) 
-			{
-				if (edges[i].getWeight()>edges[j].getWeight()) 
-				{
-					temp = edges[i];
-					edges[i] = edges[j];
-					edges[j] = temp;
-				}
-			}
-		}
-		for(int i = 0; i < edges.length; i++) {
-			try {
-				edges[i].print(jtype);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-	private void sortNodes1(Node nodes[], String argv[]) {
-		int length = nodes.length;
-		double[] distance = new double[length];
-		Descriptor target = new Descriptor();
-		double tempDis;
-		Node temp;
-		AttrType [] jtype = new AttrType[2];
-		jtype[1] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrDesc);
-		target.set(Integer.parseInt(argv[4]), Integer.parseInt(argv[5]),Integer.parseInt(argv[6]),Integer.parseInt(argv[7]),Integer.parseInt(argv[8]));
-		for(int i = 0; i < distance.length; i++) {
-			distance[i] = nodes[i].getDesc().distance(target);
-		}
-		for (int i = 0; i < nodes.length; i++) 
-		{
-			for (int j = i + 1; j < nodes.length; j++) 
-			{
-				if (distance[i] > distance[j]) 
-				{
-					temp = nodes[i];
-					nodes[i] = nodes[j];
-					nodes[j] = temp;
-					tempDis = distance[i];
-					distance[i] = distance[j];
-					distance[j] = tempDis;
-				}
-			}
-		}
-		for(int i = 0; i < nodes.length; i++) {
-			try {
-				nodes[i].print(jtype);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-	}
-	private boolean nodeIndexTest0(graphDB database, String argv[]){
-
-		ZCurve zcurve = database.nodeDesc;
-		IndexFileScan indexScan = null;
-		try {
-			IndexScan iscan=new IndexScan(IndexType.Z_Index, relName, indName, types, str_sizes, noInFlds, noOutFlds, outFlds, selects, fldNum, indexOnly);
-			iscan.get_next();	
-			indexScan = zcurve.newZFileScan(null, null);
-		} catch (KeyNotMatchException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IteratorException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ConstructPageException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (PinPageException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnpinPageException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		boolean done = false;
-		while(!done) {
-			KeyDataEntry entry = null;
-			try {
-				entry = indexScan.get_next();
-			} catch (ScanIteratorException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			if(entry == null) {
-				done = true;
-				break;
-			}
-
-		}
-
-		return true;
-	}
-	private boolean edgeIndexTest1(graphDB database, String argv[]){
-		
-		boolean status = OK;
-		AttrType[] attrType = new AttrType[4];
-	    attrType[0] = new AttrType(AttrType.attrString);
-	    attrType[1] = new AttrType(AttrType.attrInteger);
-	    attrType[2] = new AttrType(AttrType.attrInteger);
-	    attrType[3] = new AttrType(AttrType.attrInteger);
-	    FldSpec[] projlist = new FldSpec[4];
-	    RelSpec rel = new RelSpec(RelSpec.outer); 
-	    projlist[0] = new FldSpec(rel, 1);
-	    projlist[1] = new FldSpec(rel, 2);
-	    projlist[2] = new FldSpec(rel, 3);
-	    projlist[3] = new FldSpec(rel, 4);
-	    short[] attrSize = new short[4];
-	    attrSize[0] = 8;
-	    attrSize[1] = 8;
-	    attrSize[2] = 8;
-	    attrSize[3] = 4;
-		IndexScan iscan = null;
-		String filename = database.getNodes().getFileName();
-		int edgeCount = 0, i = 0;
-		try {
-			edgeCount = database.getEdgeCnt();
-		} catch (Exception e) {
-			status = FAIL;
-			e.printStackTrace();
-		}
-		Edge edges[] = new Edge[edgeCount];
-		//need to change test1.in to actual rel name
-	    try {
-	      iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "BTreeIndex", attrType, attrSize, 4, 4, projlist, null, 1, false);
-	    }
-	    catch (Exception e) {
-	      status = FAIL;
-	      e.printStackTrace();
-	    }
-		boolean done = false;
-		if(status == OK) {
-			while(!done) {
-				Tuple t = new Tuple();
-				try {
-					t = iscan.get_next();
-				} catch (IndexException e) {
-					// TODO Auto-generated catch block
-					status = FAIL;
-					e.printStackTrace();
-				} catch (UnknownKeyTypeException e) {
-					// TODO Auto-generated catch block
-					status = FAIL;
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					status = FAIL;
-					e.printStackTrace();
-					
-				}
-				if(t == null) {
-					done = true;
-					break;
-				}
-				nodes[i] = new Node(t);
-				i++;
-			}
-			sortNodes(nodes);
-		
-		return true;
-	}
-	private boolean nodeIndexTest2(graphDB database, String argv[]){
-		return true;
-	}
-	private boolean nodeIndexTest3(graphDB database, String argv[]){
-		return true;
-	}
-	private boolean nodeIndexTest4(graphDB database, String argv[]){
-		return true;
-	}
-	private boolean nodeIndexTest5(graphDB database, String argv[]){
-		return true;
-	}
-	private boolean edgeHeapTest0(graphDB database, String argv[]){
-		boolean status = OK;
-		EID eid = new EID();
-		EdgeHeapFile f = database.getEdges();
-
-		AttrType [] jtype = new AttrType[2];
-		jtype[0] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrDesc);
-		try {
-			//f = new NodeHeapFile("priyekant");
-		}
-		catch (Exception e) {
-			status = FAIL;
-			System.err.println ("*** Could not create heap file\n");
-			e.printStackTrace();
-		}
-		Escan scan = null;
-		if ( status == OK ) {	
-			System.out.println ("  - Scan the records\n");
-			try {
-				scan = f.openScan();
-			}
-			catch (Exception e) {
-				status = FAIL;
-				System.err.println ("*** Error opening scan\n");
-				e.printStackTrace();
-			}
-
-			if ( status == OK &&  SystemDefs.JavabaseBM.getNumUnpinnedBuffers() 
-					== SystemDefs.JavabaseBM.getNumBuffers() ) {
-				System.err.println ("*** The heap-file scan has not pinned the first page\n");
-				status = FAIL;
-			}
-		}
-
-		if ( status == OK ) {
-			Edge edge = new Edge();
-
-			boolean done = false;
-			while (!done) { 
-				try {
-					edge = scan.getNext(eid);
-					if (edge == null) {
-						done = true;
-						break;
-					}
-					edge.print(jtype);
-				}
-				catch (Exception e) {
-					status = FAIL;
-					e.printStackTrace();
-				}
-			}
-		}
-		return status;
-	}
-	private boolean edgHeapTest1(graphDB database, String argv[]){
-		boolean status = OK;
-		int i = 0;
-		EID eid = new EID();
-		NID nid = new NID();
-		EdgeHeapFile f        = database.getEdges();
-		NodeHeapFile nodeheap = database.getNodes();
-		int edgeCount = 0;
-		try {
-			edgeCount = database.getEdgeCnt();
-		} catch (HFBufMgrException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidSlotNumberException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidTupleSizeException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		Node[] nodes = new Node[edgeCount];
-
-		AttrType [] jtype = new AttrType[1];
-		jtype[0] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrDesc);
-		try {
-			//f = new NodeHeapFile("priyekant");
-		}
-		catch (Exception e) {
-			status = FAIL;
-			System.err.println ("*** Could not create heap file\n");
-			e.printStackTrace();
-		}
-		Escan scan = null;
-		if ( status == OK ) {	
-			System.out.println ("  - Scan the records\n");
-			try {
-				scan = f.openScan();
-			}
-			catch (Exception e) {
-				status = FAIL;
-				System.err.println ("*** Error opening scan\n");
-				e.printStackTrace();
-			}
-
-			if ( status == OK &&  SystemDefs.JavabaseBM.getNumUnpinnedBuffers() 
-					== SystemDefs.JavabaseBM.getNumBuffers() ) {
-				System.err.println ("*** The heap-file scan has not pinned the first page\n");
-				status = FAIL;
-			}
-		}
-
-		if ( status == OK ) {
-			Edge edge = new Edge();
-			
-			boolean done = false;
-			while (!done) { 
-				try {
-					edge = scan.getNext(eid);
-					nid  = eid.getSource(eid)	
-					if (edge == null) {
-						done = true;
-						break;
-					}
-					nodes[i] = f.getNode(nid);
-					i++;
-				}
-				catch (Exception e) {
-					status = FAIL;
-					e.printStackTrace();
-				}
-			}
-			sortNodes(nodes);
-		}
-
-		return status;
-	}
-	private boolean edgeHeapTest2(graphDB database, String argv[]){
-		boolean status = OK;
-		int i = 0;
-		EID eid = new EID();
-		NID nid = new NID();
-		EdgeHeapFile f        = database.getEdges();
-		NodeHeapFile nodeHeapFile = database.getNodes();
-		int edgeCount = 0;
-		try {
-			edgeCount = database.getEdgeCnt();
-		} catch (HFBufMgrException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidSlotNumberException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidTupleSizeException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		Node[] nodes = new Node[edgeCount];
-
-		AttrType [] jtype = new AttrType[1];
-		jtype[0] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrDesc);
-		try {
-			//f = new NodeHeapFile("priyekant");
-		}
-		catch (Exception e) {
-			status = FAIL;
-			System.err.println ("*** Could not create heap file\n");
-			e.printStackTrace();
-		}
-		Escan scan = null;
-		if ( status == OK ) {	
-			System.out.println ("  - Scan the records\n");
-			try {
-				scan = f.openScan();
-			}
-			catch (Exception e) {
-				status = FAIL;
-				System.err.println ("*** Error opening scan\n");
-				e.printStackTrace();
-			}
-
-			if ( status == OK &&  SystemDefs.JavabaseBM.getNumUnpinnedBuffers() 
-					== SystemDefs.JavabaseBM.getNumBuffers() ) {
-				System.err.println ("*** The heap-file scan has not pinned the first page\n");
-				status = FAIL;
-			}
-		}
-
-		if ( status == OK ) {
-			Edge edge = new Edge();
-			
-			boolean done = false;
-			while (!done) { 
-				try {
-					edge = scan.getNext(eid);
-					nid  = eid.getDestination(eid)	
-					if (edge == null) {
-						done = true;
-						break;
-					}
-					nodes[i] = nid.getNode();
-					i++;
-				}
-				catch (Exception e) {
-					status = FAIL;
-					e.printStackTrace();
-				}
-			}
-			sortNodes(nodes);
-		}
-
-		return status;
-	}
-	private boolean nodeHeapTest3(graphDB database, String argv[]){
-		boolean status = OK;
-		int i = 0;
-		EID eid = new EID();
-		EdgeHeapFile f = database.getEdges();
-		int edgeCount  = 0;
-		try {
-			edgeCount = database.getEdgeCnt();
-		} catch (HFBufMgrException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidSlotNumberException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidTupleSizeException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		Edge[] edges = new Edge[edgeCount];
-
-		AttrType [] jtype = new AttrType[1];
-		jtype[0] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrDesc);
-		try {
-			//f = new NodeHeapFile("priyekant");
-		}
-		catch (Exception e) {
-			status = FAIL;
-			System.err.println ("*** Could not create heap file\n");
-			e.printStackTrace();
-		}
-		Escan scan = null;
-		if ( status == OK ) {	
-			System.out.println ("  - Scan the records\n");
-			try {
-				scan = f.openScan();
-			}
-			catch (Exception e) {
-				status = FAIL;
-				System.err.println ("*** Error opening scan\n");
-				e.printStackTrace();
-			}
-
-			if ( status == OK &&  SystemDefs.JavabaseBM.getNumUnpinnedBuffers() 
-					== SystemDefs.JavabaseBM.getNumBuffers() ) {
-				System.err.println ("*** The heap-file scan has not pinned the first page\n");
-				status = FAIL;
-			}
-		}
-
-		if ( status == OK ) {
-			Edge edge = new Edge();
-			
-			boolean done = false;
-			while (!done) { 
-				try {
-					edge = scan.getNext(eid);	
-					if (edge == null) {
-						done = true;
-						break;
-					}
-					edges[i] = edge;
-					i++;
-				}
-				catch (Exception e) {
-					status = FAIL;
-					e.printStackTrace();
-				}
-			}
-			sortEdges(edges);
-		}
-
-		return status;
-	}
-	private boolean nodeHeapTest4(graphDB database, String argv[]){
-		boolean status = OK;
-		int i = 0;
-		EID eid = new EID();
-		EdgeHeapFile f = database.getEdges();
-		int edgeCount  = 0;
-		try {
-			edgeCount = database.getEdgeCnt();
-		} catch (HFBufMgrException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidSlotNumberException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidTupleSizeException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		Edge[] edges = new Edge[edgeCount];
-
-		AttrType [] jtype = new AttrType[1];
-		jtype[0] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrDesc);
-		try {
-			//f = new NodeHeapFile("priyekant");
-		}
-		catch (Exception e) {
-			status = FAIL;
-			System.err.println ("*** Could not create heap file\n");
-			e.printStackTrace();
-		}
-		Escan scan = null;
-		if ( status == OK ) {	
-			System.out.println ("  - Scan the records\n");
-			try {
-				scan = f.openScan();
-			}
-			catch (Exception e) {
-				status = FAIL;
-				System.err.println ("*** Error opening scan\n");
-				e.printStackTrace();
-			}
-
-			if ( status == OK &&  SystemDefs.JavabaseBM.getNumUnpinnedBuffers() 
-					== SystemDefs.JavabaseBM.getNumBuffers() ) {
-				System.err.println ("*** The heap-file scan has not pinned the first page\n");
-				status = FAIL;
-			}
-		}
-
-		if ( status == OK ) {
-			Edge edge = new Edge();
-			
-			boolean done = false;
-			while (!done) { 
-				try {
-					edge = scan.getNext(eid);	
-					if (edge == null) {
-						done = true;
-						break;
-					}
-					edges[i] = edge;
-					i++;
-				}
-				catch (Exception e) {
-					status = FAIL;
-					e.printStackTrace();
-				}
-			}
-			sortWeights(edges);
-		}
-
-		return status;
-
-	}
-	private boolean edgeHeapTest5(graphDB database, String argv[]){
-                
-                boolean status = OK;
-		int i = 0;
-		EID eid = new EID();
-		EdgeHeapFile f = database.getEdges();
-		System.out.println("Enter the lower bound of Weights:");
-                BufferedReader in = new BufferedReader (new InputStreamReader(System.in));
-		int  lowerbound, upperbound;
-		try {
-      		 lowerbound = Integer.parseInt(in.readLine());
-                 }
-                catch (NumberFormatException e) {
-                 lowerbound = 0;
-                 }
-                catch (IOException e) {
-                 lowerbound = 0;
-                 }
-		System.out.println("Enter the upper bound of Weights:");
-		try {
-      		 upperbound = Integer.parseInt(in.readLine());
-                 }
-                catch (NumberFormatException e) {
-                 upperbound = 0;
-                 }
-                catch (IOException e) {
-                 upperbound = 0;
-                 }
-		int edgeCount  = 0;
-		try {
-			edgeCount = database.getEdgeCnt();
-		} catch (HFBufMgrException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidSlotNumberException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidTupleSizeException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		Edge[] edges = new Edge[edgeCount];
-
-		AttrType [] jtype = new AttrType[1];
-		jtype[0] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrDesc);
-		try {
-			//f = new NodeHeapFile("priyekant");
-		}
-		catch (Exception e) {
-			status = FAIL;
-			System.err.println ("*** Could not create heap file\n");
-			e.printStackTrace();
-		}
-		Escan scan = null;
-		if ( status == OK ) {	
-			System.out.println ("  - Scan the records\n");
-			try {
-				scan = f.openScan();
-			}
-			catch (Exception e) {
-				status = FAIL;
-				System.err.println ("*** Error opening scan\n");
-				e.printStackTrace();
-			}
-
-			if ( status == OK &&  SystemDefs.JavabaseBM.getNumUnpinnedBuffers() 
-					== SystemDefs.JavabaseBM.getNumBuffers() ) {
-				System.err.println ("*** The heap-file scan has not pinned the first page\n");
-				status = FAIL;
-			}
-		}
-
-		if ( status == OK ) {
-			Edge edge = new Edge();
-			
-			boolean done = false;
-			while (!done) { 
-				try {
-					edge = scan.getNext(eid);	
-					if (edge == null) {
-						done = true;
-						break;
-					}
-					if(lowerbound<=edge.getWeight()&&edge.getWeight()<=upperbound){
-					 edge.print(jtype);						
-					}
-				}
-				catch (Exception e) {
-					status = FAIL;
-					e.printStackTrace();
-				}
-			}
-			
-		}
-
-		return status;
-
-	}
-
-
-       private boolean edgeHeapTest6(graphDB database, String argv[]){
-                
-                boolean status = OK;
-		int i = 0;
-		EID eid = new EID();
-		EdgeHeapFile f = database.getEdges();
-		int edgeCount  = 0;
-		try {
-			edgeCount = database.getEdgeCnt();
-		} catch (HFBufMgrException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidSlotNumberException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidTupleSizeException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		RID edges[edgeCount][2];
-		AttrType [] jtype = new AttrType[1];
-		jtype[0] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrDesc);
-		try {
-			//f = new NodeHeapFile("priyekant");
-		}
-		catch (Exception e) {
-			status = FAIL;
-			System.err.println ("*** Could not create heap file\n");
-			e.printStackTrace();
-		}
-		Escan scan = null;
-		if ( status == OK ) {	
-			System.out.println ("  - Scan the records\n");
-			try {
-				scan = f.openScan();
-			}
-			catch (Exception e) {
-				status = FAIL;
-				System.err.println ("*** Error opening scan\n");
-				e.printStackTrace();
-			}
-
-			if ( status == OK &&  SystemDefs.JavabaseBM.getNumUnpinnedBuffers() 
-					== SystemDefs.JavabaseBM.getNumBuffers() ) {
-				System.err.println ("*** The heap-file scan has not pinned the first page\n");
-				status = FAIL;
-			}
-		}
-
-		if ( status == OK ) {
-			
-			NID source,destination;
-			EID eid;
-			Edge edge = new Edge();
-			int i=0;
-			edge = scan.getNext(eid);
-			while(edge!=null){
-			     
-			   try{
-			    edges[i][0] = eid;
-		            edges[i][1] = edge.getSource();
-			    edges[i][2] = edge.getDestination();
-			    }
-			   catch(Exception e){
-			    System.err.println(""+e);
-			    }
-			   i++; 
-			 }
-			i=0;
-			while(i<edgeCount){
-			 int j=i+1;
-			 while(j<edgeCount){
-			  if(Objects.equals(edges[i][1],edges[j][2]) || Objects.equals(edges[i][2],edges[j][1])){
-			    
-			    Edge edge1 = f.getEdge(edges[i][0]);
-			    Edge edge2 = f.getEdge(edges[j][0]);
-			    
-			    try {
-			     edge1.print(jtype);
-			     edge2.print(jtype);	
-			     } 
-                            catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			     }			    
-
-			   }
-			 }						
-			}
-			  
-	         }
-	        scan.closescan();
-	}
-		
-		
-
-		return status;
-
-      }
 	public boolean runTests(String argv[]) {
 		// Kill anything that might be hanging around
 		//System.out.println(argv[0]);
 		dbpath = argv[0];
 		SystemDefs sysdef = new SystemDefs(dbpath,1000,Integer.parseInt(argv[1]),"Clock");
 		graphDB database = SystemDefs.JavabaseDB;
+		EdgeQueryHandler queries = null;
 		try {
-			database = new graphDB(0);
+			database.init();
+			queries = database.getEdgeQueryHandler();
+			
 		} catch (InvalidSlotNumberException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
@@ -917,7 +101,7 @@ class NQDriver extends TestDriver implements GlobalConst
 
 		// Commands here is very machine dependent.  We assume
 		// user are on UNIX system here
-		try {
+		/*try {
 			Runtime.getRuntime().exec(remove_logcmd);
 			Runtime.getRuntime().exec(remove_dbcmd);
 		}
@@ -935,50 +119,56 @@ class NQDriver extends TestDriver implements GlobalConst
 		catch (IOException e) {
 			System.err.println ("IO error: "+e);
 		}
-
+*/
 		/////////////////////////////////
 		boolean _pass = false;
 		switch(Integer.parseInt(argv[2])) {
 		case 0:
 			if(Integer.parseInt(argv[3]) == 1) {
-				_pass = nodeIndexTest0(database,argv);
+				_pass = queries.edgeIndexTest0(argv);
 			} else {
-				_pass = nodeHeapTest0(database,argv);
+				_pass = queries.edgeHeapTest0(argv);
 			}
 			break;
 		case 1:
 			if(Integer.parseInt(argv[3]) == 1) {
-				_pass = nodeIndexTest1(database,argv);
+				_pass = queries.edgeIndexTest1(argv);
 			} else {
-				_pass = nodeHeapTest1(database,argv);
+				_pass = queries.edgeHeapTest1(argv);
 			}
 			break;
 		case 2:
 			if(Integer.parseInt(argv[3]) == 1) {
-				_pass = nodeIndexTest2(database,argv);
+				_pass = queries.edgeIndexTest2(argv);
 			} else {
-				_pass = nodeHeapTest2(database,argv);
+				_pass = queries.edgeHeapTest2(argv);
 			}
 			break;
 		case 3:
 			if(Integer.parseInt(argv[3]) == 1) {
-				_pass = nodeIndexTest3(database,argv);
+				_pass = queries.edgeIndexTest3(argv);
 			} else {
-				_pass = nodeHeapTest3(database,argv);
+				_pass = queries.edgeHeapTest3(argv);
 			}
 			break;
 		case 4:
 			if(Integer.parseInt(argv[3]) == 1) {
-				_pass = nodeIndexTest4(database,argv);
+				_pass = queries.edgeIndexTest4(argv);
 			} else {
-				_pass = nodeHeapTest4(database,argv);
+				_pass = queries.edgeHeapTest4(argv);
 			}
 			break;
 		case 5:
 			if(Integer.parseInt(argv[3]) == 1) {
-				_pass = nodeIndexTest5(database,argv);
+				_pass = queries.edgeIndexTest5(argv);
 			} else {
-				_pass = nodeHeapTest5(database,argv);
+				_pass = queries.edgeHeapTest5(argv);
+			}
+		case 6:
+			if(Integer.parseInt(argv[3]) == 1) {
+				_pass = queries.edgeIndexTest6(argv);
+			} else {
+				_pass = queries.edgeHeapTest6(argv);
 			}
 			break;
 		default:
@@ -986,20 +176,20 @@ class NQDriver extends TestDriver implements GlobalConst
 		}
 		//////////////////////////////////
 		//Clean up again
-		try {
+		/*try {
 			Runtime.getRuntime().exec(remove_logcmd);
 			Runtime.getRuntime().exec(remove_dbcmd);
 		}
 		catch (IOException e) {
 			System.err.println ("IO error: "+e);
-		}
+		}*/
 		return _pass;
 	}
 
 }
-public class nodequery {
+public class EdgeQuery {
 	public static void main(String argv[]) {
-		NQDriver hd = new NQDriver();
+		EQDriver hd = new EQDriver();
 		boolean dbstatus;
 
 		dbstatus = hd.runTests(argv);

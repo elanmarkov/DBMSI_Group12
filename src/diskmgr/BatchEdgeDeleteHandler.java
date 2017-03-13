@@ -33,61 +33,73 @@ public class BatchEdgeDeleteHandler implements GlobalConst{
 	}
 	private final static boolean OK   = true;
 	private final static boolean FAIL = false;
-/*
-	public void runbatchedgedelete(String dbname, String filename){
 
-		SystemDefs   sysdefs  = new SystemDefs(dbname,100,100,"Clock");
-		EdgeHeapFile edgeheap = sysdefs.JavabaseDB.edges;
-		NodeHeapFile nodeheap = sysdefs.JavabaseDB.nodes;
+	public void runbatchedgedelete(String dbname, String filename) throws InvalidSlotNumberException, HFException, HFDiskMgrException, HFBufMgrException, Exception{
+        boolean status = OK;
+		EdgeHeapFile edgeheap = SystemDefs.JavabaseDB.edges;
+		NodeHeapFile nodeheap = SystemDefs.JavabaseDB.nodes;
 		PCounter         pcounter = new PCounter();
 		int       pages_read  = pcounter.rcounter;
 		int 	  pages_write = pcounter.wcounter;
 		File 	  file;
-		Scanner   inputFile;
+		Scanner   inputFile=null;
 		try{
-			file = new File(filename);
+			file = new File(System.getProperty("user.dir")
+					+ "/tests/" + filename + ".txt");
 			inputFile = new Scanner(file);
 		}
 		catch(Exception e){
 			System.out.println("Could not open the InputFile.");
-			FAIL = true;
+			
 		}
 
 		
 		// Read lines from the file until no more are left.
 
-		if(!FAIL){
+		if(status){
 
 			while (inputFile.hasNext()){		//Loop for reading the inputFile.
 
 				// Read the next name.
 				String   nextinput   = inputFile.nextLine();
 				String[] edgeinput   = nextinput.split("\\s+");
-				Escan    escan       = edgeheap.openScan();
+				Escan escan=null;
+				try {
+					escan = edgeheap.openScan();
+				} catch (InvalidTupleSizeException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				Edge     edge        = new Edge();
 				EID      eid         = new EID();
 
 
 				edge = escan.getNext(eid);
 
-				if(edge==null) {
+				if(Objects.equals(edge,null)) {
 
 					System.out.println("No edges in Database.");
-					OK = false;
+				    status = FAIL;
 				};
-				while(edge!=null && OK)	
+				while(!Objects.equals(edge,null))	
 				{
 					NID sourcenid = edge.getSource();
 					NID desnid = edge.getDestination();
 					String edgelabel = edge.getLabel();
+					Edge tempedge = new Edge();
+					tempedge.setLabel(edgeinput[2]);
+					Node node1 = new Node();
+					Node node2 = new Node();
+					node2.setLabel(edgeinput[1]);
+					node1.setLabel(edgeinput[0]);
+					
 
-					if(Objects.equals(edgeinput[2],edgelabel)){	// Edge Found with given edge Label.
+					if(Objects.equals(tempedge.getLabel(),edgelabel)){	// Edge Found with given edge Label.
 						Node sourcenode = nodeheap.getNode(sourcenid); 
 						Node desnode    = nodeheap.getNode(desnid);
 
-						if(Objects.equals(desnode.getLabel(),edgeinput[1]) && Objects.equals(sourcenode.getLabel(),edgeinput[0])){   // Checking if the edge is the one we are looking for.
-							sysdefs.JavabaseDB.deleteEdge(eid);
-							OK = false;
+						if(Objects.equals(desnode.getLabel(),node2.getLabel()) && Objects.equals(sourcenode.getLabel(),node1.getLabel())){   // Checking if the edge is the one we are looking for.
+							SystemDefs.JavabaseDB.deleteEdge(eid);
 						}
 
 					} 
@@ -103,11 +115,11 @@ public class BatchEdgeDeleteHandler implements GlobalConst{
 			pages_read  = pcounter.rcounter - pages_read;
 			pages_write = pcounter.wcounter - pages_write;
 			System.out.println("Number of Pages Read: "+pages_read+" Number of Page writes performed: "+pages_write);
-			int edgecnt = sysdefs.JavabaseDB.getEdgeCnt();
-			int nodecnt = sysdefs.JavabaseDB.getNodeCnt();
+			int edgecnt = SystemDefs.JavabaseDB.getEdgeCnt();
+			int nodecnt = SystemDefs.JavabaseDB.getNodeCnt();
 			System.out.println("Total Edge Count: "+ edgecnt + "Total node Count: "+ nodecnt);
 
-		}*/
-
+		}
+	}
 
 }

@@ -1,6 +1,8 @@
-package tests;
+
 
 import global.SystemDefs;
+
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 import diskmgr.PCounter;
 
@@ -49,12 +51,20 @@ public class testcases {
 				if(!graphExists) {
 					System.out.println("Graph DB does not exist");
 				} else {
-					
+					BatchNodeDelete deleteObj = new BatchNodeDelete();
+					deleteObj.runDeleteNode(splited);
 				}
 			} else if(splited[0].equals("batchedgedelete")) {
 				if(!graphExists) {
 					System.out.println("Graph DB does not exist");
 				} else {
+					BatchEdgeDelete deleteObj = new BatchEdgeDelete();
+					try {
+						deleteObj.batchedgedeletefunction(splited);
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					
 				}
 			} else if(splited[0].equals("nodequery")) {

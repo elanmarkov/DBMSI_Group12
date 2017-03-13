@@ -18,20 +18,16 @@ class BatchEdgeDelete implements GlobalConst{
 	
 	
 
-	public static void main (String[] args) throws FileNotFoundException
+	public void batchedgedeletefunction (String[] args) throws FileNotFoundException
 	{
-		BatchEdgeDeleteHandler BH = new BatchEdgeDeleteHandler();
-		if(args.length==2){
+		BatchEdgeDeleteHandler BH = SystemDefs.JavabaseDB.getBatchEdgeDeleteHandler();
+		
 			try{
-				BH.runbatchedgedelete(args[0],args[1]);
+				BH.runbatchedgedelete(args[2],args[1]);
 			}
 			catch(Exception e){
 				System.out.println (""+e);	
 			}
-		}
-		else{
-			System.out.println("Improper Arguments");
-		}
 
 	} 
 

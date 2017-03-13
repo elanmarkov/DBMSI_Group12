@@ -19,7 +19,7 @@ public class BatchNodeDeleteHandler{
 	BTreeFile edgeWeights;
 	graphDB db;
 	public BatchNodeDeleteHandler(NodeHeapFile nodes, EdgeHeapFile edges, BTreeFile nodeLabels, 
-	ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights, graphDB db) {
+			ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights, graphDB db) {
 
 		this.nodes = nodes;
 		this.edges = edges;
@@ -29,74 +29,93 @@ public class BatchNodeDeleteHandler{
 		this.edgeWeights = edgeWeights;
 		this.db = db;
 	}
-	/*private final static boolean OK   = true;
-	  private final static boolean FAIL = false;
-	  
-	  public void runbatchnodedelete(String dbname, String filename) throws FileNotFoundException{
+	private final static boolean OK   = true;
+	private final static boolean FAIL = false;
 
-		SystemDefs   sysdefs     = new SystemDefs(dbname,100, 100, "Clock");
+	public void runbatchnodedelete(String dbname, String filename) throws Exception{
+		boolean status = OK;
+		//  Batchnode Delete Start
 		PCounter     pageRW      = new PCounter();
 		int          pages_read  = pageRW.rcounter;
 		int 	     pages_write = pageRW.wcounter;
-		NodeHeapFile nodeheap    = sysdefs.JavabaseDB.nodes;
-	    File         file;
+		NodeHeapFile nodeheap    = SystemDefs.JavabaseDB.nodes;
+		File         file = null;
+
 		try{
-		 file = new File(filename);
+			file = new File(System.getProperty("user.dir")
+					+ "/tests/" + filename + ".txt");
 		}
 		catch(Exception e){
-		 System.out.println("Could not open the InputFile.");
-		 FAIL = true;
+			System.out.println("Could not open the InputFile.");
+			status = FAIL;
 		}
+		System.out.println("Its Running");
+		Scanner      inputFile    = new Scanner(file);
+		EdgeHeapFile     edgeheap     = SystemDefs.JavabaseDB.edges;
 
-	        Scanner      inputFile    = new Scanner(file);
-		EdgeHeapFile     edgeheap     = sysdefs.JavabaseDB.getEdges();
-	        
+		// Read lines from the file until no more are left.
+		if(status){
 
-	      	// Read lines from the file until no more are left.
-		if(!FAIL){
+			while (inputFile.hasNext())	//while 01 for going through the BatchNodeFile
+			{
+				// Read the next name.
+				String inputnodelabel = inputFile.nextLine();
+				Nscan           nscan = nodeheap.openScan();
+				Node             node = new Node();
+				NID               nid = new NID();
+				node = nscan.getNext(nid);
+				Node          tempNode = new Node();
+				tempNode.setLabel(inputnodelabel);
+				
+				while(!Objects.equals(node,null)){	//while 02 for going through the nodeheapfile looking for the particular node
 
-	      	 while (inputFile.hasNext())	//while 01 for going through the BatchNodeFile
-	         {
-	 	   // Read the next name.
-	 	   String inputnodelabel = inputFile.nextLine();
-		   Nscan           nscan = nodeheap.openScan();
-		   Node             node = new Node();
-		   NID               nid = new NID();
-	                            node = nscan.getNext(nid);
-		    while(node!=null){	//while 02 for going through the nodeheapfile looking for the particular node
+					
+					String label = node.getLabel();
+					
 
-		      String label = node.getLabel();
+					if(Objects.equals(label,tempNode.getLabel())){	// nid with the given nodelabel found
+						System.out.println(Objects.equals(node,null));
+						Escan escan = edgeheap.openScan();
+						EID eid = new EID();
+						Edge edge = new Edge();
+						edge = escan.getNext(eid);
+						while(!Objects.equals(edge,null)){		// trying to find the edges with destination and source node
+							if(Objects.equals(edge.getSource(),nid) || Objects.equals(edge.getDestination(),nid)){
+								try {
+									SystemDefs.JavabaseDB.deleteEdge(eid);
+								}
+								catch(Exception e) {
+									System.out.println("Error during deleting the Edge");
+									e.printStackTrace();
+								}
+							}
 
-		      if(Objects.equals(label,inputnodelabel)){	// nid with the given nodelabel found
-	          	 	 
-		       Escan escan = edgeheap.openScan();
-		       EID eid = new EID();
-		       Edge edge = new Edge();
-	               edge = escan.getNext(eid);
-		       while(edge!=null){		// trying to find the edges with destination and source node
-		    	if(Objects.equals(edge.getSource(),nid) || Objects.equals(edge.getDestination(),nid)){
-		     					
-	                 sysdefs.JavabaseDB.deleteEdge(eid);	
-		         }
+							edge = escan.getNext(eid);
+						}
+						escan.closescan();
 
-		    	 edge = escan.getNext(eid);
-		        }
-	                escan.closescan();
-		       } 
+						try {
+							SystemDefs.JavabaseDB.deleteNode(nid);
+						}
+						catch(Exception e) {
+							System.out.println("Error during node deletion.");
+							e.printStackTrace();
+						}
+					} 
+					node = nscan.getNext(nid);
+				}
 
-		      sysdefs.JavabaseDB.deleteNode(nid);
-	              node = nscan.getNext(nid);
-		   }
+				nscan.closescan();
+			}
 
-		  nscan.closescan();
-	       	 }
+			inputFile.close();
+		}
+		pages_read  = pageRW.rcounter - pages_read;
+		pages_write = pageRW.wcounter - pages_write;
+		System.out.println("Number of Pages Read: "+pages_read+" Number of Page writes performed: "+pages_write);
+		System.out.println("Number of Total Nodes in the Database are:"+SystemDefs.JavabaseDB.getNodeCnt());
 
-	         inputFile.close();
-		 pages_read  = pageRW.rcounter - pages_read;
-		 pages_write = pageRW.wcounter - pages_write;
-		 System.out.println("Number of Pages Read: "+pages_read+" Number of Page writes performed: "+pages_write);
-	        }
 
-	   }*/
+	}
 
 }

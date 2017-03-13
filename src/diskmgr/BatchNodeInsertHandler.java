@@ -71,8 +71,12 @@ public class BatchNodeInsertHandler {
 					Integer.parseInt(splited[3]), Integer.parseInt(splited[4]), 
 					Integer.parseInt(splited[5]));
 			newnode.setDesc(nodedesc);
-			nodeByteArray = newnode.getNodeByteArray();
-			nodeid = nodeHeapFile.insertNode(nodeByteArray);
+			try{
+			SystemDefs.JavabaseDB.insertNode(newnode);
+			} catch(Exception e){
+				e.printStackTrace();
+			}
+			
 
 		}
 		br.close();

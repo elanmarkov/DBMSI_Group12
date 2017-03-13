@@ -362,9 +362,7 @@ public static StringKey conver5Dto1D(KeyClass key){
 	String[] vectors = new String[5]; 
 	//System.out.println("Utility.conver5Dto1D() 1");
 	for(int i=0;i<vectors.length;i++){
-		
 		vectors[i]=get8BitStringRepresentation(vector5d.get(i));
-		System.out.println("Utility.conver5Dto1D() i "+vector5d.get(i)+"="+vectors[i]);
 	}
 	//System.out.println("Utility.conver5Dto1D() 2" );
 	StringBuffer StringKey = new StringBuffer();

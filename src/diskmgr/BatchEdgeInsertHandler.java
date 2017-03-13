@@ -99,8 +99,11 @@ public class BatchEdgeInsertHandler {
 			newEdge.setSource(sourceNid);
 			newEdge.setDestination(desNid);
 			newEdge.setWeight(weight);
-			edgeByteArray = newEdge.getEdgeByteArray();
-			edgeId = edgeHeapFile.insertEdge(edgeByteArray);
+			try{
+				SystemDefs.JavabaseDB.insertEdge(newEdge);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 		System.out.println("Rec count " + edgeHeapFile.getRecCnt());

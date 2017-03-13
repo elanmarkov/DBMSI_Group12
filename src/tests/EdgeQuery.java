@@ -997,7 +997,7 @@ class NQDriver extends TestDriver implements GlobalConst
 	}
 
 }
-public class nodequery {
+public class edgequery {
 	public static void main(String argv[]) {
 		NQDriver hd = new NQDriver();
 		boolean dbstatus;

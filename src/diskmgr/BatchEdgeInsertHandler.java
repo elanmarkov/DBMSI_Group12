@@ -29,7 +29,7 @@ public class BatchEdgeInsertHandler {
 		this.edgeLabels = edgeLabels;
 		this.edgeWeights = edgeWeights;
 	}
-	public boolean test1(String edgeFileName) 
+	public boolean test1(String edgeFileName,PCounter pc) 
 			throws FileNotFoundException, IOException, SpaceNotAvailableException, 
 			HFBufMgrException, InvalidSlotNumberException, InvalidTupleSizeException, 
 			HFException, HFDiskMgrException
@@ -48,14 +48,14 @@ public class BatchEdgeInsertHandler {
 		edgeHeapFile = edges;
 		
 		BufferedReader br = new BufferedReader(new FileReader(System.getProperty("user.dir")
-				+ "/tests/" + edgeFileName + ".txt"));
+				+ "/src/tests/" + edgeFileName + ".txt"));
 
 
 		while ((line = br.readLine()) != null)
 		{
 			String[] splited = line.split("\\s+");
-			String srcLabel = splited[0];
-			String destLabel = splited[1];
+			String srcLabel = Tuple.getFixedLengthLable(splited[0]);
+			String destLabel = Tuple.getFixedLengthLable(splited[1]);
 			String edgeLabel = splited[2];
 			int weight = Integer.parseInt(splited[3]);
 			NID sourceNid = new NID();
@@ -68,7 +68,7 @@ public class BatchEdgeInsertHandler {
 			boolean destFound = false;
 			
 			do
-			{
+			{	System.out.println("BatchEdgeInsertHandler.test1() "+scanned_node);
 				if (scanned_node == null)
 				{
 					srcFound = true;
@@ -76,6 +76,8 @@ public class BatchEdgeInsertHandler {
 				}
 				else
 				{
+					//System.out.println("BatchEdgeInsertHandler.test1() "+scanned_node.getLabel());
+					//System.out.println("BatchEdgeInsertHandler.test1() src : "+srcLabel + "dest : "+destLabel);
 					if(scanned_node.getLabel().equals(getFixedLengthLable(srcLabel)))
 					{
 						System.out.println("Source Node found");
@@ -106,8 +108,8 @@ public class BatchEdgeInsertHandler {
 		// Output releavant statistics
 		System.out.println("Node Count after batch insertion on graph database: " + nodes.getNodeCnt());
 		System.out.println("Edge Count after batch insertion on graph database: " + edges.getEdgeCnt());
-		System.out.println("No. of disk pages read during batch insertion on graph database: " /*+ sysdef.JavabaseDB.pageRW.rcounter*/);
-		System.out.println("No. of disk pages written during batch insertion on graph database: " /*+ sysdef.JavabaseDB.pageRW.wcounter*/);
+		System.out.println("No. of disk pages read during batch insertion on graph database: " + pc.rcounter);
+		System.out.println("No. of disk pages written during batch insertion on graph database: " + pc.wcounter);
 
 		if ( status == OK )
 			System.out.println ("  Test completed successfully.\n");

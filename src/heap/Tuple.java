@@ -560,7 +560,7 @@ public void setHdr (short numFlds,  AttrType types[], short strSizes[])
    }
   
   
-  protected String getFixedLengthLable(String label) {
+  public static String getFixedLengthLable(String label) {
 		if(label.length() >LABEL_MAX_LENGTH){
 			return label.substring(0,LABEL_MAX_LENGTH);
 		}else{

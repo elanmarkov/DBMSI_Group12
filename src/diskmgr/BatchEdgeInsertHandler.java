@@ -49,10 +49,9 @@ public class BatchEdgeInsertHandler {
 		
 		nodeHeapFile = nodes;
 		edgeHeapFile = edges;
-		
+		System.out.print(System.getProperty("user.dir"));
 		BufferedReader br = new BufferedReader(new FileReader(System.getProperty("user.dir")
-				+ "/src/tests/" + edgeFileName + ".txt"));
-
+				+ '/' +  edgeFileName));
 
 		while ((line = br.readLine()) != null)
 		{
@@ -105,7 +104,7 @@ public class BatchEdgeInsertHandler {
 			newEdge.setDestination(desNid);
 			newEdge.setWeight(weight);
 			try{
-				SystemDefs.JavabaseDB.insertEdge(newEdge);
+				db.insertEdge(newEdge);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

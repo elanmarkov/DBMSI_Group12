@@ -387,7 +387,7 @@ public class EdgeQueryHandler {
 			e1.printStackTrace();
 		}
 		int i = 0;
-		Node[] nodes = new Node[edgeCount];
+		Node[] nodesArray = new Node[edgeCount];
 		//need to change test1.in to actual rel name
 		try {
 			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "BTreeIndex", attrType, attrSize, 4, 4, projlist, null, 0, false);
@@ -423,7 +423,7 @@ public class EdgeQueryHandler {
 				Edge edge = (Edge)t;
 				NID nid = edge.getDestination();
 				try {
-					nodes[i] = nodeheap.getNode(nid);
+					nodesArray[i] = nodeheap.getNode(nid);
 				} catch (InvalidSlotNumberException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -446,7 +446,7 @@ public class EdgeQueryHandler {
 
 				i++;
 			}
-			sortNodes(nodes);
+			sortNodes(nodesArray);
 		}
 		return status;	
 	}

@@ -59,7 +59,7 @@ public class BatchNodeInsertHandler {
 		
 
 		BufferedReader br = new BufferedReader(new FileReader(System.getProperty("user.dir")
-				+ "/src/tests/" + nodefilename + ".txt"));
+				+ '/' + nodefilename));
 
 		while ((line = br.readLine()) != null)
 		{
@@ -75,7 +75,7 @@ public class BatchNodeInsertHandler {
 					Integer.parseInt(splited[5]));
 			newnode.setDesc(nodedesc);
 			try{
-			SystemDefs.JavabaseDB.insertNode(newnode);
+			db.insertNode(newnode);
 			} catch(Exception e){
 				e.printStackTrace();
 			}

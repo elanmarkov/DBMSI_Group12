@@ -1,7 +1,7 @@
 /*Author Harshdeep
   This program runs with 2 parameters, FileName and GraphDBName. Task 13 of Phase 2. Takes
   input of batch of edges and deletes them from the GraphDBName database.*/ 
-
+package tests;
 import java.io.*;
 import java.util.*;
 import java.lang.*;

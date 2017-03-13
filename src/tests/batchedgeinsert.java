@@ -20,7 +20,8 @@ public class batchedgeinsert {
 	public boolean runTests(String edgeFile, PCounter pc) throws FileNotFoundException, IOException, SpaceNotAvailableException, HFBufMgrException, InvalidSlotNumberException, InvalidTupleSizeException, HFException, HFDiskMgrException, GetFileEntryException, ConstructPageException, AddFileEntryException {
 		BatchEdgeInsertHandler queries = SystemDefs.JavabaseDB.getBatchEdgeInsertHandler();
 		boolean _pass = queries.test1(edgeFile,pc);
-		System.out.print (_pass==true ? "completely successfully" : "failed");
+		System.out.print ("\n" + "... Batch Edge Insert tests ");
+		System.out.print (_pass==true ? "completed successfully." : "failed.");
 		System.out.print (".\n\n");
 		return _pass;
 	}

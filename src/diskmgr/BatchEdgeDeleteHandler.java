@@ -36,8 +36,8 @@ public class BatchEdgeDeleteHandler implements GlobalConst{
 
 	public void runbatchedgedelete(String dbname, String filename) throws InvalidSlotNumberException, HFException, HFDiskMgrException, HFBufMgrException, Exception{
         boolean status = OK;
-		EdgeHeapFile edgeheap = SystemDefs.JavabaseDB.edges;
-		NodeHeapFile nodeheap = SystemDefs.JavabaseDB.nodes;
+		EdgeHeapFile edgeheap = edges;
+		NodeHeapFile nodeheap = nodes;
 		PCounter         pcounter = new PCounter();
 		int       pages_read  = pcounter.rcounter;
 		int 	  pages_write = pcounter.wcounter;
@@ -99,7 +99,7 @@ public class BatchEdgeDeleteHandler implements GlobalConst{
 						Node desnode    = nodeheap.getNode(desnid);
 
 						if(Objects.equals(desnode.getLabel(),node2.getLabel()) && Objects.equals(sourcenode.getLabel(),node1.getLabel())){   // Checking if the edge is the one we are looking for.
-							SystemDefs.JavabaseDB.deleteEdge(eid);
+							db.deleteEdge(eid);
 						}
 
 					} 
@@ -115,8 +115,8 @@ public class BatchEdgeDeleteHandler implements GlobalConst{
 			pages_read  = pcounter.rcounter - pages_read;
 			pages_write = pcounter.wcounter - pages_write;
 			System.out.println("Number of Pages Read: "+pages_read+" Number of Page writes performed: "+pages_write);
-			int edgecnt = SystemDefs.JavabaseDB.getEdgeCnt();
-			int nodecnt = SystemDefs.JavabaseDB.getNodeCnt();
+			int edgecnt = db.getEdgeCnt();
+			int nodecnt = db.getNodeCnt();
 			System.out.println("Total Edge Count: "+ edgecnt + "Total node Count: "+ nodecnt);
 
 		}

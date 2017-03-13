@@ -23,7 +23,7 @@ import diskmgr.*;
 			System.out.println("Queries = " + queries);
 			boolean _pass = queries.test1(NodeFile, pc);
 			System.out.print ("\n" + "... Batch Node Insert tests ");
-			System.out.print (_pass==true ? "completely successfully" : "failed");
+			System.out.print (_pass==true ? "completed successfully." : "failed.");
 			System.out.print (".\n\n");
 			return _pass;
 		}

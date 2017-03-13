@@ -1,4 +1,4 @@
-
+package tests;
 
 import global.SystemDefs;
 
@@ -8,6 +8,10 @@ import diskmgr.PCounter;
 
 
 public class testcases {
+	private static void printReadWriteCount() {
+		System.out.println("\nNo. of pages read : " + PCounter.rcounter);
+		System.out.println("No. of pages write : " + PCounter.wcounter);
+	}
 	public static void main(String args[])
 	{
 		SystemDefs sysdef; 
@@ -68,13 +72,17 @@ public class testcases {
 					
 				}
 			} else if(splited[0].equals("nodequery")) {
+				PCounter.initialize();
 				String[] newSplited = new String[splited.length-1];
 				System.arraycopy(splited, 1, newSplited, 0, newSplited.length);
 				if(!graphExists) {
 					System.out.println("Graph DB does not exist");
 				} else {
 					nodequery nQuery = new nodequery();
-					nQuery.runTests(newSplited);
+					boolean _pass = nQuery.runTests(newSplited);
+					if(_pass) {
+						printReadWriteCount();
+					}
 				}
 			} else if(splited[0].equals("edgequery")) {
 				if(!graphExists) {
@@ -89,5 +97,4 @@ public class testcases {
 			
 		} while(!exit);
 	}
-
 }

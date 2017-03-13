@@ -35,7 +35,7 @@ import global.RID;
 
 public class ZCurve extends IndexFile{
 
-	public static int KEY_SIZE = 80;
+	public static int KEY_SIZE = 82;
 	private String fileName;
 	private BTreeFile btree;
 	

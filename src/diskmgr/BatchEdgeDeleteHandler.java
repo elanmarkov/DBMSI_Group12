@@ -19,18 +19,21 @@ public class BatchEdgeDeleteHandler implements GlobalConst{
 	ZCurve nodeDesc;
 	BTreeFile edgeLabels;
 	BTreeFile edgeWeights;
+	graphDB db;
 	public BatchEdgeDeleteHandler(NodeHeapFile nodes, EdgeHeapFile edges, BTreeFile nodeLabels, 
-		ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights) {
+	ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights, graphDB db) {
+
 		this.nodes = nodes;
 		this.edges = edges;
 		this.nodeLabels = nodeLabels;
 		this.nodeDesc = nodeDesc;
 		this.edgeLabels = edgeLabels;
 		this.edgeWeights = edgeWeights;
+		this.db = db;
 	}
-	/*private final static boolean OK   = true;
+	private final static boolean OK   = true;
 	private final static boolean FAIL = false;
-
+/*
 	public void runbatchedgedelete(String dbname, String filename){
 
 		SystemDefs   sysdefs  = new SystemDefs(dbname,100,100,"Clock");

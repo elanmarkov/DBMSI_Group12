@@ -20,8 +20,9 @@ public class EdgeQueryHandler {
 	ZCurve nodeDesc;
 	BTreeFile edgeLabels;
 	BTreeFile edgeWeights;
+	graphDB db;
 	public EdgeQueryHandler(NodeHeapFile nodes, EdgeHeapFile edges, BTreeFile nodeLabels, 
-	ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights) {
+	ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights, graphDB db) {
 
 		this.nodes = nodes;
 		this.edges = edges;
@@ -29,6 +30,7 @@ public class EdgeQueryHandler {
 		this.nodeDesc = nodeDesc;
 		this.edgeLabels = edgeLabels;
 		this.edgeWeights = edgeWeights;
+		this.db = db;
 	}
 
 	private void sortNodes(Node nodesArray[]) 

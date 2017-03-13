@@ -18,14 +18,17 @@ public class NodeQueryHandler {
 	ZCurve nodeDesc;
 	BTreeFile edgeLabels;
 	BTreeFile edgeWeights;
+	graphDB db;
 	public NodeQueryHandler(NodeHeapFile nodes, EdgeHeapFile edges, BTreeFile nodeLabels, 
-		ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights) {
+	ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights, graphDB db) {
+
 		this.nodes = nodes;
 		this.edges = edges;
 		this.nodeLabels = nodeLabels;
 		this.nodeDesc = nodeDesc;
 		this.edgeLabels = edgeLabels;
 		this.edgeWeights = edgeWeights;
+		this.db = db;
 	}
 
 	private void sortNodes(Node nodes[]) {

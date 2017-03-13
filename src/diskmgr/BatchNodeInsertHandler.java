@@ -18,14 +18,17 @@ public class BatchNodeInsertHandler {
 	ZCurve nodeDesc;
 	BTreeFile edgeLabels;
 	BTreeFile edgeWeights;
+	graphDB db;
 	public BatchNodeInsertHandler(NodeHeapFile nodes, EdgeHeapFile edges, BTreeFile nodeLabels, 
-		ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights) {
+	ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights, graphDB db) {
+
 		this.nodes = nodes;
 		this.edges = edges;
 		this.nodeLabels = nodeLabels;
 		this.nodeDesc = nodeDesc;
 		this.edgeLabels = edgeLabels;
 		this.edgeWeights = edgeWeights;
+		this.db = db;
 	}
 	public boolean test1(String nodefilename, PCounter pc)
 			throws FileNotFoundException, IOException, SpaceNotAvailableException, 

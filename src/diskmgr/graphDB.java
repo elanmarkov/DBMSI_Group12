@@ -98,12 +98,12 @@ public class graphDB extends DB {
 			edgeLabels = new BTreeFile(filename + "EDGELABEL", AttrType.attrString, KEY_SIZE, 0);
 			edgeWeights = new BTreeFile(filename + "EDGEWEIGHT", AttrType.attrInteger, KEY_SIZE, 0);
 		}
-		nodeQuery = new NodeQueryHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights);
-		edgeQuery = new EdgeQueryHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights);
-		batchNodeDelete = new BatchNodeDeleteHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights);
-		batchEdgeDelete = new BatchEdgeDeleteHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights);
-		batchNodeInsert = new BatchNodeInsertHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights);
-		batchEdgeInsert = new BatchEdgeInsertHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights);
+		nodeQuery = new NodeQueryHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights, this);
+		edgeQuery = new EdgeQueryHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights, this);
+		batchNodeDelete = new BatchNodeDeleteHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights, this);
+		batchEdgeDelete = new BatchEdgeDeleteHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights, this);
+		batchNodeInsert = new BatchNodeInsertHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights, this);
+		batchEdgeInsert = new BatchEdgeInsertHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights, this);
 	}
 	public int getNodeCnt() throws HFBufMgrException, InvalidSlotNumberException, InvalidTupleSizeException, IOException, HFDiskMgrException {
 		return nodes.getNodeCnt();

@@ -411,7 +411,7 @@ public class NodeQueryHandler {
 		}
 		Node[] nodesArray = new Node[nodeCount];
 
-		AttrType [] jtype = new AttrType[1];
+		AttrType [] jtype = new AttrType[2];
 		jtype[0] = new AttrType (AttrType.attrString);
 		jtype[1] = new AttrType (AttrType.attrDesc);
 		try {
@@ -579,7 +579,7 @@ public class NodeQueryHandler {
 		NID nid = new NID();
 		NodeHeapFile f = nodes;
 		boolean nodeExists = false;
-		String nodeLabel = argv[5];
+		String nodeLabel = argv[4];
 		Node refNode = new Node();
 		refNode.setLabel(nodeLabel);
 		String incomingEdges[] = null;
@@ -685,7 +685,9 @@ public class NodeQueryHandler {
 							done = true;
 							break;
 						}
-						if(f.getNode(edge.getSource()).getLabel().equals(refNode.getLabel())) {
+						NID sourceId = edge.getSource();
+						System.out.println("source = "+sourceId.slotNo +" -- page "+sourceId.pageNo.pid);
+						if(f.getNode(sourceId).getLabel().equals(refNode.getLabel())) {
 							outgoingEdges[outgoingEdgeCount] = edge.getLabel();
 							outgoingEdgeCount++;
 						} else if(f.getNode(edge.getDestination()).getLabel().equals(refNode.getLabel())) {

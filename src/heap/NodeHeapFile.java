@@ -38,7 +38,7 @@ public class NodeHeapFile extends Heapfile{
 	
 	public Node getNode(NID nid) throws InvalidSlotNumberException, InvalidTupleSizeException, HFException,
 	HFDiskMgrException, HFBufMgrException, Exception {
-		Tuple tp= super.getRecord(nid);
+		Tuple tp= super.getRecord(new RID(nid.pageNo, nid.slotNo));
 		if(tp!=null){
 			Node node = new Node(tp.data, 0);
 			Descriptor desc = Convert.getDescValue(Node.LABEL_MAX_LENGTH+2, tp.data);

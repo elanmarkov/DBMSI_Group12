@@ -104,13 +104,13 @@ public class NodeQueryHandler {
 	    projlist[0] = new FldSpec(rel, 1);
 	    projlist[1] = new FldSpec(rel, 2);
 	    short[] attrSize = new short[2];
-	    attrSize[0] = 8;
+	    attrSize[0] = Node.LABEL_MAX_LENGTH;
 	    attrSize[1] = 10;
 		IndexScan iscan = null;
 		String filename = nodes.getFileName();
 		//need to change test1.in to actual rel name
 	    try {
-	      iscan = new IndexScan(new IndexType(IndexType.Z_Index), filename, "ZTreeIndex", attrType, attrSize, 2, 2, projlist, null, 2, false);
+	      iscan = new IndexScan(new IndexType(IndexType.Z_Index), filename, "GraphDB0NODEDESC", attrType, attrSize, 2, 2, projlist, null, 2, false);
 	    }
 	    catch (Exception e) {
 	      status = FAIL;
@@ -121,20 +121,13 @@ public class NodeQueryHandler {
 			while(!done) {
 				Tuple t = new Tuple();
 				try {
-					t = iscan.get_next();
-				} catch (IndexException e1) {
-					// TODO Auto-generated catch block
-					status = FAIL;
-					e1.printStackTrace();
-				} catch (UnknownKeyTypeException e1) {
-					// TODO Auto-generated catch block
-					status = FAIL;
-					e1.printStackTrace();
-				} catch (IOException e1) {
+					t = iscan.getNextNode();
+				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					status = FAIL;
 					e1.printStackTrace();
 				}
+				System.out.println("t = " + t);
 				if(t == null) {
 					done = true;
 					break;
@@ -161,7 +154,7 @@ public class NodeQueryHandler {
 	    projlist[0] = new FldSpec(rel, 1);
 	    projlist[1] = new FldSpec(rel, 2);
 	    short[] attrSize = new short[2];
-	    attrSize[0] = 8;
+	    attrSize[0] = Node.LABEL_MAX_LENGTH;
 	    attrSize[1] = 10;
 		IndexScan iscan = null;
 		String filename = nodes.getFileName();
@@ -175,7 +168,7 @@ public class NodeQueryHandler {
 		Node nodes[] = new Node[nodeCount];
 		//need to change test1.in to actual rel name
 	    try {
-	      iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "BTreeIndex", attrType, attrSize, 2, 2, projlist, null, 1, false);
+	      iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0NODELABEL" , attrType, attrSize, 2, 2, projlist, null, 1, false);
 	    }
 	    catch (Exception e) {
 	      status = FAIL;
@@ -186,29 +179,26 @@ public class NodeQueryHandler {
 			while(!done) {
 				Tuple t = new Tuple();
 				try {
-					t = iscan.get_next();
-				} catch (IndexException e) {
+					t = iscan.getNextNode();
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					status = FAIL;
 					e.printStackTrace();
-				} catch (UnknownKeyTypeException e) {
-					// TODO Auto-generated catch block
-					status = FAIL;
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					status = FAIL;
-					e.printStackTrace();
-					
 				}
 				if(t == null) {
 					done = true;
 					break;
 				}
 				nodes[i] = new Node(t);
+				try {
+				nodes[i].print(null);
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
 				i++;
 			}
-			sortNodes(nodes);
+			//sortNodes(nodes);
+			
 		}
 		return status;
 	}
@@ -222,8 +212,7 @@ public class NodeQueryHandler {
 	    projlist[0] = new FldSpec(rel, 1);
 	    projlist[1] = new FldSpec(rel, 2);
 	    short[] attrSize = new short[2];
-	    
-	    attrSize[0] = 8;
+	    attrSize[0] = Node.LABEL_MAX_LENGTH;
 	    attrSize[1] = 10;
 		IndexScan iscan = null;
 		String filename = nodes.getFileName();
@@ -237,7 +226,7 @@ public class NodeQueryHandler {
 		Node nodes[] = new Node[nodeCount];
 		//need to change test1.in to actual rel name
 	    try {
-	      iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "BTreeIndex", attrType, attrSize, 2, 2, projlist, null, 1, false);
+	      iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0NODELABEL", attrType, attrSize, 2, 2, projlist, null, 1, false);
 	    }
 	    catch (Exception e) {
 	      status = FAIL;
@@ -248,20 +237,10 @@ public class NodeQueryHandler {
 			while(!done) {
 				Tuple t = new Tuple();
 				try {
-					t = iscan.get_next();
-				} catch (IndexException e) {
-					// TODO Auto-generated catch block
+					t = iscan.getNextNode();
+				} catch (Exception e) {
 					status = FAIL;
 					e.printStackTrace();
-				} catch (UnknownKeyTypeException e) {
-					// TODO Auto-generated catch block
-					status = FAIL;
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					status = FAIL;
-					e.printStackTrace();
-					
 				}
 				if(t == null) {
 					done = true;
@@ -287,13 +266,13 @@ public class NodeQueryHandler {
 	    projlist[0] = new FldSpec(rel, 1);
 	    projlist[1] = new FldSpec(rel, 2);
 	    short[] attrSize = new short[2];
-	    attrSize[0] = 8;
+	    attrSize[0] = Node.LABEL_MAX_LENGTH;
 	    attrSize[1] = 10;
 		IndexScan iscan = null;
 		String filename = nodes.getFileName();
 		//need to change test1.in to actual rel name
 	    try {
-	      iscan = new IndexScan(new IndexType(IndexType.Z_Index), filename, "ZTreeIndex", attrType, attrSize, 2, 2, projlist, null, 2, false);
+	      iscan = new IndexScan(new IndexType(IndexType.Z_Index), filename, "GraphDB0NODEDESC", attrType, attrSize, 2, 2, projlist, null, 2, false);
 	    }
 	    catch (Exception e) {
 	      status = FAIL;
@@ -304,17 +283,10 @@ public class NodeQueryHandler {
 			while(!done) {
 				Tuple t = new Tuple();
 				try {
-					t = iscan.get_next();
-				} catch (IndexException e1) {
-					// TODO Auto-generated catch block
+					t = iscan.getNextNode();
+				} catch (Exception e1) {
 					e1.printStackTrace();
-				} catch (UnknownKeyTypeException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				} 
 				if(t == null) {
 					done = true;
 					break;
@@ -347,20 +319,28 @@ public class NodeQueryHandler {
 	    attrSize[0] = 8;
 	    attrSize[1] = 10;
 	    
-	    AttrType[] EattrType = new AttrType[4];
+	    AttrType[] EattrType = new AttrType[6];
 	    attrType[0] = new AttrType(AttrType.attrString);
 	    attrType[1] = new AttrType(AttrType.attrInteger);
 	    attrType[2] = new AttrType(AttrType.attrInteger);
-	    attrType[3] = new AttrType(AttrType.attrString);
-	    FldSpec[] Eprojlist = new FldSpec[2];
+	    attrType[3] = new AttrType(AttrType.attrInteger);
+	    attrType[4] = new AttrType(AttrType.attrInteger);
+	    attrType[5] = new AttrType(AttrType.attrInteger);
+	    FldSpec[] Eprojlist = new FldSpec[6];
 	    RelSpec Erel = new RelSpec(RelSpec.outer); 
 	    Eprojlist[0] = new FldSpec(rel, 1);
 	    Eprojlist[1] = new FldSpec(rel, 2);
-	    short[] EattrSize = new short[4];
-	    EattrSize[0] = 4;
-	    EattrSize[1] = 8;
-	    EattrSize[2] = 8;
-	    EattrSize[3] = 8;
+	    Eprojlist[2] = new FldSpec(rel, 3);
+	    Eprojlist[3] = new FldSpec(rel, 4);
+	    Eprojlist[4] = new FldSpec(rel, 5);
+	    Eprojlist[5] = new FldSpec(rel, 6);
+	    short[] EattrSize = new short[6];
+	    EattrSize[0] = 6;
+	    EattrSize[1] = 4;
+	    EattrSize[2] = 4;
+	    EattrSize[3] = 4;
+	    EattrSize[4] = 4;
+	    EattrSize[5] = 4;
 	    
 		String incomingEdges[] = null;
 		String outgoingEdges[] = null;

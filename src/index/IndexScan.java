@@ -168,6 +168,7 @@ public class IndexScan extends Iterator {
 
 		try {
 			nextentry = indScan.get_next();
+			System.out.println("IndexScan.get_next() next entry : "+nextentry);
 		} catch (Exception e) {
 			throw new IndexException(e, "IndexScan.java: BTree error");
 		}
@@ -291,7 +292,77 @@ public class IndexScan extends Iterator {
 			closeFlag = true;
 		}
 	}
+	
+	public Node getNextNode() throws IOException,
+	   JoinsException ,
+	   IndexException,
+	   InvalidTupleSizeException,
+	   InvalidTypeException, 
+	   PageNotReadException,
+	   TupleUtilsException, 
+	   PredEvalException,
+	   SortException,
+	   LowMemException,
+	   UnknowAttrType,
+	   UnknownKeyTypeException,
+	   Exception{
 
+		RID rid;
+		KeyDataEntry nextentry = null;
+
+		try {
+			nextentry = indScan.get_next();
+		} catch (Exception e) {
+			throw new IndexException(e, "IndexScan.java: BTree error");
+		}
+
+		while (nextentry != null) {
+			rid = ((LeafData) nextentry.data).getData();
+			try {
+				tuple1 = f.getRecord(rid);
+				return new Node(tuple1);
+			} catch (Exception e) {
+				throw new IndexException(e, "IndexScan.java: getRecord failed");
+			}
+		}
+		return null;
+	}
+
+	public Edge getNextEdge() throws IOException,
+	   JoinsException ,
+	   IndexException,
+	   InvalidTupleSizeException,
+	   InvalidTypeException, 
+	   PageNotReadException,
+	   TupleUtilsException, 
+	   PredEvalException,
+	   SortException,
+	   LowMemException,
+	   UnknowAttrType,
+	   UnknownKeyTypeException,
+	   Exception{
+
+		RID rid;
+		KeyDataEntry nextentry = null;
+
+		try {
+			nextentry = indScan.get_next();
+		} catch (Exception e) {
+			throw new IndexException(e, "IndexScan.java: BTree error");
+		}
+
+		while (nextentry != null) {
+			rid = ((LeafData) nextentry.data).getData();
+			try {
+				tuple1 = f.getRecord(rid);
+				return new Edge(tuple1);
+			} catch (Exception e) {
+				throw new IndexException(e, "IndexScan.java: getRecord failed");
+			}
+		}
+		return null;
+	
+	}
 	public FldSpec[] perm_mat;
 	private IndexFile indFile;
 	private IndexFileScan indScan;

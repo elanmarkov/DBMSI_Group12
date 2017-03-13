@@ -69,5 +69,8 @@ public class EdgeHeapFile extends Heapfile{
 		Escan newscan = new Escan(this);
 		return newscan;
 	}
+	public String getFileName() {
+		return _fileName;
+	}
 
 }

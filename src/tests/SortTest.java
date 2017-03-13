@@ -204,10 +204,9 @@ class SORTDriver extends TestDriver
 
     // Sort "test1.in" 
     Sort sort = null;
-    Descriptor y = new Descriptor();
-    y.set(-1,-1,-1,-1,-1);
+    
     try {
-      sort = new Sort(attrType, (short) 2, attrSize, fscan, 1,10,y, order[0], REC_LEN1, SORTPGNUM);
+      sort = new Sort(attrType, (short) 2, attrSize, fscan, 1, order[0], REC_LEN1, SORTPGNUM);
     }
     catch (Exception e) {
       status = FAIL;
@@ -364,10 +363,9 @@ class SORTDriver extends TestDriver
      
     // Sort "test2.in"
     Sort sort = null;
-    Descriptor y = new Descriptor();
-    y.set(-1,-1,-1,-1,-1);
+    
     try {
-      sort = new Sort(attrType, (short) 1, attrSize, fscan, 1,10,y, order[1], REC_LEN1, SORTPGNUM);
+      sort = new Sort(attrType, (short) 1, attrSize, fscan, 1, order[1], REC_LEN1, SORTPGNUM);
     }
     catch (Exception e) {
       status = FAIL;

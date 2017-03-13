@@ -71,7 +71,8 @@ public class BatchEdgeInsertHandler {
 			boolean destFound = false;
 			
 			do
-			{	System.out.println("BatchEdgeInsertHandler.test1() "+scanned_node);
+			{	
+				//System.out.println("BatchEdgeInsertHandler.test1() "+scanned_node);
 				if (scanned_node == null)
 				{
 					srcFound = true;
@@ -80,17 +81,25 @@ public class BatchEdgeInsertHandler {
 				else
 				{
 					//System.out.println("BatchEdgeInsertHandler.test1() "+scanned_node.getLabel());
-					//System.out.println("BatchEdgeInsertHandler.test1() src : "+srcLabel + "dest : "+destLabel);
-					if(scanned_node.getLabel().equals(getFixedLengthLable(srcLabel)))
+					//System.out.println("BatchEdgeInsertHandler.test1() src : "+srcLabel + "dest : "+destLabel + " fixed length : " + getFixedLengthLable(srcLabel));
+					if(scanned_node.getLabel().equals(srcLabel))
 					{
-						System.out.println("Source Node found");
-						sourceNid = nid; 
+						System.out.println("Source Edge Label : "+ edgeLabel +" Source Node found label : " +scanned_node.getLabel());
+						sourceNid = new NID(new PageId(nid.pageNo.pid),nid.slotNo); 
+						try {
+							Node n = nodeHeapFile.getNode(nid);
+							System.out.println("BatchEdgeInsertHandler.test1() label : nid : "+nid + " " + n.getLabel());
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						srcFound = true;
 					}
-					if (scanned_node.getLabel().equals(getFixedLengthLable(destLabel)))
+					if (scanned_node.getLabel().equals(destLabel))
 					{
-						System.out.println("Dest found");
-						desNid = nid;
+						//System.out.println("Dest found");
+						//System.out.println("Dest Node found slot : "+nid.slotNo +" page : "+nid.pageNo.pid);
+						desNid = new NID(new PageId(nid.pageNo.pid),nid.slotNo);
 						destFound = true;
 					}
 					scanned_node = scan.getNext(nid);
@@ -102,6 +111,7 @@ public class BatchEdgeInsertHandler {
 			newEdge.setSource(sourceNid);
 			newEdge.setDestination(desNid);
 			newEdge.setWeight(weight);
+			System.out.println("BatchEdgeInsertHandler.test1() edge : sourceNid : "+sourceNid.slotNo +" - "+sourceNid.pageNo.pid +" des : "+desNid.slotNo +" - "+desNid.pageNo.pid);
 			try{
 				SystemDefs.JavabaseDB.insertEdge(newEdge);
 			} catch (Exception e) {

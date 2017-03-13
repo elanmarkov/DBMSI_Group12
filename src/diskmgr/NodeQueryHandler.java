@@ -20,7 +20,7 @@ public class NodeQueryHandler {
 	BTreeFile edgeWeights;
 	graphDB db;
 	public NodeQueryHandler(NodeHeapFile nodes, EdgeHeapFile edges, BTreeFile nodeLabels, 
-		ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights, graphDB db) {
+			ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights, graphDB db) {
 		this.nodes = nodes;
 		this.edges = edges;
 		this.nodeLabels = nodeLabels;
@@ -97,25 +97,25 @@ public class NodeQueryHandler {
 	public boolean nodeIndexTest0(String argv[]){
 		boolean status = OK;
 		AttrType[] attrType = new AttrType[2];
-	    attrType[0] = new AttrType(AttrType.attrString);
-	    attrType[1] = new AttrType(AttrType.attrDesc);
-	    FldSpec[] projlist = new FldSpec[2];
-	    RelSpec rel = new RelSpec(RelSpec.outer); 
-	    projlist[0] = new FldSpec(rel, 1);
-	    projlist[1] = new FldSpec(rel, 2);
-	    short[] attrSize = new short[2];
-	    attrSize[0] = Node.LABEL_MAX_LENGTH;
-	    attrSize[1] = 10;
+		attrType[0] = new AttrType(AttrType.attrString);
+		attrType[1] = new AttrType(AttrType.attrDesc);
+		FldSpec[] projlist = new FldSpec[2];
+		RelSpec rel = new RelSpec(RelSpec.outer); 
+		projlist[0] = new FldSpec(rel, 1);
+		projlist[1] = new FldSpec(rel, 2);
+		short[] attrSize = new short[2];
+		attrSize[0] = Node.LABEL_MAX_LENGTH;
+		attrSize[1] = 10;
 		IndexScan iscan = null;
 		String filename = nodes.getFileName();
 		//need to change test1.in to actual rel name
-	    try {
-	      iscan = new IndexScan(new IndexType(IndexType.Z_Index), filename, "GraphDB0NODEDESC", attrType, attrSize, 2, 2, projlist, null, 2, false);
-	    }
-	    catch (Exception e) {
-	      status = FAIL;
-	      e.printStackTrace();
-	    }
+		try {
+			iscan = new IndexScan(new IndexType(IndexType.Z_Index), filename, "GraphDB0NODEDESC", attrType, attrSize, 2, 2, projlist, null, 2, false);
+		}
+		catch (Exception e) {
+			status = FAIL;
+			e.printStackTrace();
+		}
 		boolean done = false;
 		if(status == OK) {
 			while(!done) {
@@ -147,15 +147,15 @@ public class NodeQueryHandler {
 	public boolean nodeIndexTest1(String argv[]){
 		boolean status = OK;
 		AttrType[] attrType = new AttrType[2];
-	    attrType[0] = new AttrType(AttrType.attrString);
-	    attrType[1] = new AttrType(AttrType.attrDesc);
-	    FldSpec[] projlist = new FldSpec[2];
-	    RelSpec rel = new RelSpec(RelSpec.outer); 
-	    projlist[0] = new FldSpec(rel, 1);
-	    projlist[1] = new FldSpec(rel, 2);
-	    short[] attrSize = new short[2];
-	    attrSize[0] = Node.LABEL_MAX_LENGTH;
-	    attrSize[1] = 10;
+		attrType[0] = new AttrType(AttrType.attrString);
+		attrType[1] = new AttrType(AttrType.attrDesc);
+		FldSpec[] projlist = new FldSpec[2];
+		RelSpec rel = new RelSpec(RelSpec.outer); 
+		projlist[0] = new FldSpec(rel, 1);
+		projlist[1] = new FldSpec(rel, 2);
+		short[] attrSize = new short[2];
+		attrSize[0] = Node.LABEL_MAX_LENGTH;
+		attrSize[1] = 10;
 		IndexScan iscan = null;
 		String filename = nodes.getFileName();
 		int nodeCount = 0, i = 0;
@@ -167,13 +167,13 @@ public class NodeQueryHandler {
 		}
 		Node nodes[] = new Node[nodeCount];
 		//need to change test1.in to actual rel name
-	    try {
-	      iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0NODELABEL" , attrType, attrSize, 2, 2, projlist, null, 1, false);
-	    }
-	    catch (Exception e) {
-	      status = FAIL;
-	      e.printStackTrace();
-	    }
+		try {
+			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0NODELABEL" , attrType, attrSize, 2, 2, projlist, null, 1, false);
+		}
+		catch (Exception e) {
+			status = FAIL;
+			e.printStackTrace();
+		}
 		boolean done = false;
 		if(status == OK) {
 			while(!done) {
@@ -191,29 +191,29 @@ public class NodeQueryHandler {
 				}
 				nodes[i] = new Node(t);
 				try {
-				nodes[i].print(null);
+					nodes[i].print(null);
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
 				i++;
 			}
 			//sortNodes(nodes);
-			
+
 		}
 		return status;
 	}
 	public boolean nodeIndexTest2(String argv[]){
 		boolean status = OK;
 		AttrType[] attrType = new AttrType[2];
-	    attrType[0] = new AttrType(AttrType.attrString);
-	    attrType[1] = new AttrType(AttrType.attrDesc);
-	    FldSpec[] projlist = new FldSpec[2];
-	    RelSpec rel = new RelSpec(RelSpec.outer); 
-	    projlist[0] = new FldSpec(rel, 1);
-	    projlist[1] = new FldSpec(rel, 2);
-	    short[] attrSize = new short[2];
-	    attrSize[0] = Node.LABEL_MAX_LENGTH;
-	    attrSize[1] = 10;
+		attrType[0] = new AttrType(AttrType.attrString);
+		attrType[1] = new AttrType(AttrType.attrDesc);
+		FldSpec[] projlist = new FldSpec[2];
+		RelSpec rel = new RelSpec(RelSpec.outer); 
+		projlist[0] = new FldSpec(rel, 1);
+		projlist[1] = new FldSpec(rel, 2);
+		short[] attrSize = new short[2];
+		attrSize[0] = Node.LABEL_MAX_LENGTH;
+		attrSize[1] = 10;
 		IndexScan iscan = null;
 		String filename = nodes.getFileName();
 		int nodeCount = 0, i = 0;
@@ -225,13 +225,13 @@ public class NodeQueryHandler {
 		}
 		Node nodes[] = new Node[nodeCount];
 		//need to change test1.in to actual rel name
-	    try {
-	      iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0NODELABEL", attrType, attrSize, 2, 2, projlist, null, 1, false);
-	    }
-	    catch (Exception e) {
-	      status = FAIL;
-	      e.printStackTrace();
-	    }
+		try {
+			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0NODELABEL", attrType, attrSize, 2, 2, projlist, null, 1, false);
+		}
+		catch (Exception e) {
+			status = FAIL;
+			e.printStackTrace();
+		}
 		boolean done = false;
 		if(status == OK) {
 			while(!done) {
@@ -259,25 +259,25 @@ public class NodeQueryHandler {
 		double distance = Double.parseDouble(argv[9]);
 		boolean status = OK;
 		AttrType[] attrType = new AttrType[2];
-	    attrType[0] = new AttrType(AttrType.attrString);
-	    attrType[1] = new AttrType(AttrType.attrDesc);
-	    FldSpec[] projlist = new FldSpec[2];
-	    RelSpec rel = new RelSpec(RelSpec.outer); 
-	    projlist[0] = new FldSpec(rel, 1);
-	    projlist[1] = new FldSpec(rel, 2);
-	    short[] attrSize = new short[2];
-	    attrSize[0] = Node.LABEL_MAX_LENGTH;
-	    attrSize[1] = 10;
+		attrType[0] = new AttrType(AttrType.attrString);
+		attrType[1] = new AttrType(AttrType.attrDesc);
+		FldSpec[] projlist = new FldSpec[2];
+		RelSpec rel = new RelSpec(RelSpec.outer); 
+		projlist[0] = new FldSpec(rel, 1);
+		projlist[1] = new FldSpec(rel, 2);
+		short[] attrSize = new short[2];
+		attrSize[0] = Node.LABEL_MAX_LENGTH;
+		attrSize[1] = 10;
 		IndexScan iscan = null;
 		String filename = nodes.getFileName();
 		//need to change test1.in to actual rel name
-	    try {
-	      iscan = new IndexScan(new IndexType(IndexType.Z_Index), filename, "GraphDB0NODEDESC", attrType, attrSize, 2, 2, projlist, null, 2, false);
-	    }
-	    catch (Exception e) {
-	      status = FAIL;
-	      e.printStackTrace();
-	    }
+		try {
+			iscan = new IndexScan(new IndexType(IndexType.Z_Index), filename, "GraphDB0NODEDESC", attrType, attrSize, 2, 2, projlist, null, 2, false);
+		}
+		catch (Exception e) {
+			status = FAIL;
+			e.printStackTrace();
+		}
 		boolean done = false;
 		if(status == OK) {
 			while(!done) {
@@ -306,42 +306,42 @@ public class NodeQueryHandler {
 		String nodeLabel = argv[4];
 		Node refNode = new Node();
 		refNode.setLabel(nodeLabel);
-		
+
 		AttrType[] attrType = new AttrType[2];
-	    attrType[0] = new AttrType(AttrType.attrString);
-	    attrType[1] = new AttrType(AttrType.attrDesc);
-	    FldSpec[] projlist = new FldSpec[2];
-	    RelSpec rel = new RelSpec(RelSpec.outer); 
-	    projlist[0] = new FldSpec(rel, 1);
-	    projlist[1] = new FldSpec(rel, 2);
-	    
-	    short[] attrSize = new short[4];
-	    attrSize[0] = 8;
-	    attrSize[1] = 10;
-	    
-	    AttrType[] EattrType = new AttrType[6];
-	    EattrType[0] = new AttrType(AttrType.attrString);
-	    EattrType[1] = new AttrType(AttrType.attrInteger);
-	    EattrType[2] = new AttrType(AttrType.attrInteger);
-	    EattrType[3] = new AttrType(AttrType.attrInteger);
-	    EattrType[4] = new AttrType(AttrType.attrInteger);
-	    EattrType[5] = new AttrType(AttrType.attrInteger);
-	    FldSpec[] Eprojlist = new FldSpec[6];
-	    RelSpec Erel = new RelSpec(RelSpec.outer); 
-	    Eprojlist[0] = new FldSpec(rel, 1);
-	    Eprojlist[1] = new FldSpec(rel, 2);
-	    Eprojlist[2] = new FldSpec(rel, 3);
-	    Eprojlist[3] = new FldSpec(rel, 4);
-	    Eprojlist[4] = new FldSpec(rel, 5);
-	    Eprojlist[5] = new FldSpec(rel, 6);
-	    short[] EattrSize = new short[6];
-	    EattrSize[0] = 6;
-	    EattrSize[1] = 4;
-	    EattrSize[2] = 4;
-	    EattrSize[3] = 4;
-	    EattrSize[4] = 4;
-	    EattrSize[5] = 4;
-	    
+		attrType[0] = new AttrType(AttrType.attrString);
+		attrType[1] = new AttrType(AttrType.attrDesc);
+		FldSpec[] projlist = new FldSpec[2];
+		RelSpec rel = new RelSpec(RelSpec.outer); 
+		projlist[0] = new FldSpec(rel, 1);
+		projlist[1] = new FldSpec(rel, 2);
+
+		short[] attrSize = new short[4];
+		attrSize[0] = Node.LABEL_MAX_LENGTH;
+		attrSize[1] = 10;
+
+		AttrType[] EattrType = new AttrType[6];
+		EattrType[0] = new AttrType(AttrType.attrString);
+		EattrType[1] = new AttrType(AttrType.attrInteger);
+		EattrType[2] = new AttrType(AttrType.attrInteger);
+		EattrType[3] = new AttrType(AttrType.attrInteger);
+		EattrType[4] = new AttrType(AttrType.attrInteger);
+		EattrType[5] = new AttrType(AttrType.attrInteger);
+		FldSpec[] Eprojlist = new FldSpec[6];
+		RelSpec Erel = new RelSpec(RelSpec.outer); 
+		Eprojlist[0] = new FldSpec(rel, 1);
+		Eprojlist[1] = new FldSpec(rel, 2);
+		Eprojlist[2] = new FldSpec(rel, 3);
+		Eprojlist[3] = new FldSpec(rel, 4);
+		Eprojlist[4] = new FldSpec(rel, 5);
+		Eprojlist[5] = new FldSpec(rel, 6);
+		short[] EattrSize = new short[6];
+		EattrSize[0] = Node.LABEL_MAX_LENGTH;
+		EattrSize[1] = 4;
+		EattrSize[2] = 4;
+		EattrSize[3] = 4;
+		EattrSize[4] = 4;
+		EattrSize[5] = 4;
+
 		String incomingEdges[] = null;
 		String outgoingEdges[] = null;
 		int incomingEdgeCount = 0;
@@ -350,55 +350,54 @@ public class NodeQueryHandler {
 		String Efilename = edges.getFileName();
 		IndexScan isscan = null;
 		IndexScan eiscan = null;
-		
+
 		try {
-		      isscan = new IndexScan(new IndexType(IndexType.B_Index), Nfilename, "GraphDB0NODELABEL", attrType, attrSize, 2, 2, projlist, null, 1, false);
-		    }
-		    catch (Exception e) {
-		      status = FAIL;
-		      e.printStackTrace();
-		    }
+			isscan = new IndexScan(new IndexType(IndexType.B_Index), Nfilename, "GraphDB0NODELABEL", attrType, attrSize, 2, 2, projlist, null, 1, false);
+		}
+		catch (Exception e) {
+			status = FAIL;
+			e.printStackTrace();
+		}
 
 		if ( status == OK ) {
 			Tuple t = new Tuple();
 
 			boolean done = false;
 			while (!done) { 
-					
-					try {
-						t = isscan.getNextNode();
-					} catch (Exception e1) {
-						e1.printStackTrace();
-					}
-					if(t == null) {
-						done = true;
-						break;
-					}
-					Node n = new Node(t);
-					if(n.getLabel().equals(refNode.getLabel())) {
-						nodeExists = true;
-						refNode = n;
-						break;
-					}
-					
+
+				try {
+					t = isscan.getNextNode();
+				} catch (Exception e1) {
+					e1.printStackTrace();
 				}
+				if(t == null) {
+					done = true;
+					break;
+				}
+				Node n = new Node(t);
+				if(n.getLabel().equals(refNode.getLabel())) {
+					nodeExists = true;
+					refNode = n;
+					break;
+				}
+
+			}
 		}
-		System.out.println("NodeQueryHandler.nodeIndexTest4() refname: " + refNode.getLabel());
 		try {
-			incomingEdges = new String[edges.getEdgeCnt()];
-			outgoingEdges = new String[edges.getEdgeCnt()];
+			incomingEdges = new String[nodes.getNodeCnt()];
+			outgoingEdges = new String[nodes.getNodeCnt()];
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		} 
 		if(nodeExists) {
-			
+
 			try {
-			      eiscan = new IndexScan(new IndexType(IndexType.B_Index), Efilename, "GraphDB0EDGELABEL", EattrType, EattrSize, 6, 6, Eprojlist, null, 1, false);
-			    }
-			    catch (Exception e) {
-			      status = FAIL;
-			      e.printStackTrace();
-			    }
+				eiscan = new IndexScan(new IndexType(IndexType.B_Index), Efilename, "GraphDB0EDGELABEL", EattrType, EattrSize, 6, 6, Eprojlist, null, 1, false);
+			}
+			catch (Exception e) {
+				status = FAIL;
+				e.printStackTrace();
+			}
 
 			if ( status == OK ) {
 				Tuple et = new Tuple();
@@ -425,7 +424,7 @@ public class NodeQueryHandler {
 						e.printStackTrace();
 					}
 				}
-				
+
 				try {
 					refNode.print(attrType);
 				} catch (IOException e) {
@@ -446,7 +445,7 @@ public class NodeQueryHandler {
 		return status;
 	}
 	public boolean nodeIndexTest5(String argv[]){
-		
+
 		Descriptor desc = new Descriptor();
 		desc.set(Integer.parseInt(argv[4]), Integer.parseInt(argv[5]), Integer.parseInt(argv[6]), Integer.parseInt(argv[7]), Integer.parseInt(argv[8]));
 		double distance = Double.parseDouble(argv[9]);
@@ -461,34 +460,41 @@ public class NodeQueryHandler {
 		int incomingEdgeCount[] = null;
 		String Nfilename = nodes.getFileName();
 		String Efilename = edges.getFileName();
-		
+
 		AttrType[] attrType = new AttrType[2];
-	    attrType[0] = new AttrType(AttrType.attrString);
-	    attrType[1] = new AttrType(AttrType.attrDesc);
-	    FldSpec[] projlist = new FldSpec[2];
-	    RelSpec rel = new RelSpec(RelSpec.outer); 
-	    projlist[0] = new FldSpec(rel, 1);
-	    projlist[1] = new FldSpec(rel, 2);
-	    
-	    short[] attrSize = new short[2];
-	    attrSize[0] = 8;
-	    attrSize[1] = 10;
-	    
-	    AttrType[] EattrType = new AttrType[4];
-	    attrType[0] = new AttrType(AttrType.attrString);
-	    attrType[1] = new AttrType(AttrType.attrInteger);
-	    attrType[2] = new AttrType(AttrType.attrInteger);
-	    attrType[3] = new AttrType(AttrType.attrString);
-	    FldSpec[] Eprojlist = new FldSpec[2];
-	    RelSpec Erel = new RelSpec(RelSpec.outer); 
-	    Eprojlist[0] = new FldSpec(rel, 1);
-	    Eprojlist[1] = new FldSpec(rel, 2);
-	    short[] EattrSize = new short[4];
-	    EattrSize[0] = 4;
-	    EattrSize[1] = 8;
-	    EattrSize[2] = 8;
-	    EattrSize[3] = 8;
-		
+		attrType[0] = new AttrType(AttrType.attrString);
+		attrType[1] = new AttrType(AttrType.attrDesc);
+		FldSpec[] projlist = new FldSpec[2];
+		RelSpec rel = new RelSpec(RelSpec.outer); 
+		projlist[0] = new FldSpec(rel, 1);
+		projlist[1] = new FldSpec(rel, 2);
+		short[] attrSize = new short[6];
+		attrSize[0] = Node.LABEL_MAX_LENGTH;
+		attrSize[1] = 10;
+
+		AttrType[] EattrType = new AttrType[6];
+		EattrType[0] = new AttrType(AttrType.attrString);
+		EattrType[1] = new AttrType(AttrType.attrInteger);
+		EattrType[2] = new AttrType(AttrType.attrInteger);
+		EattrType[3] = new AttrType(AttrType.attrInteger);
+		EattrType[4] = new AttrType(AttrType.attrInteger);
+		EattrType[5] = new AttrType(AttrType.attrInteger);
+		FldSpec[] Eprojlist = new FldSpec[6];
+		RelSpec Erel = new RelSpec(RelSpec.outer); 
+		Eprojlist[0] = new FldSpec(rel, 1);
+		Eprojlist[1] = new FldSpec(rel, 2);
+		Eprojlist[2] = new FldSpec(rel, 3);
+		Eprojlist[3] = new FldSpec(rel, 4);
+		Eprojlist[4] = new FldSpec(rel, 5);
+		Eprojlist[5] = new FldSpec(rel, 6);
+		short[] EattrSize = new short[6];
+		EattrSize[0] = Node.LABEL_MAX_LENGTH;
+		EattrSize[1] = 4;
+		EattrSize[2] = 4;
+		EattrSize[3] = 4;
+		EattrSize[4] = 4;
+		EattrSize[5] = 4;
+
 		try{
 			nodeCount = nodes.getNodeCnt();
 		} catch (Exception e) {
@@ -499,12 +505,12 @@ public class NodeQueryHandler {
 		IndexScan iscan = null;
 		IndexScan eiscan = null;
 		try {
-		      iscan = new IndexScan(new IndexType(IndexType.Z_Index), Nfilename, "ZTreeIndex", attrType, attrSize, 2, 2, projlist, null, 2, false);
-		    }
-		    catch (Exception e) {
-		      status = FAIL;
-		      e.printStackTrace();
-		    }
+			iscan = new IndexScan(new IndexType(IndexType.B_Index), Nfilename, "GraphDB0NODELABEL", attrType, attrSize, 2, 2, projlist, null, 1, false);
+		}
+		catch (Exception e) {
+			status = FAIL;
+			e.printStackTrace();
+		}
 
 		if ( status == OK ) {
 			Tuple t = new Tuple();
@@ -512,7 +518,7 @@ public class NodeQueryHandler {
 			boolean done = false;
 			while (!done) { 
 				try {
-					t = iscan.get_next();
+					t = iscan.getNextNode();
 					if (t == null) {
 						done = true;
 						break;
@@ -528,27 +534,22 @@ public class NodeQueryHandler {
 					e.printStackTrace();
 				}
 			}
-			
+
 		}
-		incomingEdges = new String[nodesArray.length][];
-		outgoingEdges = new String[nodesArray.length][];
+		incomingEdges = new String[nodesArray.length][nodesArray.length];
+		outgoingEdges = new String[nodesArray.length][nodesArray.length];
 		incomingEdgeCount = new int[nodesArray.length];
 		outgoingEdgeCount = new int[nodesArray.length];
 		if(i > 0) {
 			status = OK;
-			EID eid = new EID();
-			EdgeHeapFile f1 = edges;
-
 			if ( status == OK ) {
 				try {
-				      eiscan = new IndexScan(new IndexType(IndexType.B_Index), Efilename, "BTreeIndex", EattrType, EattrSize, 2, 2, Eprojlist, null, 2, false);
-				    }
-				    catch (Exception e) {
-				      status = FAIL;
-				      e.printStackTrace();
-				    }
+					eiscan = new IndexScan(new IndexType(IndexType.B_Index), Efilename, "GraphDB0EDGELABEL", EattrType, EattrSize, 6, 6, Eprojlist, null, 1, false);
 				}
-
+				catch (Exception e) {
+					status = FAIL;
+					e.printStackTrace();
+				}
 			}
 
 			if ( status == OK ) {
@@ -556,18 +557,18 @@ public class NodeQueryHandler {
 				boolean done = false;
 				while (!done) { 
 					try {
-						t = eiscan.get_next();
+						t = eiscan.getNextEdge();
 						if (t == null) {
 							done = true;
 							break;
 						}
 						Edge e = new Edge(t);
-						
-						for(int j = 0; j < nodesArray.length; j++) {
-							if(f.getNode(e.getSource()).getLabel().equals(nodesArray[i].getLabel())) {
+
+						for(int j = 0; j < i; j++) {
+							if(f.getNode(e.getSource()).getLabel().equals(nodesArray[j].getLabel())) {
 								outgoingEdges[j][outgoingEdgeCount[j]] = e.getLabel();
 								outgoingEdgeCount[j]++;
-							} else if(f.getNode(e.getDestination()).getLabel().equals(nodesArray[i].getLabel())) {
+							} else if(f.getNode(e.getDestination()).getLabel().equals(nodesArray[j].getLabel())) {
 								incomingEdges[j][incomingEdgeCount[j]] = e.getLabel();
 								incomingEdgeCount[j]++;
 							}
@@ -578,8 +579,8 @@ public class NodeQueryHandler {
 						e.printStackTrace();
 					}
 				}
-				
-				for(int j = 0;j < nodesArray.length; j++) {
+
+				for(int j = 0;j < i; j++) {
 					try {
 						nodesArray[j].print(attrType);
 					} catch (IOException e) {
@@ -596,12 +597,12 @@ public class NodeQueryHandler {
 					}
 				}
 			}
-			else {
-				System.out.println("There is no node which has the given distance from the target descriptor");
-				} 
-			return status;
-			}
-	
+		} else {
+			System.out.println("There is no node which has the given distance from the target descriptor");
+		} 
+		return status;
+	}
+
 
 	public boolean nodeHeapTest0(String argv[]){
 		boolean status = OK;
@@ -751,7 +752,7 @@ public class NodeQueryHandler {
 			e1.printStackTrace();
 		} 
 		Node[] nodesArray = new Node[nodeCount];
-		
+
 		Nscan scan = null;
 		if ( status == OK ) {	
 			System.out.println ("  - Scan the records\n");
@@ -805,7 +806,7 @@ public class NodeQueryHandler {
 		AttrType [] jtype = new AttrType[2];
 		jtype[0] = new AttrType (AttrType.attrString);
 		jtype[1] = new AttrType (AttrType.attrDesc);
-		
+
 		Nscan scan = null;
 		if ( status == OK ) {	
 			System.out.println ("  - Scan the records\n");
@@ -961,16 +962,12 @@ public class NodeQueryHandler {
 						}
 						Node n = f.getNode(edge.getSource());
 						Node d = f.getNode(edge.getDestination());
-						System.out.println("NodeQueryHandler.nodeHeapTest4() node lbl : "+n.getLabel() +" refNode lbl "+refNode.getLabel()+" edge lbl : "+edge.getLabel());
-						System.out.println("NodeQueryHandler.nodeHeapTest4() node lbl : "+d.getLabel() +" refNode lbl "+refNode.getLabel()+" edge lbl : "+edge.getLabel());
 						if(n.getLabel().equals(refNode.getLabel())) {
 							outgoingEdges[outgoingEdgeCount] = edge.getLabel();
-							System.out.println("NodeQueryHandler.nodeHeapTest4() node lbl : "+n.getLabel() +" refNode lbl "+refNode.getLabel()+" edge lbl : "+edge.getLabel());
 							outgoingEdgeCount++;
 						} else if(d.getLabel().equals(refNode.getLabel())) {
 							incomingEdges[incomingEdgeCount] = edge.getLabel();
 							incomingEdgeCount++;
-							System.out.println("NodeQueryHandler.nodeHeapTest4() node lbl : "+d.getLabel() +" refNode lbl "+refNode.getLabel()+" edge lbl : "+edge.getLabel());
 						}
 						//edge.print(null);
 					}
@@ -1008,7 +1005,7 @@ public class NodeQueryHandler {
 		NID nid = new NID();
 		NodeHeapFile f = nodes;
 		int nodeCount = 0;
-		int i =0;
+		int i = 0;
 		String outgoingEdges[][] = null;
 		String incomingEdges[][] = null;
 		int outgoingEdgeCount[] = null;
@@ -1066,8 +1063,8 @@ public class NodeQueryHandler {
 			}
 			scan.closescan();
 		}
-		incomingEdges = new String[nodesArray.length][];
-		outgoingEdges = new String[nodesArray.length][];
+		incomingEdges = new String[nodesArray.length][nodesArray.length];
+		outgoingEdges = new String[nodesArray.length][nodesArray.length];
 		incomingEdgeCount = new int[nodesArray.length];
 		outgoingEdgeCount = new int[nodesArray.length];
 		if(i > 0) {
@@ -1104,13 +1101,15 @@ public class NodeQueryHandler {
 							done = true;
 							break;
 						}
-						for(int j = 0; j < nodesArray.length; j++) {
-							if(f.getNode(edge.getSource()).getLabel().equals(nodesArray[i].getLabel())) {
+						for(int j = 0; j < i; j++) {
+							Node sNode = f.getNode(edge.getSource());
+							Node dNode = f.getNode(edge.getDestination());
+							if(sNode.getLabel().equals(nodesArray[j].getLabel())) {
 								outgoingEdges[j][outgoingEdgeCount[j]] = edge.getLabel();
 								outgoingEdgeCount[j]++;
-							} else if(f.getNode(edge.getDestination()).getLabel().equals(nodesArray[i].getLabel())) {
-								incomingEdges[j][incomingEdgeCount[j]] = edge.getLabel();
-								incomingEdgeCount[j]++;
+							} else if(dNode.getLabel().equals(nodesArray[j].getLabel())) {
+									incomingEdges[j][incomingEdgeCount[j]] = edge.getLabel();
+									incomingEdgeCount[j]++;
 							}
 						}
 					}
@@ -1120,7 +1119,7 @@ public class NodeQueryHandler {
 					}
 				}
 				escan.closescan();
-				for(int j = 0;j < nodesArray.length; j++) {
+				for(int j = 0;j < i; j++) {
 					try {
 						nodesArray[j].print(jtype);
 					} catch (IOException e) {
@@ -1139,7 +1138,7 @@ public class NodeQueryHandler {
 			}
 		} else {
 			System.out.println("There is no node which has the given distance from the target descriptor");
-		}
+		} 
 		return status;
 	}
 

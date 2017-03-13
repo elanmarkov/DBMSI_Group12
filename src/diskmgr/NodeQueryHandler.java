@@ -303,7 +303,7 @@ public class NodeQueryHandler {
 		NID nid = new NID();
 		NodeHeapFile f = nodes;
 		boolean nodeExists = false;
-		String nodeLabel = argv[5];
+		String nodeLabel = argv[4];
 		Node refNode = new Node();
 		refNode.setLabel(nodeLabel);
 		
@@ -320,12 +320,12 @@ public class NodeQueryHandler {
 	    attrSize[1] = 10;
 	    
 	    AttrType[] EattrType = new AttrType[6];
-	    attrType[0] = new AttrType(AttrType.attrString);
-	    attrType[1] = new AttrType(AttrType.attrInteger);
-	    attrType[2] = new AttrType(AttrType.attrInteger);
-	    attrType[3] = new AttrType(AttrType.attrInteger);
-	    attrType[4] = new AttrType(AttrType.attrInteger);
-	    attrType[5] = new AttrType(AttrType.attrInteger);
+	    EattrType[0] = new AttrType(AttrType.attrString);
+	    EattrType[1] = new AttrType(AttrType.attrInteger);
+	    EattrType[2] = new AttrType(AttrType.attrInteger);
+	    EattrType[3] = new AttrType(AttrType.attrInteger);
+	    EattrType[4] = new AttrType(AttrType.attrInteger);
+	    EattrType[5] = new AttrType(AttrType.attrInteger);
 	    FldSpec[] Eprojlist = new FldSpec[6];
 	    RelSpec Erel = new RelSpec(RelSpec.outer); 
 	    Eprojlist[0] = new FldSpec(rel, 1);
@@ -352,7 +352,7 @@ public class NodeQueryHandler {
 		IndexScan eiscan = null;
 		
 		try {
-		      isscan = new IndexScan(new IndexType(IndexType.B_Index), Nfilename, "BTreeIndex", attrType, attrSize, 2, 2, projlist, null, 2, false);
+		      isscan = new IndexScan(new IndexType(IndexType.B_Index), Nfilename, "GraphDB0NODELABEL", attrType, attrSize, 2, 2, projlist, null, 1, false);
 		    }
 		    catch (Exception e) {
 		      status = FAIL;
@@ -366,15 +366,8 @@ public class NodeQueryHandler {
 			while (!done) { 
 					
 					try {
-						t = isscan.get_next();
-					} catch (IndexException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (UnknownKeyTypeException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
+						t = isscan.getNextNode();
+					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
 					if(t == null) {
@@ -397,25 +390,13 @@ public class NodeQueryHandler {
 		try {
 			incomingEdges = new String[edges.getEdgeCnt()];
 			outgoingEdges = new String[edges.getEdgeCnt()];
-		} catch (HFBufMgrException e1) {
-			// TODO Auto-generated catch block
+		} catch (Exception e1) {
 			e1.printStackTrace();
-		} catch (InvalidSlotNumberException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidTupleSizeException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} 
 		if(nodeExists) {
 			
 			try {
-			      eiscan = new IndexScan(new IndexType(IndexType.B_Index), Efilename, "BTreeIndex", EattrType, EattrSize, 2, 2, Eprojlist, null, 2, false);
+			      eiscan = new IndexScan(new IndexType(IndexType.B_Index), Efilename, "GraphDB0EDGELABEL", EattrType, EattrSize, 6, 6, Eprojlist, null, 1, false);
 			    }
 			    catch (Exception e) {
 			      status = FAIL;
@@ -427,7 +408,7 @@ public class NodeQueryHandler {
 				boolean done = false;
 				while (!done) { 
 					try {
-						et = eiscan.get_next();
+						et = eiscan.getNextEdge();
 						if (et == null) {
 							done = true;
 							break;
@@ -450,7 +431,6 @@ public class NodeQueryHandler {
 				try {
 					refNode.print(attrType);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				System.out.println("Incoming Edges are:");
@@ -875,7 +855,7 @@ public class NodeQueryHandler {
 		NID nid = new NID();
 		NodeHeapFile f = nodes;
 		boolean nodeExists = false;
-		String nodeLabel = argv[5];
+		String nodeLabel = argv[4];
 		Node refNode = new Node();
 		refNode.setLabel(nodeLabel);
 		String incomingEdges[] = null;
@@ -981,13 +961,18 @@ public class NodeQueryHandler {
 							done = true;
 							break;
 						}
-						if(f.getNode(edge.getSource()).getLabel().equals(refNode.getLabel())) {
+						/*Node n = f.getNode(edge.getSource());
+						Node d = f.getNode(edge.getDestination());
+						if(n.getLabel().equals(refNode.getLabel())) {
 							outgoingEdges[outgoingEdgeCount] = edge.getLabel();
+							System.out.println("NodeQueryHandler.nodeHeapTest4() node lbl : "+n.getLabel() +" refNode lbl "+refNode.getLabel()+" edge lbl : "+edge.getLabel());
 							outgoingEdgeCount++;
-						} else if(f.getNode(edge.getDestination()).getLabel().equals(refNode.getLabel())) {
+						} else if(d.getLabel().equals(refNode.getLabel())) {
 							incomingEdges[incomingEdgeCount] = edge.getLabel();
 							incomingEdgeCount++;
-						}
+							System.out.println("NodeQueryHandler.nodeHeapTest4() node lbl : "+d.getLabel() +" refNode lbl "+refNode.getLabel()+" edge lbl : "+edge.getLabel());
+						}*/
+						//edge.print(null);
 					}
 					catch (Exception e) {
 						status = FAIL;

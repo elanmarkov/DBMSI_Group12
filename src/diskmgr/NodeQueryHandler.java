@@ -29,7 +29,7 @@ public class NodeQueryHandler {
 		this.edgeWeights = edgeWeights;
 		this.db = db;
 	}
-
+	
 	private void sortNodes(Node nodes[]) {
 		Node temp;
 		AttrType [] jtype = new AttrType[2];
@@ -142,7 +142,7 @@ public class NodeQueryHandler {
 				}
 			}
 		}
-		return true;
+		return status;
 	}
 	public boolean nodeIndexTest1(String argv[]){
 		boolean status = OK;
@@ -327,13 +327,13 @@ public class NodeQueryHandler {
 		EattrType[4] = new AttrType(AttrType.attrInteger);
 		EattrType[5] = new AttrType(AttrType.attrInteger);
 		FldSpec[] Eprojlist = new FldSpec[6];
-		RelSpec Erel = new RelSpec(RelSpec.outer); 
-		Eprojlist[0] = new FldSpec(rel, 1);
-		Eprojlist[1] = new FldSpec(rel, 2);
-		Eprojlist[2] = new FldSpec(rel, 3);
-		Eprojlist[3] = new FldSpec(rel, 4);
-		Eprojlist[4] = new FldSpec(rel, 5);
-		Eprojlist[5] = new FldSpec(rel, 6);
+		RelSpec erel = new RelSpec(RelSpec.outer); 
+		Eprojlist[0] = new FldSpec(erel, 1);
+		Eprojlist[1] = new FldSpec(erel, 2);
+		Eprojlist[2] = new FldSpec(erel, 3);
+		Eprojlist[3] = new FldSpec(erel, 4);
+		Eprojlist[4] = new FldSpec(erel, 5);
+		Eprojlist[5] = new FldSpec(erel, 6);
 		short[] EattrSize = new short[6];
 		EattrSize[0] = Node.LABEL_MAX_LENGTH;
 		EattrSize[1] = 4;
@@ -480,13 +480,13 @@ public class NodeQueryHandler {
 		EattrType[4] = new AttrType(AttrType.attrInteger);
 		EattrType[5] = new AttrType(AttrType.attrInteger);
 		FldSpec[] Eprojlist = new FldSpec[6];
-		RelSpec Erel = new RelSpec(RelSpec.outer); 
-		Eprojlist[0] = new FldSpec(rel, 1);
-		Eprojlist[1] = new FldSpec(rel, 2);
-		Eprojlist[2] = new FldSpec(rel, 3);
-		Eprojlist[3] = new FldSpec(rel, 4);
-		Eprojlist[4] = new FldSpec(rel, 5);
-		Eprojlist[5] = new FldSpec(rel, 6);
+		RelSpec erel = new RelSpec(RelSpec.outer); 
+		Eprojlist[0] = new FldSpec(erel, 1);
+		Eprojlist[1] = new FldSpec(erel, 2);
+		Eprojlist[2] = new FldSpec(erel, 3);
+		Eprojlist[3] = new FldSpec(erel, 4);
+		Eprojlist[4] = new FldSpec(erel, 5);
+		Eprojlist[5] = new FldSpec(erel, 6);
 		short[] EattrSize = new short[6];
 		EattrSize[0] = Node.LABEL_MAX_LENGTH;
 		EattrSize[1] = 4;
@@ -685,18 +685,6 @@ public class NodeQueryHandler {
 			e.printStackTrace();
 		}
 		Node[] nodesArray = new Node[nodeCount];
-
-		AttrType [] jtype = new AttrType[1];
-		jtype[0] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrDesc);
-		try {
-			//f = new NodeHeapFile("priyekant");
-		}
-		catch (Exception e) {
-			status = FAIL;
-			System.err.println ("*** Could not create heap file\n");
-			e.printStackTrace();
-		}
 		Nscan scan = null;
 		if ( status == OK ) {	
 			System.out.println ("  - Scan the records\n");

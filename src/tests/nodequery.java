@@ -8,6 +8,7 @@ public class nodequery {
 	public static void main(String argv[]) {
 		Runtime.getRuntime().exit(0);
 	}
+	
 	public boolean runTests(String argv[]) {
 
 		NodeQueryHandler queries = null;

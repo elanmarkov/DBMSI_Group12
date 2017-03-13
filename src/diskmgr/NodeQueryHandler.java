@@ -382,11 +382,8 @@ public class NodeQueryHandler {
 					}
 					
 				}
-				
-		return status;	
-			
 		}
-
+		System.out.println("NodeQueryHandler.nodeIndexTest4() refname: " + refNode.getLabel());
 		try {
 			incomingEdges = new String[edges.getEdgeCnt()];
 			outgoingEdges = new String[edges.getEdgeCnt()];
@@ -409,6 +406,7 @@ public class NodeQueryHandler {
 				while (!done) { 
 					try {
 						et = eiscan.getNextEdge();
+						System.out.println("NodeQueryHandler.nodeIndexTest4() et : "+et);
 						if (et == null) {
 							done = true;
 							break;
@@ -961,8 +959,10 @@ public class NodeQueryHandler {
 							done = true;
 							break;
 						}
-						/*Node n = f.getNode(edge.getSource());
+						Node n = f.getNode(edge.getSource());
 						Node d = f.getNode(edge.getDestination());
+						System.out.println("NodeQueryHandler.nodeHeapTest4() node lbl : "+n.getLabel() +" refNode lbl "+refNode.getLabel()+" edge lbl : "+edge.getLabel());
+						System.out.println("NodeQueryHandler.nodeHeapTest4() node lbl : "+d.getLabel() +" refNode lbl "+refNode.getLabel()+" edge lbl : "+edge.getLabel());
 						if(n.getLabel().equals(refNode.getLabel())) {
 							outgoingEdges[outgoingEdgeCount] = edge.getLabel();
 							System.out.println("NodeQueryHandler.nodeHeapTest4() node lbl : "+n.getLabel() +" refNode lbl "+refNode.getLabel()+" edge lbl : "+edge.getLabel());
@@ -971,7 +971,7 @@ public class NodeQueryHandler {
 							incomingEdges[incomingEdgeCount] = edge.getLabel();
 							incomingEdgeCount++;
 							System.out.println("NodeQueryHandler.nodeHeapTest4() node lbl : "+d.getLabel() +" refNode lbl "+refNode.getLabel()+" edge lbl : "+edge.getLabel());
-						}*/
+						}
 						//edge.print(null);
 					}
 					catch (Exception e) {

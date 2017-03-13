@@ -5,6 +5,7 @@ import java.io.IOException;
 import global.Convert;
 import global.EID;
 import global.NID;
+import global.RID;
 
 public class Escan extends Scan{
 
@@ -15,7 +16,10 @@ public class Escan extends Scan{
 	public Edge getNext(EID eid) 
 		    throws InvalidTupleSizeException,
 			   IOException{
-			Tuple tp = super.getNext(eid);
+			RID rid = new RID(eid.pageNo,eid.slotNo);
+			Tuple tp = super.getNext(rid);
+			eid.pageNo.pid=rid.pageNo.pid;
+			eid.slotNo=rid.slotNo;
 			if(tp!=null){
 				Edge edge = new Edge(tp.data, 0);
 				try {

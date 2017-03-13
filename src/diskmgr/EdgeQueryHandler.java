@@ -37,8 +37,8 @@ public class EdgeQueryHandler {
 	{
 		Node source = null,destination = null;
 		try {
-		source = nodes.getNode(e.getSource());
-		destination = nodes.getNode(e.getDestination());
+			source = nodes.getNode(e.getSource());
+			destination = nodes.getNode(e.getDestination());
 		} catch(Exception e1) {
 			e1.printStackTrace();
 		}
@@ -142,7 +142,7 @@ public class EdgeQueryHandler {
 		{
 			for (int j = i + 1; j < edgesArray.length; j++) 
 			{
-				if (edgesArray[i].getWeight() > edgesArray[j].getWeight()) 
+				if (edgesArray[i].getWeight() >= edgesArray[j].getWeight()) 
 				{
 					temp = edgesArray[i];
 					edgesArray[i] = edgesArray[j];
@@ -163,496 +163,401 @@ public class EdgeQueryHandler {
 	{
 
 		boolean status = OK;
-		AttrType[] attrType = new AttrType[4];
+		AttrType[] attrType = new AttrType[6];
 		attrType[0] = new AttrType(AttrType.attrString);
 		attrType[1] = new AttrType(AttrType.attrInteger);
 		attrType[2] = new AttrType(AttrType.attrInteger);
 		attrType[3] = new AttrType(AttrType.attrInteger);
-		FldSpec[] projlist = new FldSpec[4];
+		attrType[4] = new AttrType(AttrType.attrInteger);
+		attrType[5] = new AttrType(AttrType.attrInteger);
+		FldSpec[] projlist = new FldSpec[6];
 		RelSpec rel = new RelSpec(RelSpec.outer); 
 		projlist[0] = new FldSpec(rel, 1);
 		projlist[1] = new FldSpec(rel, 2);
 		projlist[2] = new FldSpec(rel, 3);
 		projlist[3] = new FldSpec(rel, 4);
-		short[] attrSize = new short[4];
-		attrSize[0] = 8;
-		attrSize[1] = 8;
-		attrSize[2] = 8;
+		projlist[4] = new FldSpec(rel, 5);
+		projlist[5] = new FldSpec(rel, 6);
+		short[] attrSize = new short[6];
+		attrSize[0] = Tuple.LABEL_MAX_LENGTH;
+		attrSize[1] = 4;
+		attrSize[2] = 4;
+		attrSize[3] = 4;
+		attrSize[2] = 4;
 		attrSize[3] = 4;
 		IndexScan iscan = null;
-		String filename = nodes.getFileName();
-		int edgeCount = 0, i = 0;
+		String filename = edges.getFileName();
+		Tuple t = null;
 		try {
-			edgeCount = edges.getEdgeCnt();
-		} catch (Exception e) {
+			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGELABEL", attrType, attrSize, 6, 6, projlist, null, 1, false);
+		}
+		catch(Exception e) {
 			status = FAIL;
 			e.printStackTrace();
 		}
-		IndexFileScan iScan = null;
-		Tuple t = null;
-		try {
-			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "BTreeIndex", attrType, attrSize, 4, 4, projlist, null, 1, false);
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
 		boolean done = false;
-		while(!done) {
-			try {
-				t = iscan.get_next();
-			}
-			catch (IndexException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			catch (UnknownKeyTypeException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 
-			if(t == null) {
-				done = true;
-				break;
-			}
-			Edge edge = (Edge)t;
-			try {
-				edge.print(attrType);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		if(status == OK) {
+			while(!done) {
+				try {
+					t = iscan.getNextEdge();
+				}
+				catch (Exception e) {
+					status = FAIL;
+					e.printStackTrace();
+				}
 
+				if(t == null) {
+					done = true;
+					break;
+				}
+				Edge edge = new Edge(t);
+				try {
+					print(edge,nodes);
+				} catch (IOException e) {
+					status = FAIL;
+					e.printStackTrace();
+				}
+			}
 		}
-
-
-		return true;
+		return status;
 	}
 	public boolean edgeIndexTest1(String argv[])
 	{
-
 		boolean status = OK;
-		AttrType[] attrType = new AttrType[4];
+		AttrType[] attrType = new AttrType[6];
 		attrType[0] = new AttrType(AttrType.attrString);
 		attrType[1] = new AttrType(AttrType.attrInteger);
 		attrType[2] = new AttrType(AttrType.attrInteger);
 		attrType[3] = new AttrType(AttrType.attrInteger);
-		FldSpec[] projlist = new FldSpec[4];
+		attrType[4] = new AttrType(AttrType.attrInteger);
+		attrType[5] = new AttrType(AttrType.attrInteger);
+		FldSpec[] projlist = new FldSpec[6];
 		RelSpec rel = new RelSpec(RelSpec.outer); 
 		projlist[0] = new FldSpec(rel, 1);
 		projlist[1] = new FldSpec(rel, 2);
 		projlist[2] = new FldSpec(rel, 3);
 		projlist[3] = new FldSpec(rel, 4);
-		short[] attrSize = new short[4];
-		attrSize[0] = 8;
-		attrSize[1] = 8;
-		attrSize[2] = 8;
+		projlist[4] = new FldSpec(rel, 5);
+		projlist[5] = new FldSpec(rel, 6);
+		short[] attrSize = new short[6];
+		attrSize[0] = Tuple.LABEL_MAX_LENGTH;
+		attrSize[1] = 4;
+		attrSize[2] = 4;
+		attrSize[3] = 4;
+		attrSize[2] = 4;
 		attrSize[3] = 4;
 		IndexScan iscan = null;
-		String filename = nodes.getFileName();
-		EdgeHeapFile edgeheap = edges;
-		NodeHeapFile nodeheap = nodes;
+		String filename = edges.getFileName();
+		Tuple t = null;
 		int edgeCount = 0;
 		try {
 			edgeCount = edges.getEdgeCnt();
-		} catch (InvalidSlotNumberException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidTupleSizeException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (HFDiskMgrException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (HFBufMgrException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		int nodeCount = 0, i = 0;
-		try {
-			nodeCount = nodes.getNodeCnt();
-		} catch (Exception e) {
+		} catch (Exception e1) {
 			status = FAIL;
-			e.printStackTrace();
-		}
-		Node[] nodes = new Node[edgeCount];
-		//need to change test1.in to actual rel name
-		try {
-			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "BTreeIndex", attrType, attrSize, 4, 4, projlist, null, 0, false);
-		}
-		catch (Exception e) {
-			status = FAIL;
-			e.printStackTrace();
-		}
-		boolean done = false;
-		if(status == OK) {
-			while(!done) {
-				Tuple t = new Tuple();
-				try {
-					t = iscan.get_next();
-				} catch (IndexException e) {
-					// TODO Auto-generated catch block
-					status = FAIL;
-					e.printStackTrace();
-				} catch (UnknownKeyTypeException e) {
-					// TODO Auto-generated catch block
-					status = FAIL;
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					status = FAIL;
-					e.printStackTrace();
-
-				}
-				if(t == null) {
-					done = true;
-					break;
-				}
-				Edge edge = (Edge)t;
-				NID nid = edge.getSource();
-				try {
-					nodes[i] = nodeheap.getNode(nid);
-				} catch (InvalidSlotNumberException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InvalidTupleSizeException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (HFException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (HFDiskMgrException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (HFBufMgrException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				i++;
-			}
-			sortNodes(nodes);
-		}
-		return status;	
-
-	}
-	public boolean edgeIndexTest2(String argv[]){
-		boolean status = OK;
-		AttrType[] attrType = new AttrType[4];
-		attrType[0] = new AttrType(AttrType.attrString);
-		attrType[1] = new AttrType(AttrType.attrInteger);
-		attrType[2] = new AttrType(AttrType.attrInteger);
-		attrType[3] = new AttrType(AttrType.attrInteger);
-		FldSpec[] projlist = new FldSpec[4];
-		RelSpec rel = new RelSpec(RelSpec.outer); 
-		projlist[0] = new FldSpec(rel, 1);
-		projlist[1] = new FldSpec(rel, 2);
-		projlist[2] = new FldSpec(rel, 3);
-		projlist[3] = new FldSpec(rel, 4);
-		short[] attrSize = new short[4];
-		attrSize[0] = 8;
-		attrSize[1] = 8;
-		attrSize[2] = 8;
-		attrSize[3] = 4;
-		IndexScan iscan = null;
-		String filename = nodes.getFileName();
-		EdgeHeapFile edgeheap = edges;
-		NodeHeapFile nodeheap = nodes;
-		int edgeCount = 0;
-		try {
-			edgeCount = edges.getEdgeCnt();
-		} catch (InvalidSlotNumberException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidTupleSizeException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (HFDiskMgrException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (HFBufMgrException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		int i = 0;
-		Node[] nodesArray = new Node[edgeCount];
-		//need to change test1.in to actual rel name
+
+		Edge[] edges = new Edge[edgeCount];
 		try {
-			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "BTreeIndex", attrType, attrSize, 4, 4, projlist, null, 0, false);
+			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGELABEL", attrType, attrSize, 6, 6, projlist, null, 1, false);
 		}
-		catch (Exception e) {
+		catch(Exception e) {
 			status = FAIL;
 			e.printStackTrace();
 		}
 		boolean done = false;
 		if(status == OK) {
 			while(!done) {
-				Tuple t = new Tuple();
+				t = new Tuple();
 				try {
-					t = iscan.get_next();
-				} catch (IndexException e) {
-					// TODO Auto-generated catch block
+					t = iscan.getNextEdge();
+				} catch (Exception e) {
 					status = FAIL;
 					e.printStackTrace();
-				} catch (UnknownKeyTypeException e) {
-					// TODO Auto-generated catch block
-					status = FAIL;
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					status = FAIL;
-					e.printStackTrace();
-
 				}
 				if(t == null) {
 					done = true;
 					break;
 				}
-				Edge edge = (Edge)t;
-				NID nid = edge.getDestination();
-				try {
-					nodesArray[i] = nodeheap.getNode(nid);
-				} catch (InvalidSlotNumberException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InvalidTupleSizeException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (HFException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (HFDiskMgrException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (HFBufMgrException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
+				Edge edge = new Edge(t);
+				edges[i] = edge;
 				i++;
 			}
-			sortNodes(nodesArray);
+			sortEdges(edges,0);
+		}
+		return status;	
+	}
+	public boolean edgeIndexTest2(String argv[]){
+		boolean status = OK;
+		AttrType[] attrType = new AttrType[6];
+		attrType[0] = new AttrType(AttrType.attrString);
+		attrType[1] = new AttrType(AttrType.attrInteger);
+		attrType[2] = new AttrType(AttrType.attrInteger);
+		attrType[3] = new AttrType(AttrType.attrInteger);
+		attrType[4] = new AttrType(AttrType.attrInteger);
+		attrType[5] = new AttrType(AttrType.attrInteger);
+		FldSpec[] projlist = new FldSpec[6];
+		RelSpec rel = new RelSpec(RelSpec.outer); 
+		projlist[0] = new FldSpec(rel, 1);
+		projlist[1] = new FldSpec(rel, 2);
+		projlist[2] = new FldSpec(rel, 3);
+		projlist[3] = new FldSpec(rel, 4);
+		projlist[4] = new FldSpec(rel, 5);
+		projlist[5] = new FldSpec(rel, 6);
+		short[] attrSize = new short[6];
+		attrSize[0] = Tuple.LABEL_MAX_LENGTH;
+		attrSize[1] = 4;
+		attrSize[2] = 4;
+		attrSize[3] = 4;
+		attrSize[2] = 4;
+		attrSize[3] = 4;
+		IndexScan iscan = null;
+		String filename = edges.getFileName();
+		Tuple t = null;
+		int edgeCount = 0;
+		try {
+			edgeCount = edges.getEdgeCnt();
+		} catch (Exception e1) {
+			status = FAIL;
+			e1.printStackTrace();
+		}
+		int i = 0;
+
+		Edge[] edges = new Edge[edgeCount];
+		try {
+			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGELABEL", attrType, attrSize, 6, 6, projlist, null, 1, false);
+		}
+		catch(Exception e) {
+			status = FAIL;
+			e.printStackTrace();
+		}
+		boolean done = false;
+		if(status == OK) {
+			while(!done) {
+				t = new Tuple();
+				try {
+					t = iscan.getNextEdge();
+				} catch (Exception e) {
+					status = FAIL;
+					e.printStackTrace();
+				}
+				if(t == null) {
+					done = true;
+					break;
+				}
+				Edge edge = new Edge(t);
+				edges[i] = edge;
+				i++;
+			}
+			sortEdges(edges,1);
 		}
 		return status;	
 	}
 	public boolean edgeIndexTest3(String argv[]){
-		return this.edgeIndexTest0(argv);
-	}
-	public  boolean edgeIndexTest4(String argv[]){
 		boolean status = OK;
-		AttrType[] attrType = new AttrType[4];
+		AttrType[] attrType = new AttrType[6];
 		attrType[0] = new AttrType(AttrType.attrString);
 		attrType[1] = new AttrType(AttrType.attrInteger);
 		attrType[2] = new AttrType(AttrType.attrInteger);
 		attrType[3] = new AttrType(AttrType.attrInteger);
-		FldSpec[] projlist = new FldSpec[4];
+		attrType[4] = new AttrType(AttrType.attrInteger);
+		attrType[5] = new AttrType(AttrType.attrInteger);
+		FldSpec[] projlist = new FldSpec[6];
 		RelSpec rel = new RelSpec(RelSpec.outer); 
 		projlist[0] = new FldSpec(rel, 1);
 		projlist[1] = new FldSpec(rel, 2);
 		projlist[2] = new FldSpec(rel, 3);
 		projlist[3] = new FldSpec(rel, 4);
-		short[] attrSize = new short[4];
-		attrSize[0] = 8;
-		attrSize[1] = 8;
-		attrSize[2] = 8;
+		projlist[4] = new FldSpec(rel, 5);
+		projlist[5] = new FldSpec(rel, 6);
+		short[] attrSize = new short[6];
+		attrSize[0] = Tuple.LABEL_MAX_LENGTH;
+		attrSize[1] = 4;
+		attrSize[2] = 4;
+		attrSize[3] = 4;
+		attrSize[2] = 4;
 		attrSize[3] = 4;
 		IndexScan iscan = null;
-		String filename = nodes.getFileName();
-		EdgeHeapFile edgeheap = edges;
-		NodeHeapFile nodeheap = nodes;
+		String filename = edges.getFileName();
+		Tuple t = null;
 		int edgeCount = 0;
 		try {
 			edgeCount = edges.getEdgeCnt();
-		} catch (InvalidSlotNumberException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidTupleSizeException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (HFDiskMgrException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (HFBufMgrException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
+		} catch (Exception e1) {
+			status = FAIL;
 			e1.printStackTrace();
 		}
 		int i = 0;
-		Node[] nodes = new Node[edgeCount];
-		//need to change test1.in to actual rel name
+
+		Edge[] edges = new Edge[edgeCount];
 		try {
-			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "BTreeIndex", attrType, attrSize, 4, 4, projlist, null, 3, false);
+			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGELABEL", attrType, attrSize, 6, 6, projlist, null, 1, false);
 		}
-		catch (Exception e) {
+		catch(Exception e) {
 			status = FAIL;
 			e.printStackTrace();
 		}
 		boolean done = false;
 		if(status == OK) {
 			while(!done) {
-				Tuple t = new Tuple();
+				t = new Tuple();
 				try {
-					t = iscan.get_next();
-				} catch (IndexException e) {
-					// TODO Auto-generated catch block
+					t = iscan.getNextEdge();
+				} catch (Exception e) {
 					status = FAIL;
 					e.printStackTrace();
-				} catch (UnknownKeyTypeException e) {
-					// TODO Auto-generated catch block
-					status = FAIL;
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					status = FAIL;
-					e.printStackTrace();
-
 				}
 				if(t == null) {
 					done = true;
 					break;
 				}
-				Edge edge = (Edge)t;
-				try {
-					edge.print(attrType);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
+				Edge edge = new Edge(t);
+				edges[i] = edge;
 				i++;
 			}
+			sortEdges(edges,2);
 		}
 		return status;	
 	}
-	public boolean edgeIndexTest5(String argv[]){
+	public  boolean edgeIndexTest4(String argv[]){
 		boolean status = OK;
-		AttrType[] attrType = new AttrType[4];
+		AttrType[] attrType = new AttrType[6];
 		attrType[0] = new AttrType(AttrType.attrString);
 		attrType[1] = new AttrType(AttrType.attrInteger);
 		attrType[2] = new AttrType(AttrType.attrInteger);
 		attrType[3] = new AttrType(AttrType.attrInteger);
-		FldSpec[] projlist = new FldSpec[4];
+		attrType[4] = new AttrType(AttrType.attrInteger);
+		attrType[5] = new AttrType(AttrType.attrInteger);
+		FldSpec[] projlist = new FldSpec[6];
 		RelSpec rel = new RelSpec(RelSpec.outer); 
 		projlist[0] = new FldSpec(rel, 1);
 		projlist[1] = new FldSpec(rel, 2);
 		projlist[2] = new FldSpec(rel, 3);
 		projlist[3] = new FldSpec(rel, 4);
-		short[] attrSize = new short[4];
-		attrSize[0] = 8;
-		attrSize[1] = 8;
-		attrSize[2] = 8;
+		projlist[4] = new FldSpec(rel, 5);
+		projlist[5] = new FldSpec(rel, 6);
+		short[] attrSize = new short[6];
+		attrSize[0] = Tuple.LABEL_MAX_LENGTH;
+		attrSize[1] = 4;
+		attrSize[2] = 4;
+		attrSize[3] = 4;
+		attrSize[2] = 4;
 		attrSize[3] = 4;
 		IndexScan iscan = null;
-		String filename = nodes.getFileName();
-		EdgeHeapFile edgeheap = edges;
-		NodeHeapFile nodeheap = nodes;
-		System.out.println("Enter the lower bound of Weights:");
-		BufferedReader in = new BufferedReader (new InputStreamReader(System.in));
-		int  lowerbound, upperbound;
-		try {
-			lowerbound = Integer.parseInt(in.readLine());
-		}
-		catch (NumberFormatException e) {
-			lowerbound = 0;
-		}
-		catch (IOException e) {
-			lowerbound = 0;
-		}
-		System.out.println("Enter the upper bound of Weights:");
-		try {
-			upperbound = Integer.parseInt(in.readLine());
-		}
-		catch (NumberFormatException e) {
-			upperbound = 0;
-		}
-		catch (IOException e) {
-			upperbound = 0;
-		}
-
+		String filename = edges.getFileName();
+		Tuple t = null;
 		int edgeCount = 0;
 		try {
 			edgeCount = edges.getEdgeCnt();
-		} catch (InvalidSlotNumberException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidTupleSizeException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (HFDiskMgrException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (HFBufMgrException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
+		} catch (Exception e1) {
+			status = FAIL;
 			e1.printStackTrace();
 		}
+		int i = 0;
 
-		//need to change test1.in to actual rel name
+		Edge[] edges = new Edge[edgeCount];
 		try {
-			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "BTreeIndex", attrType, attrSize, 4, 4, projlist, null, 3, false);
+			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGEWEIGHT", attrType, attrSize, 6, 6, projlist, null, 6, false);
 		}
-		catch (Exception e) {
+		catch(Exception e) {
 			status = FAIL;
 			e.printStackTrace();
 		}
 		boolean done = false;
 		if(status == OK) {
 			while(!done) {
-				Tuple t = new Tuple();
+				t = new Tuple();
 				try {
-					t = iscan.get_next();
-				} catch (IndexException e) {
-					// TODO Auto-generated catch block
+					t = iscan.getNextEdge();
+				} catch (Exception e) {
 					status = FAIL;
 					e.printStackTrace();
-				} catch (UnknownKeyTypeException e) {
-					// TODO Auto-generated catch block
-					status = FAIL;
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					status = FAIL;
-					e.printStackTrace();
-
 				}
 				if(t == null) {
 					done = true;
 					break;
 				}
-				Edge edge = (Edge)t;
-				if(edge.getWeight()>=lowerbound || edge.getWeight()<=upperbound) {
-					try {
-						edge.print(attrType);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
+				Edge edge = new Edge(t);
+				edges[i] = edge;
+				i++;
+			}
+			sortWeights(edges);
+		}
+		return status;		
+	}
+	public boolean edgeIndexTest5(String argv[]){
+		boolean status = OK;
+		AttrType[] attrType = new AttrType[6];
+		attrType[0] = new AttrType(AttrType.attrString);
+		attrType[1] = new AttrType(AttrType.attrInteger);
+		attrType[2] = new AttrType(AttrType.attrInteger);
+		attrType[3] = new AttrType(AttrType.attrInteger);
+		attrType[4] = new AttrType(AttrType.attrInteger);
+		attrType[5] = new AttrType(AttrType.attrInteger);
+		FldSpec[] projlist = new FldSpec[6];
+		RelSpec rel = new RelSpec(RelSpec.outer); 
+		projlist[0] = new FldSpec(rel, 1);
+		projlist[1] = new FldSpec(rel, 2);
+		projlist[2] = new FldSpec(rel, 3);
+		projlist[3] = new FldSpec(rel, 4);
+		projlist[4] = new FldSpec(rel, 5);
+		projlist[5] = new FldSpec(rel, 6);
+		short[] attrSize = new short[6];
+		attrSize[0] = Tuple.LABEL_MAX_LENGTH;
+		attrSize[1] = 4;
+		attrSize[2] = 4;
+		attrSize[3] = 4;
+		attrSize[2] = 4;
+		attrSize[3] = 4;
+		IndexScan iscan = null;
+		String filename = edges.getFileName();
+		Tuple t = null;
+		int edgeCount = 0;
+		int  lowerbound = Integer.parseInt(argv[4]), upperbound = Integer.parseInt(argv[5]);
+		try {
+			edgeCount = edges.getEdgeCnt();
+		} catch (Exception e1) {
+			status = FAIL;
+			e1.printStackTrace();
+		}
+		int i = 0;
+
+		Edge[] edges = new Edge[edgeCount];
+		try {
+			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGEWEIGHT", attrType, attrSize, 6, 6, projlist, null, 6, false);
+		}
+		catch(Exception e) {
+			status = FAIL;
+			e.printStackTrace();
+		}
+		boolean done = false;
+		if(status == OK) {
+			while(!done) {
+				t = new Tuple();
+				try {
+					t = iscan.getNextEdge();
+				} catch (Exception e) {
+					status = FAIL;
+					e.printStackTrace();
+				}
+				if(t == null) {
+					done = true;
+					break;
+				}
+				Edge edge = new Edge(t);
+				if(edge.getWeight() >= lowerbound && edge.getWeight() <= upperbound){
+					try{
+						print(edge,nodes);					
+					} catch(Exception e) {
+						status = FAIL;
 						e.printStackTrace();
 					}
 				}
-
-
-
 			}
 		}
-		return status;
+		return status;	
 	}
 	public boolean edgeIndexTest6(String argv[]) throws InvalidTupleSizeException{
 
@@ -715,8 +620,6 @@ public class EdgeQueryHandler {
 
 
 		if ( status == OK ) {
-
-			NID source,destination;
 			try {
 				scan = new IndexScan(new IndexType(IndexType.B_Index), filename, "BTreeIndex", attrType, attrSize, 4, 4, projlist, null, 3, false);
 			}
@@ -1124,7 +1027,7 @@ public class EdgeQueryHandler {
 		int edgeCount  = 0;
 		Scanner  sc = new Scanner(System.in);
 		sc.nextLine();
-		
+
 		try {
 			edgeCount = edges.getEdgeCnt();
 		} catch (Exception e1) {

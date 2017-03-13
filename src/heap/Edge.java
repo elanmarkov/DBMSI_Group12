@@ -37,6 +37,25 @@ public class Edge extends Tuple{
 		this.destination=fromEdge.destination;
 		this.weight=fromEdge.weight;
 	}
+	public Edge(Tuple tp) {
+		if(tp!=null){
+			this.data= tp.data;
+			try {
+				this.label = Convert.getStrValue(0, this.data, Edge.LABEL_MAX_LENGTH+2);
+				NID srcId = new NID();
+				srcId.pageNo.pid = Convert.getIntValue(Edge.LABEL_MAX_LENGTH+2, this.data);
+				srcId.slotNo=Convert.getIntValue(Edge.LABEL_MAX_LENGTH+2+4, this.data);
+				this.source = srcId;
+				NID destId = new NID();
+				destId.pageNo.pid = Convert.getIntValue(Edge.LABEL_MAX_LENGTH+2+4+4, this.data);
+				destId.slotNo=Convert.getIntValue(Edge.LABEL_MAX_LENGTH+2+4+4+4, this.data);
+				this.destination=destId;
+				this.weight=Convert.getIntValue(Edge.LABEL_MAX_LENGTH+2+4+4+4+4, this.data);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	public String getLabel()
 	{
 		return label;

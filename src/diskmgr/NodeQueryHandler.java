@@ -405,7 +405,6 @@ public class NodeQueryHandler {
 				while (!done) { 
 					try {
 						et = eiscan.getNextEdge();
-						System.out.println("NodeQueryHandler.nodeIndexTest4() et : "+et);
 						if (et == null) {
 							done = true;
 							break;

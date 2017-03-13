@@ -2,6 +2,7 @@ package diskmgr;
 
 import java.io.*;
 import java.util.Objects;
+import java.util.Scanner;
 
 import bufmgr.*;
 import global.*;
@@ -22,7 +23,7 @@ public class EdgeQueryHandler {
 	BTreeFile edgeWeights;
 	graphDB db;
 	public EdgeQueryHandler(NodeHeapFile nodes, EdgeHeapFile edges, BTreeFile nodeLabels, 
-	ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights, graphDB db) {
+			ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights, graphDB db) {
 
 		this.nodes = nodes;
 		this.edges = edges;
@@ -31,6 +32,22 @@ public class EdgeQueryHandler {
 		this.edgeLabels = edgeLabels;
 		this.edgeWeights = edgeWeights;
 		this.db = db;
+	}
+	public static void print(Edge e,NodeHeapFile nodes) throws IOException
+	{
+		Node source = null,destination = null;
+		try {
+		source = nodes.getNode(e.getSource());
+		destination = nodes.getNode(e.getDestination());
+		} catch(Exception e1) {
+			e1.printStackTrace();
+		}
+		System.out.print("[");
+		System.out.println(" source label : "+source.getLabel());
+		System.out.println(" destination label : "+destination.getLabel());
+		System.out.print(" edge label : "+e.getLabel());
+		System.out.print(" weight : "+e.getWeight());
+		System.out.println(" ]");
 	}
 
 	private void sortNodes(Node nodesArray[]) 
@@ -60,28 +77,57 @@ public class EdgeQueryHandler {
 			}
 		}
 	}
-	
-	private void sortEdges(Edge edgesArray[]) 
+
+	private void sortEdges(Edge edgesArray[],int sortParameter) 
 	{
 		Edge temp;
-		AttrType [] jtype = new AttrType[2];
-		jtype[1] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrDesc);
+		Node sourceNode1 = null;
+		Node sourceNode2 = null;
+		Node destinationNode1 = null;
+		Node destinationNode2 = null;
 		for (int i = 0; i < edgesArray.length; i++) 
 		{
 			for (int j = i + 1; j < edgesArray.length; j++) 
 			{
-				if (edgesArray[i].getLabel().compareTo(edgesArray[j].getLabel()) > 0) 
-				{
-					temp = edgesArray[i];
-					edgesArray[i] = edgesArray[j];
-					edgesArray[j] = temp;
+				if(sortParameter == 0) {
+					try{
+						sourceNode1 = nodes.getNode(edgesArray[i].getSource());
+						sourceNode2 = nodes.getNode(edgesArray[j].getSource());
+					} catch(Exception e) {
+						e.printStackTrace();
+					}
+					if (sourceNode1.getLabel().compareTo(sourceNode2.getLabel()) > 0) 
+					{
+						temp = edgesArray[i];
+						edgesArray[i] = edgesArray[j];
+						edgesArray[j] = temp;
+					}
+				} else if(sortParameter == 1) {
+					try{
+						destinationNode1 = nodes.getNode(edgesArray[i].getDestination());
+						destinationNode2 = nodes.getNode(edgesArray[j].getDestination());
+					} catch(Exception e) {
+						e.printStackTrace();
+					}
+					if (destinationNode1.getLabel().compareTo(destinationNode2.getLabel()) > 0) 
+					{
+						temp = edgesArray[i];
+						edgesArray[i] = edgesArray[j];
+						edgesArray[j] = temp;
+					}
+				} else if(sortParameter == 2) {
+					if (edgesArray[i].getLabel().compareTo(edgesArray[j].getLabel()) > 0) 
+					{
+						temp = edgesArray[i];
+						edgesArray[i] = edgesArray[j];
+						edgesArray[j] = temp;
+					}
 				}
 			}
 		}
 		for(int i = 0; i < edgesArray.length; i++) {
 			try {
-				edgesArray[i].print(jtype);
+				print(edgesArray[i],nodes);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -89,17 +135,14 @@ public class EdgeQueryHandler {
 		}
 	}
 
-       private void sortWeights(Edge edgesArray[]) 
-       {
+	private void sortWeights(Edge edgesArray[]) 
+	{
 		Edge temp;
-		AttrType [] jtype = new AttrType[2];
-		jtype[1] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrDesc);
 		for (int i = 0; i < edgesArray.length; i++) 
 		{
 			for (int j = i + 1; j < edgesArray.length; j++) 
 			{
-				if (edgesArray[i].getWeight()>edgesArray[j].getWeight()) 
+				if (edgesArray[i].getWeight() > edgesArray[j].getWeight()) 
 				{
 					temp = edgesArray[i];
 					edgesArray[i] = edgesArray[j];
@@ -109,34 +152,33 @@ public class EdgeQueryHandler {
 		}
 		for(int i = 0; i < edgesArray.length; i++) {
 			try {
-				edgesArray[i].print(jtype);
+				print(edgesArray[i],nodes);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
-	
-		public boolean edgeIndexTest0(String argv[])
+
+	public boolean edgeIndexTest0(String argv[])
 	{
 
 		boolean status = OK;
 		AttrType[] attrType = new AttrType[4];
-	    attrType[0] = new AttrType(AttrType.attrString);
-	    attrType[1] = new AttrType(AttrType.attrInteger);
-	    attrType[2] = new AttrType(AttrType.attrInteger);
-	    attrType[3] = new AttrType(AttrType.attrInteger);
-	    FldSpec[] projlist = new FldSpec[4];
-	    RelSpec rel = new RelSpec(RelSpec.outer); 
-	    projlist[0] = new FldSpec(rel, 1);
-	    projlist[1] = new FldSpec(rel, 2);
-	    projlist[2] = new FldSpec(rel, 3);
-	    projlist[3] = new FldSpec(rel, 4);
-	    short[] attrSize = new short[4];
-	    attrSize[0] = 8;
-	    attrSize[1] = 8;
-	    attrSize[2] = 8;
-	    attrSize[3] = 4;
+		attrType[0] = new AttrType(AttrType.attrString);
+		attrType[1] = new AttrType(AttrType.attrInteger);
+		attrType[2] = new AttrType(AttrType.attrInteger);
+		attrType[3] = new AttrType(AttrType.attrInteger);
+		FldSpec[] projlist = new FldSpec[4];
+		RelSpec rel = new RelSpec(RelSpec.outer); 
+		projlist[0] = new FldSpec(rel, 1);
+		projlist[1] = new FldSpec(rel, 2);
+		projlist[2] = new FldSpec(rel, 3);
+		projlist[3] = new FldSpec(rel, 4);
+		short[] attrSize = new short[4];
+		attrSize[0] = 8;
+		attrSize[1] = 8;
+		attrSize[2] = 8;
+		attrSize[3] = 4;
 		IndexScan iscan = null;
 		String filename = nodes.getFileName();
 		int edgeCount = 0, i = 0;
@@ -157,21 +199,21 @@ public class EdgeQueryHandler {
 		boolean done = false;
 		while(!done) {
 			try {
-					t = iscan.get_next();
-				}
+				t = iscan.get_next();
+			}
 			catch (IndexException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			catch (UnknownKeyTypeException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			 
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 			if(t == null) {
 				done = true;
 				break;
@@ -183,32 +225,32 @@ public class EdgeQueryHandler {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
-	
+
 
 		return true;
 	}
 	public boolean edgeIndexTest1(String argv[])
 	{
-		
+
 		boolean status = OK;
 		AttrType[] attrType = new AttrType[4];
-	    attrType[0] = new AttrType(AttrType.attrString);
-	    attrType[1] = new AttrType(AttrType.attrInteger);
-	    attrType[2] = new AttrType(AttrType.attrInteger);
-	    attrType[3] = new AttrType(AttrType.attrInteger);
-	    FldSpec[] projlist = new FldSpec[4];
-	    RelSpec rel = new RelSpec(RelSpec.outer); 
-	    projlist[0] = new FldSpec(rel, 1);
-	    projlist[1] = new FldSpec(rel, 2);
-	    projlist[2] = new FldSpec(rel, 3);
-	    projlist[3] = new FldSpec(rel, 4);
-	    short[] attrSize = new short[4];
-	    attrSize[0] = 8;
-	    attrSize[1] = 8;
-	    attrSize[2] = 8;
-	    attrSize[3] = 4;
+		attrType[0] = new AttrType(AttrType.attrString);
+		attrType[1] = new AttrType(AttrType.attrInteger);
+		attrType[2] = new AttrType(AttrType.attrInteger);
+		attrType[3] = new AttrType(AttrType.attrInteger);
+		FldSpec[] projlist = new FldSpec[4];
+		RelSpec rel = new RelSpec(RelSpec.outer); 
+		projlist[0] = new FldSpec(rel, 1);
+		projlist[1] = new FldSpec(rel, 2);
+		projlist[2] = new FldSpec(rel, 3);
+		projlist[3] = new FldSpec(rel, 4);
+		short[] attrSize = new short[4];
+		attrSize[0] = 8;
+		attrSize[1] = 8;
+		attrSize[2] = 8;
+		attrSize[3] = 4;
 		IndexScan iscan = null;
 		String filename = nodes.getFileName();
 		EdgeHeapFile edgeheap = edges;
@@ -241,13 +283,13 @@ public class EdgeQueryHandler {
 		}
 		Node[] nodes = new Node[edgeCount];
 		//need to change test1.in to actual rel name
-	    try {
-	      iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "BTreeIndex", attrType, attrSize, 4, 4, projlist, null, 0, false);
-	    }
-	    catch (Exception e) {
-	      status = FAIL;
-	      e.printStackTrace();
-	    }
+		try {
+			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "BTreeIndex", attrType, attrSize, 4, 4, projlist, null, 0, false);
+		}
+		catch (Exception e) {
+			status = FAIL;
+			e.printStackTrace();
+		}
 		boolean done = false;
 		if(status == OK) {
 			while(!done) {
@@ -266,7 +308,7 @@ public class EdgeQueryHandler {
 					// TODO Auto-generated catch block
 					status = FAIL;
 					e.printStackTrace();
-					
+
 				}
 				if(t == null) {
 					done = true;
@@ -295,32 +337,32 @@ public class EdgeQueryHandler {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 				i++;
 			}
 			sortNodes(nodes);
 		}
 		return status;	
-		
+
 	}
 	public boolean edgeIndexTest2(String argv[]){
 		boolean status = OK;
 		AttrType[] attrType = new AttrType[4];
-	    attrType[0] = new AttrType(AttrType.attrString);
-	    attrType[1] = new AttrType(AttrType.attrInteger);
-	    attrType[2] = new AttrType(AttrType.attrInteger);
-	    attrType[3] = new AttrType(AttrType.attrInteger);
-	    FldSpec[] projlist = new FldSpec[4];
-	    RelSpec rel = new RelSpec(RelSpec.outer); 
-	    projlist[0] = new FldSpec(rel, 1);
-	    projlist[1] = new FldSpec(rel, 2);
-	    projlist[2] = new FldSpec(rel, 3);
-	    projlist[3] = new FldSpec(rel, 4);
-	    short[] attrSize = new short[4];
-	    attrSize[0] = 8;
-	    attrSize[1] = 8;
-	    attrSize[2] = 8;
-	    attrSize[3] = 4;
+		attrType[0] = new AttrType(AttrType.attrString);
+		attrType[1] = new AttrType(AttrType.attrInteger);
+		attrType[2] = new AttrType(AttrType.attrInteger);
+		attrType[3] = new AttrType(AttrType.attrInteger);
+		FldSpec[] projlist = new FldSpec[4];
+		RelSpec rel = new RelSpec(RelSpec.outer); 
+		projlist[0] = new FldSpec(rel, 1);
+		projlist[1] = new FldSpec(rel, 2);
+		projlist[2] = new FldSpec(rel, 3);
+		projlist[3] = new FldSpec(rel, 4);
+		short[] attrSize = new short[4];
+		attrSize[0] = 8;
+		attrSize[1] = 8;
+		attrSize[2] = 8;
+		attrSize[3] = 4;
 		IndexScan iscan = null;
 		String filename = nodes.getFileName();
 		EdgeHeapFile edgeheap = edges;
@@ -347,13 +389,13 @@ public class EdgeQueryHandler {
 		int i = 0;
 		Node[] nodesArray = new Node[edgeCount];
 		//need to change test1.in to actual rel name
-	    try {
-	      iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "BTreeIndex", attrType, attrSize, 4, 4, projlist, null, 0, false);
-	    }
-	    catch (Exception e) {
-	      status = FAIL;
-	      e.printStackTrace();
-	    }
+		try {
+			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "BTreeIndex", attrType, attrSize, 4, 4, projlist, null, 0, false);
+		}
+		catch (Exception e) {
+			status = FAIL;
+			e.printStackTrace();
+		}
 		boolean done = false;
 		if(status == OK) {
 			while(!done) {
@@ -372,7 +414,7 @@ public class EdgeQueryHandler {
 					// TODO Auto-generated catch block
 					status = FAIL;
 					e.printStackTrace();
-					
+
 				}
 				if(t == null) {
 					done = true;
@@ -401,7 +443,7 @@ public class EdgeQueryHandler {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 				i++;
 			}
 			sortNodes(nodesArray);
@@ -409,26 +451,26 @@ public class EdgeQueryHandler {
 		return status;	
 	}
 	public boolean edgeIndexTest3(String argv[]){
-				return this.edgeIndexTest0(argv);
+		return this.edgeIndexTest0(argv);
 	}
 	public  boolean edgeIndexTest4(String argv[]){
 		boolean status = OK;
 		AttrType[] attrType = new AttrType[4];
-	    attrType[0] = new AttrType(AttrType.attrString);
-	    attrType[1] = new AttrType(AttrType.attrInteger);
-	    attrType[2] = new AttrType(AttrType.attrInteger);
-	    attrType[3] = new AttrType(AttrType.attrInteger);
-	    FldSpec[] projlist = new FldSpec[4];
-	    RelSpec rel = new RelSpec(RelSpec.outer); 
-	    projlist[0] = new FldSpec(rel, 1);
-	    projlist[1] = new FldSpec(rel, 2);
-	    projlist[2] = new FldSpec(rel, 3);
-	    projlist[3] = new FldSpec(rel, 4);
-	    short[] attrSize = new short[4];
-	    attrSize[0] = 8;
-	    attrSize[1] = 8;
-	    attrSize[2] = 8;
-	    attrSize[3] = 4;
+		attrType[0] = new AttrType(AttrType.attrString);
+		attrType[1] = new AttrType(AttrType.attrInteger);
+		attrType[2] = new AttrType(AttrType.attrInteger);
+		attrType[3] = new AttrType(AttrType.attrInteger);
+		FldSpec[] projlist = new FldSpec[4];
+		RelSpec rel = new RelSpec(RelSpec.outer); 
+		projlist[0] = new FldSpec(rel, 1);
+		projlist[1] = new FldSpec(rel, 2);
+		projlist[2] = new FldSpec(rel, 3);
+		projlist[3] = new FldSpec(rel, 4);
+		short[] attrSize = new short[4];
+		attrSize[0] = 8;
+		attrSize[1] = 8;
+		attrSize[2] = 8;
+		attrSize[3] = 4;
 		IndexScan iscan = null;
 		String filename = nodes.getFileName();
 		EdgeHeapFile edgeheap = edges;
@@ -455,13 +497,13 @@ public class EdgeQueryHandler {
 		int i = 0;
 		Node[] nodes = new Node[edgeCount];
 		//need to change test1.in to actual rel name
-	    try {
-	      iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "BTreeIndex", attrType, attrSize, 4, 4, projlist, null, 3, false);
-	    }
-	    catch (Exception e) {
-	      status = FAIL;
-	      e.printStackTrace();
-	    }
+		try {
+			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "BTreeIndex", attrType, attrSize, 4, 4, projlist, null, 3, false);
+		}
+		catch (Exception e) {
+			status = FAIL;
+			e.printStackTrace();
+		}
 		boolean done = false;
 		if(status == OK) {
 			while(!done) {
@@ -480,7 +522,7 @@ public class EdgeQueryHandler {
 					// TODO Auto-generated catch block
 					status = FAIL;
 					e.printStackTrace();
-					
+
 				}
 				if(t == null) {
 					done = true;
@@ -493,7 +535,7 @@ public class EdgeQueryHandler {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 				i++;
 			}
 		}
@@ -502,47 +544,47 @@ public class EdgeQueryHandler {
 	public boolean edgeIndexTest5(String argv[]){
 		boolean status = OK;
 		AttrType[] attrType = new AttrType[4];
-	    attrType[0] = new AttrType(AttrType.attrString);
-	    attrType[1] = new AttrType(AttrType.attrInteger);
-	    attrType[2] = new AttrType(AttrType.attrInteger);
-	    attrType[3] = new AttrType(AttrType.attrInteger);
-	    FldSpec[] projlist = new FldSpec[4];
-	    RelSpec rel = new RelSpec(RelSpec.outer); 
-	    projlist[0] = new FldSpec(rel, 1);
-	    projlist[1] = new FldSpec(rel, 2);
-	    projlist[2] = new FldSpec(rel, 3);
-	    projlist[3] = new FldSpec(rel, 4);
-	    short[] attrSize = new short[4];
-	    attrSize[0] = 8;
-	    attrSize[1] = 8;
-	    attrSize[2] = 8;
-	    attrSize[3] = 4;
+		attrType[0] = new AttrType(AttrType.attrString);
+		attrType[1] = new AttrType(AttrType.attrInteger);
+		attrType[2] = new AttrType(AttrType.attrInteger);
+		attrType[3] = new AttrType(AttrType.attrInteger);
+		FldSpec[] projlist = new FldSpec[4];
+		RelSpec rel = new RelSpec(RelSpec.outer); 
+		projlist[0] = new FldSpec(rel, 1);
+		projlist[1] = new FldSpec(rel, 2);
+		projlist[2] = new FldSpec(rel, 3);
+		projlist[3] = new FldSpec(rel, 4);
+		short[] attrSize = new short[4];
+		attrSize[0] = 8;
+		attrSize[1] = 8;
+		attrSize[2] = 8;
+		attrSize[3] = 4;
 		IndexScan iscan = null;
 		String filename = nodes.getFileName();
 		EdgeHeapFile edgeheap = edges;
 		NodeHeapFile nodeheap = nodes;
 		System.out.println("Enter the lower bound of Weights:");
-        BufferedReader in = new BufferedReader (new InputStreamReader(System.in));
-        int  lowerbound, upperbound;
-        try {
-        	lowerbound = Integer.parseInt(in.readLine());
-        }
-        catch (NumberFormatException e) {
-        	lowerbound = 0;
-        }
-        catch (IOException e) {
-        	lowerbound = 0;
-        }
-        System.out.println("Enter the upper bound of Weights:");
-        try {
-        	upperbound = Integer.parseInt(in.readLine());
-        }
-        catch (NumberFormatException e) {
-        	upperbound = 0;
-        }
-        catch (IOException e) {
-        	upperbound = 0;
-        }
+		BufferedReader in = new BufferedReader (new InputStreamReader(System.in));
+		int  lowerbound, upperbound;
+		try {
+			lowerbound = Integer.parseInt(in.readLine());
+		}
+		catch (NumberFormatException e) {
+			lowerbound = 0;
+		}
+		catch (IOException e) {
+			lowerbound = 0;
+		}
+		System.out.println("Enter the upper bound of Weights:");
+		try {
+			upperbound = Integer.parseInt(in.readLine());
+		}
+		catch (NumberFormatException e) {
+			upperbound = 0;
+		}
+		catch (IOException e) {
+			upperbound = 0;
+		}
 
 		int edgeCount = 0;
 		try {
@@ -563,15 +605,15 @@ public class EdgeQueryHandler {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		//need to change test1.in to actual rel name
-	    try {
-	      iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "BTreeIndex", attrType, attrSize, 4, 4, projlist, null, 3, false);
-	    }
-	    catch (Exception e) {
-	      status = FAIL;
-	      e.printStackTrace();
-	    }
+		try {
+			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "BTreeIndex", attrType, attrSize, 4, 4, projlist, null, 3, false);
+		}
+		catch (Exception e) {
+			status = FAIL;
+			e.printStackTrace();
+		}
 		boolean done = false;
 		if(status == OK) {
 			while(!done) {
@@ -590,7 +632,7 @@ public class EdgeQueryHandler {
 					// TODO Auto-generated catch block
 					status = FAIL;
 					e.printStackTrace();
-					
+
 				}
 				if(t == null) {
 					done = true;
@@ -607,7 +649,7 @@ public class EdgeQueryHandler {
 				}
 
 
-			
+
 			}
 		}
 		return status;
@@ -764,20 +806,8 @@ public class EdgeQueryHandler {
 		boolean status = OK;
 		EID eid = new EID();
 		EdgeHeapFile f = edges;
-
-		AttrType [] jtype = new AttrType[2];
-		jtype[0] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrDesc);
-		try {
-			//f = new NodeHeapFile("priyekant");
-		}
-		catch (Exception e) {
-			status = FAIL;
-			System.err.println ("*** Could not create heap file\n");
-			e.printStackTrace();
-		}
 		Escan scan = null;
-		if ( status == OK ) {	
+		if ( status == OK ) {
 			System.out.println ("  - Scan the records\n");
 			try {
 				scan = f.openScan();
@@ -799,20 +829,21 @@ public class EdgeQueryHandler {
 			Edge edge = new Edge();
 
 			boolean done = false;
-			while (!done) { 
+			while (!done) {
 				try {
 					edge = scan.getNext(eid);
 					if (edge == null) {
 						done = true;
 						break;
 					}
-					edge.print(jtype);
+					print(edge,nodes);
 				}
 				catch (Exception e) {
 					status = FAIL;
 					e.printStackTrace();
 				}
 			}
+			scan.closescan();
 		}
 		return status;
 	}
@@ -820,33 +851,16 @@ public class EdgeQueryHandler {
 		boolean status = OK;
 		int i = 0;
 		EID eid = new EID();
-		NID nid = new NID();
-		EdgeHeapFile f        = edges;
-		NodeHeapFile nodeheap = nodes;
+		EdgeHeapFile f = edges;
 		int edgeCount = 0;
 		try {
 			edgeCount = edges.getEdgeCnt();
-		} catch (HFBufMgrException e1) {
+		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		} catch (InvalidSlotNumberException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidTupleSizeException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		Edge[] edgesArray = new Edge[edgeCount];
 
-		AttrType [] jtype = new AttrType[1];
-		jtype[0] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrDesc);
-		
 		Escan scan = null;
 		if ( status == OK ) {	
 			System.out.println ("  - Scan the records\n");
@@ -868,12 +882,10 @@ public class EdgeQueryHandler {
 
 		if ( status == OK ) {
 			Edge edge = new Edge();
-			
 			boolean done = false;
-			while (!done) { 
+			while (!done) {
 				try {
 					edge = scan.getNext(eid);
-					nid  = edge.getSource();	
 					if (edge == null) 
 					{
 						done = true;
@@ -887,50 +899,23 @@ public class EdgeQueryHandler {
 					e.printStackTrace();
 				}
 			}
-			sortEdges(edgesArray);
+			scan.closescan();
+			sortEdges(edgesArray,0);
 		}
-
 		return status;
 	}
 	public boolean edgeHeapTest2(String argv[]){
 		boolean status = OK;
 		int i = 0;
 		EID eid = new EID();
-		NID nid = new NID();
-		EdgeHeapFile f        = edges;
-		NodeHeapFile nodeHeapFile = nodes;
+		EdgeHeapFile f = edges;
 		int edgeCount = 0;
 		try {
 			edgeCount = edges.getEdgeCnt();
-		} catch (HFBufMgrException e1) {
-			// TODO Auto-generated catch block
+		} catch (Exception e1) {
 			e1.printStackTrace();
-		} catch (InvalidSlotNumberException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidTupleSizeException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
 		}
 		Edge[] edgesArray = new Edge[edgeCount];
-
-		AttrType [] jtype = new AttrType[1];
-		jtype[0] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrDesc);
-		try {
-			//f = new NodeHeapFile("priyekant");
-		}
-		catch (Exception e) {
-			status = FAIL;
-			System.err.println ("*** Could not create heap file\n");
-			e.printStackTrace();
-		}
 		Escan scan = null;
 		if ( status == OK ) {	
 			System.out.println ("  - Scan the records\n");
@@ -952,12 +937,10 @@ public class EdgeQueryHandler {
 
 		if ( status == OK ) {
 			Edge edge = new Edge();
-			
 			boolean done = false;
 			while (!done) { 
 				try {
 					edge = scan.getNext(eid);
-					nid  = edge.getDestination();
 					if (edge == null) {
 						done = true;
 						break;
@@ -970,9 +953,9 @@ public class EdgeQueryHandler {
 					e.printStackTrace();
 				}
 			}
-			sortEdges(edgesArray);
+			scan.closescan();
+			sortEdges(edgesArray,1);
 		}
-
 		return status;
 	}
 	public boolean edgeHeapTest3(String argv[]){
@@ -983,34 +966,10 @@ public class EdgeQueryHandler {
 		int edgeCount  = 0;
 		try {
 			edgeCount = edges.getEdgeCnt();
-		} catch (HFBufMgrException e1) {
-			// TODO Auto-generated catch block
+		} catch (Exception e1) {
 			e1.printStackTrace();
-		} catch (InvalidSlotNumberException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidTupleSizeException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch(Exception e) {
-			e.printStackTrace();
 		}
 		Edge[] edgesArray = new Edge[edgeCount];
-
-		AttrType [] jtype = new AttrType[1];
-		jtype[0] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrDesc);
-		try {
-			//f = new NodeHeapFile("priyekant");
-		}
-		catch (Exception e) {
-			status = FAIL;
-			System.err.println ("*** Could not create heap file\n");
-			e.printStackTrace();
-		}
 		Escan scan = null;
 		if ( status == OK ) {	
 			System.out.println ("  - Scan the records\n");
@@ -1032,7 +991,7 @@ public class EdgeQueryHandler {
 
 		if ( status == OK ) {
 			Edge edge = new Edge();
-			
+
 			boolean done = false;
 			while (!done) { 
 				try {
@@ -1049,9 +1008,9 @@ public class EdgeQueryHandler {
 					e.printStackTrace();
 				}
 			}
-			sortEdges(edgesArray);
+			scan.closescan();
+			sortEdges(edgesArray,2);
 		}
-
 		return status;
 	}
 	public boolean edgeHeapTest4(String argv[]){
@@ -1062,35 +1021,10 @@ public class EdgeQueryHandler {
 		int edgeCount  = 0;
 		try {
 			edgeCount = edges.getEdgeCnt();
-		} catch (HFBufMgrException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidSlotNumberException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidTupleSizeException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		Edge[] edgesArray = new Edge[edgeCount];
-
-		AttrType [] jtype = new AttrType[1];
-		jtype[0] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrDesc);
-		try {
-			//f = new NodeHeapFile("priyekant");
-		}
-		catch (Exception e) {
-			status = FAIL;
-			System.err.println ("*** Could not create heap file\n");
-			e.printStackTrace();
-		}
 		Escan scan = null;
 		if ( status == OK ) {	
 			System.out.println ("  - Scan the records\n");
@@ -1112,7 +1046,6 @@ public class EdgeQueryHandler {
 
 		if ( status == OK ) {
 			Edge edge = new Edge();
-			
 			boolean done = false;
 			while (!done) { 
 				try {
@@ -1129,72 +1062,16 @@ public class EdgeQueryHandler {
 					e.printStackTrace();
 				}
 			}
+			scan.closescan();
 			sortWeights(edgesArray);
 		}
-
 		return status;
-
 	}
 	public boolean edgeHeapTest5(String argv[]){
-                
-                boolean status = OK;
-		int i = 0;
+		boolean status = OK;
 		EID eid = new EID();
 		EdgeHeapFile f = edges;
-		System.out.println("Enter the lower bound of Weights:");
-                BufferedReader in = new BufferedReader (new InputStreamReader(System.in));
-		int  lowerbound, upperbound;
-		try {
-      		 lowerbound = Integer.parseInt(in.readLine());
-                 }
-                catch (NumberFormatException e) {
-                 lowerbound = 0;
-                 }
-                catch (IOException e) {
-                 lowerbound = 0;
-                 }
-		System.out.println("Enter the upper bound of Weights:");
-		try {
-      		 upperbound = Integer.parseInt(in.readLine());
-                 }
-                catch (NumberFormatException e) {
-                 upperbound = 0;
-                 }
-                catch (IOException e) {
-                 upperbound = 0;
-                 }
-		int edgeCount  = 0;
-		try {
-			edgeCount = edges.getEdgeCnt();
-		} catch (HFBufMgrException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidSlotNumberException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidTupleSizeException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		Edge[] edgesArray = new Edge[edgeCount];
-
-		AttrType [] jtype = new AttrType[1];
-		jtype[0] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrDesc);
-		try {
-			//f = new NodeHeapFile("priyekant");
-		}
-		catch (Exception e) {
-			status = FAIL;
-			System.err.println ("*** Could not create heap file\n");
-			e.printStackTrace();
-		}
+		int  lowerbound = Integer.parseInt(argv[4]), upperbound = Integer.parseInt(argv[5]);
 		Escan scan = null;
 		if ( status == OK ) {	
 			System.out.println ("  - Scan the records\n");
@@ -1216,7 +1093,7 @@ public class EdgeQueryHandler {
 
 		if ( status == OK ) {
 			Edge edge = new Edge();
-			
+
 			boolean done = false;
 			while (!done) { 
 				try {
@@ -1225,8 +1102,8 @@ public class EdgeQueryHandler {
 						done = true;
 						break;
 					}
-					if(lowerbound<=edge.getWeight()&&edge.getWeight()<=upperbound){
-					 edge.print(jtype);						
+					if(edge.getWeight() >= lowerbound && edge.getWeight() <= upperbound){
+						print(edge,nodes);						
 					}
 				}
 				catch (Exception e) {
@@ -1234,54 +1111,29 @@ public class EdgeQueryHandler {
 					e.printStackTrace();
 				}
 			}
-			
 		}
-
 		return status;
-
 	}
 
 
-       public boolean edgeHeapTest6(String argv[]){
-                
-                boolean status = OK;
+	public boolean edgeHeapTest6(String argv[]){
+		boolean status = OK;
 		int i = 0;
 		EID eid = new EID();
 		EdgeHeapFile f = edges;
 		int edgeCount  = 0;
+		Scanner  sc = new Scanner(System.in);
+		sc.nextLine();
 		
 		try {
 			edgeCount = edges.getEdgeCnt();
-		} catch (HFBufMgrException e1) {
-			// TODO Auto-generated catch block
+		} catch (Exception e1) {
 			e1.printStackTrace();
-		} catch (InvalidSlotNumberException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidTupleSizeException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}catch (Exception e) {
-			e.printStackTrace();
 		}
-		
+
 		RID[][] edgesArray = new RID[edgeCount][3];
-		AttrType [] jtype = new AttrType[1];
-		jtype[0] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrDesc);
-		try {
-			//f = new NodeHeapFile("priyekant");
-		}
-		catch (Exception e) {
-			status = FAIL;
-			System.err.println ("*** Could not create heap file\n");
-			e.printStackTrace();
-		}
 		Escan scan = null;
-		if ( status == OK ) {	
+		if ( status == OK ) {
 			System.out.println ("  - Scan the records\n");
 			try {
 				scan = f.openScan();
@@ -1298,86 +1150,57 @@ public class EdgeQueryHandler {
 				status = FAIL;
 			}
 		}
-
+		sc.nextLine();
 		if ( status == OK ) {
-			
-			NID source,destination;
-		
 			Edge edge = new Edge();
 			i=0;
 			try {
 				edge = scan.getNext(eid);
-			} catch (InvalidTupleSizeException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			} catch (IOException e2) {
-				// TODO Auto-generated catch block
+			} catch (Exception e2) {
+				status = FAIL;
 				e2.printStackTrace();
 			}
 			while(edge!=null){
-			     
-			   try{
-			    edgesArray[i][0] = eid;
-		            edgesArray[i][1] = edge.getSource();
-			    edgesArray[i][2] = edge.getDestination();
-			    }
-			   catch(Exception e){
-			    System.err.println(""+e);
-			    }
-			   i++; 
-			 }
+				try{
+					edgesArray[i][0] = eid;
+					edgesArray[i][1] = edge.getSource();
+					edgesArray[i][2] = edge.getDestination();
+				}
+				catch(Exception e){
+					status = FAIL;
+					System.err.println(""+e);
+				}
+				i++; 
+			}
 			i=0;
 			while(i<edgeCount){
-			 int j=i+1;
-			 while(j<edgeCount){
-			  if(Objects.equals(edgesArray[i][1],edgesArray[j][2]) || Objects.equals(edgesArray[i][2],edgesArray[j][1])){
-			    
-			    Edge edge1 = null;
-				try {
-					edge1 = f.getEdge((EID)edgesArray[i][0]);
-					Edge edge2 = f.getEdge((EID)edgesArray[j][0]);
-				} catch (InvalidSlotNumberException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (InvalidTupleSizeException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (HFException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (HFDiskMgrException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (HFBufMgrException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			    
-			    
-			    try {
-			     edge1.print(jtype);
-			     	
-			     } 
-                            catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			     }			    
+				int j=i+1;
+				while(j<edgeCount){
+					if(Objects.equals(edgesArray[i][1],edgesArray[j][2]) || Objects.equals(edgesArray[i][2],edgesArray[j][1])){
 
-			   }
-			 }						
+						Edge edge1 = null,edge2 = null;
+						try {
+							edge1 = f.getEdge((EID)edgesArray[i][0]);
+							edge2 = f.getEdge((EID)edgesArray[j][0]);
+						} catch (Exception e1) {
+							status = FAIL;
+							e1.printStackTrace();
+						}
+						try {
+							System.out.println("[ "+ edge1.getLabel() + ", "+ edge2.getLabel() + " ]") ;
+						} 
+						catch (Exception e) {
+							status = FAIL;
+							e.printStackTrace();
+						}			    
+
+					}
+				}						
 			}
-			  
-	         }
-	        scan.closescan();
 
-		
-		
-
+		}
+		sc.nextLine();
+		scan.closescan();
 		return status;
-
-      }
-
+	}
 }

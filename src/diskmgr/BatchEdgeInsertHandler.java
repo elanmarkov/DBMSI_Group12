@@ -105,7 +105,7 @@ public class BatchEdgeInsertHandler {
 			newEdge.setDestination(desNid);
 			newEdge.setWeight(weight);
 			try{
-				SystemDefs.JavabaseDB.insertEdge(newEdge);
+				db.insertEdge(newEdge);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

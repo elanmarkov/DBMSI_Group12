@@ -70,6 +70,12 @@ SMJoin:SM_JoinTest.java
 sortmerge: SMJoin
 	$(JAVA) tests.SM_JoinTest
 
+# test Graph test cases
 
+Graph:testcases.java
+	$(JAVAC) testcases.java
+
+graph: Graph
+	$(JAVA) tests.testcases
 
 

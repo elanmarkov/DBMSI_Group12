@@ -38,7 +38,7 @@ public class BatchNodeDeleteHandler{
 		PCounter     pageRW      = new PCounter();
 		int          pages_read  = pageRW.rcounter;
 		int 	     pages_write = pageRW.wcounter;
-		NodeHeapFile nodeheap    = SystemDefs.JavabaseDB.nodes;
+		NodeHeapFile nodeheap    = nodes;
 		File         file = null;
 
 		try{
@@ -51,7 +51,7 @@ public class BatchNodeDeleteHandler{
 		}
 		System.out.println("Its Running");
 		Scanner      inputFile    = new Scanner(file);
-		EdgeHeapFile     edgeheap     = SystemDefs.JavabaseDB.edges;
+		EdgeHeapFile     edgeheap     = edges;
 
 		// Read lines from the file until no more are left.
 		if(status){
@@ -67,22 +67,22 @@ public class BatchNodeDeleteHandler{
 				Node          tempNode = new Node();
 				tempNode.setLabel(inputnodelabel);
 				
-				while(!Objects.equals(node,null)){	//while 02 for going through the nodeheapfile looking for the particular node
+				while(!node.equals(null)){	//while 02 for going through the nodeheapfile looking for the particular node
 
 					
 					String label = node.getLabel();
 					
 
 					if(Objects.equals(label,tempNode.getLabel())){	// nid with the given nodelabel found
-						System.out.println(Objects.equals(node,null));
+						System.out.println(node.equals(null));
 						Escan escan = edgeheap.openScan();
 						EID eid = new EID();
 						Edge edge = new Edge();
 						edge = escan.getNext(eid);
 						while(!Objects.equals(edge,null)){		// trying to find the edges with destination and source node
-							if(Objects.equals(edge.getSource(),nid) || Objects.equals(edge.getDestination(),nid)){
+							if(edge.getSource().equals(nid) || edge.getDestination().equals(nid)){
 								try {
-									SystemDefs.JavabaseDB.deleteEdge(eid);
+									db.deleteEdge(eid);
 								}
 								catch(Exception e) {
 									System.out.println("Error during deleting the Edge");
@@ -95,7 +95,7 @@ public class BatchNodeDeleteHandler{
 						escan.closescan();
 
 						try {
-							SystemDefs.JavabaseDB.deleteNode(nid);
+							db.deleteNode(nid);
 						}
 						catch(Exception e) {
 							System.out.println("Error during node deletion.");

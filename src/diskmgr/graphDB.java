@@ -88,15 +88,15 @@ public class graphDB extends DB {
 		nodeDesc = new ZCurve(filename + "NODEDESC");
 		if(type == 1) {
 		// full delete
-			nodeLabels = new BTreeFile(filename + "NODELABEL", 1, KEY_SIZE, 1);
-			edgeLabels = new BTreeFile(filename + "EDGELABEL", 1, KEY_SIZE, 1);
-			edgeWeights = new BTreeFile(filename + "EDGEWEIGHT", 0, KEY_SIZE, 1);
+			nodeLabels = new BTreeFile(filename + "NODELABEL", AttrType.attrString, KEY_SIZE, 1);
+			edgeLabels = new BTreeFile(filename + "EDGELABEL", AttrType.attrString, KEY_SIZE, 1);
+			edgeWeights = new BTreeFile(filename + "EDGEWEIGHT", AttrType.attrInteger, KEY_SIZE, 1);
 		}
 		else {
 		// Otherwise, naive delete
-			nodeLabels = new BTreeFile(filename + "NODELABEL", 1, KEY_SIZE, 0);
-			edgeLabels = new BTreeFile(filename + "EDGELABEL", 1, KEY_SIZE, 0);
-			edgeWeights = new BTreeFile(filename + "EDGEWEIGHT", 0, KEY_SIZE, 0);
+			nodeLabels = new BTreeFile(filename + "NODELABEL", AttrType.attrString, KEY_SIZE, 0);
+			edgeLabels = new BTreeFile(filename + "EDGELABEL", AttrType.attrString, KEY_SIZE, 0);
+			edgeWeights = new BTreeFile(filename + "EDGEWEIGHT", AttrType.attrInteger, KEY_SIZE, 0);
 		}
 		nodeQuery = new NodeQueryHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights);
 		edgeQuery = new EdgeQueryHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights);
@@ -127,7 +127,7 @@ public class graphDB extends DB {
 	public void insertNode(Node node) throws IOException, Exception {
 		NID id = nodes.insertNode(node.getNodeByteArray());
 		nodeLabels.insert(new StringKey(node.getLabel()), id);
-		nodeDesc.insert(new StringKey(node.getDesc().toString()), id);
+		nodeDesc.insert(new DescriptorKey(node.getDesc()), id);
 		addLabelNoDuplicate(labelNames, node.getLabel());
 		return;
 	}
@@ -143,7 +143,7 @@ public class graphDB extends DB {
 	public void deleteNode(NID id) throws IOException, Exception {
 		Node node = nodes.getNode(id);
 		nodeLabels.Delete(new StringKey(node.getLabel()), id);
-		nodeDesc.Delete(new StringKey(node.getDesc().toString()), id);
+		nodeDesc.Delete(new DescriptorKey(node.getDesc()), id);
 		removeLabel(labelNames, node.getLabel());
 		nodes.deleteNode(id);
 		return;

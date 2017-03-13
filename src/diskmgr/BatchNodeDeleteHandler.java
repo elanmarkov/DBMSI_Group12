@@ -1,22 +1,32 @@
 package diskmgr;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Objects;
-import java.util.Scanner;
-
-import global.EID;
-import global.NID;
-import global.SystemDefs;
-import heap.Edge;
-import heap.EdgeHeapFile;
-import heap.Escan;
-import heap.Node;
-import heap.NodeHeapFile;
-import heap.Nscan;
+import java.io.*;
+import java.util.*;
+import java.lang.*;
+import heap.*;
+import bufmgr.*;
+import diskmgr.*;
+import global.*;
+import btree.*;
+import zindex.*;
 
 public class BatchNodeDeleteHandler{
-	private final static boolean OK   = true;
+	NodeHeapFile nodes;
+	EdgeHeapFile edges;
+	BTreeFile nodeLabels;
+	ZCurve nodeDesc;
+	BTreeFile edgeLabels;
+	BTreeFile edgeWeights;
+	public BatchNodeDeleteHandler(NodeHeapFile nodes, EdgeHeapFile edges, BTreeFile nodeLabels, 
+		ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights) {
+		this.nodes = nodes;
+		this.edges = edges;
+		this.nodeLabels = nodeLabels;
+		this.nodeDesc = nodeDesc;
+		this.edgeLabels = edgeLabels;
+		this.edgeWeights = edgeWeights;
+	}
+	/*private final static boolean OK   = true;
 	  private final static boolean FAIL = false;
 	  
 	  public void runbatchnodedelete(String dbname, String filename) throws FileNotFoundException{
@@ -84,6 +94,6 @@ public class BatchNodeDeleteHandler{
 		 System.out.println("Number of Pages Read: "+pages_read+" Number of Page writes performed: "+pages_write);
 	        }
 
-	   }
+	   }*/
 
 }

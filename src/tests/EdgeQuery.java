@@ -166,7 +166,12 @@ class EQDriver extends TestDriver implements GlobalConst
 			}
 		case 6:
 			if(Integer.parseInt(argv[3]) == 1) {
-				_pass = queries.edgeIndexTest6(argv);
+				try {
+					_pass = queries.edgeIndexTest6(argv);
+				} catch (InvalidTupleSizeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			} else {
 				_pass = queries.edgeHeapTest6(argv);
 			}
@@ -187,7 +192,9 @@ class EQDriver extends TestDriver implements GlobalConst
 	}
 
 }
+
 public class EdgeQuery {
+
 	public static void main(String argv[]) {
 		EQDriver hd = new EQDriver();
 		boolean dbstatus;

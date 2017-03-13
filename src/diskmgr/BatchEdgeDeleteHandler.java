@@ -9,10 +9,26 @@ import bufmgr.*;
 import diskmgr.*;
 import global.*;
 import btree.*;
+import zindex.*;
 
 
 public class BatchEdgeDeleteHandler implements GlobalConst{
-	private final static boolean OK   = true;
+	NodeHeapFile nodes;
+	EdgeHeapFile edges;
+	BTreeFile nodeLabels;
+	ZCurve nodeDesc;
+	BTreeFile edgeLabels;
+	BTreeFile edgeWeights;
+	public BatchEdgeDeleteHandler(NodeHeapFile nodes, EdgeHeapFile edges, BTreeFile nodeLabels, 
+		ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights) {
+		this.nodes = nodes;
+		this.edges = edges;
+		this.nodeLabels = nodeLabels;
+		this.nodeDesc = nodeDesc;
+		this.edgeLabels = edgeLabels;
+		this.edgeWeights = edgeWeights;
+	}
+	/*private final static boolean OK   = true;
 	private final static boolean FAIL = false;
 
 	public void runbatchedgedelete(String dbname, String filename){
@@ -88,7 +104,7 @@ public class BatchEdgeDeleteHandler implements GlobalConst{
 			int nodecnt = sysdefs.JavabaseDB.getNodeCnt();
 			System.out.println("Total Edge Count: "+ edgecnt + "Total node Count: "+ nodecnt);
 
-		}
+		}*/
 
 
 }

@@ -21,8 +21,8 @@ public class EdgeQueryHandler {
 	BTreeFile edgeLabels;
 	BTreeFile edgeWeights;
 	public EdgeQueryHandler(NodeHeapFile nodes, EdgeHeapFile edges, BTreeFile nodeLabels, 
-		ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights) 
-	{
+	ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights) {
+
 		this.nodes = nodes;
 		this.edges = edges;
 		this.nodeLabels = nodeLabels;

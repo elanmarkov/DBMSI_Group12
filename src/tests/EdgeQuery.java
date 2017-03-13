@@ -1,27 +1,15 @@
 package tests;
 
 import diskmgr.EdgeQueryHandler;
-import diskmgr.graphDB;
-import global.GlobalConst;
 import global.SystemDefs;
 import heap.InvalidTupleSizeException;
 
-class EQDriver extends TestDriver implements GlobalConst
-{
-
-	public EQDriver () {
-		super("nodequerytest");      
-	}
-	
+public class EdgeQuery {
 	public boolean runTests(String argv[]) {
-		dbpath = argv[0];
-		graphDB database = SystemDefs.JavabaseDB;
 		EdgeQueryHandler queries = null;
 		try {
-			queries = database.getEdgeQueryHandler();
-			
+			queries = SystemDefs.JavabaseDB.getEdgeQueryHandler();
 		} catch (Exception e2) {
-			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		} 
 		
@@ -68,6 +56,7 @@ class EQDriver extends TestDriver implements GlobalConst
 			} else {
 				_pass = queries.edgeHeapTest5(argv);
 			}
+			break;
 		case 6:
 			if(Integer.parseInt(argv[3]) == 1) {
 				try {
@@ -85,24 +74,5 @@ class EQDriver extends TestDriver implements GlobalConst
 		}
 		return _pass;
 	}
-
-}
-
-public class EdgeQuery {
-
-	public static void main(String argv[]) {
-		EQDriver hd = new EQDriver();
-		boolean dbstatus;
-
-		dbstatus = hd.runTests(argv);
-
-		if (dbstatus != true) {
-			System.err.println ("Error encountered during nodequery tests:\n");
-			Runtime.getRuntime().exit(1);
-		}
-
-		Runtime.getRuntime().exit(0);
-	}
-
 }
 

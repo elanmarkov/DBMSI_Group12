@@ -51,34 +51,6 @@ public class EdgeQueryHandler {
 		System.out.println(" ]");
 	}
 
-	private void sortNodes(Node nodesArray[]) 
-	{
-		Node temp;
-		AttrType [] jtype = new AttrType[2];
-		jtype[1] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrDesc);
-		for (int i = 0; i < nodesArray.length; i++) 
-		{
-			for (int j = i + 1; j < nodesArray.length; j++) 
-			{
-				if (nodesArray[i].getLabel().compareTo(nodesArray[j].getLabel()) > 0) 
-				{
-					temp = nodesArray[i];
-					nodesArray[i] = nodesArray[j];
-					nodesArray[j] = temp;
-				}
-			}
-		}
-		for(int i = 0; i < nodesArray.length; i++) {
-			try {
-				nodesArray[i].print(jtype);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-
 	private void sortEdges(Edge edgesArray[],int sortParameter) 
 	{
 		Edge temp;
@@ -220,6 +192,11 @@ public class EdgeQueryHandler {
 					e.printStackTrace();
 				}
 			}
+			try {
+				iscan.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return status;
 	}
@@ -287,6 +264,11 @@ public class EdgeQueryHandler {
 				i++;
 			}
 			sortEdges(edges,0);
+			try {
+				iscan.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return status;	
 	}
@@ -353,6 +335,11 @@ public class EdgeQueryHandler {
 				i++;
 			}
 			sortEdges(edges,1);
+			try {
+				iscan.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return status;	
 	}
@@ -419,6 +406,11 @@ public class EdgeQueryHandler {
 				i++;
 			}
 			sortEdges(edges,2);
+			try {
+				iscan.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return status;	
 	}
@@ -485,6 +477,11 @@ public class EdgeQueryHandler {
 				i++;
 			}
 			sortWeights(edges);
+			try {
+				iscan.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return status;		
 	}
@@ -556,6 +553,11 @@ public class EdgeQueryHandler {
 						e.printStackTrace();
 					}
 				}
+			}
+			try {
+				iscan.close();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 		return status;	
@@ -669,7 +671,12 @@ public class EdgeQueryHandler {
 					j++;
 				}
 				i++;
-			}						
+			}	
+			try {
+				iscan.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 
@@ -987,6 +994,7 @@ public class EdgeQueryHandler {
 					e.printStackTrace();
 				}
 			}
+			scan.closescan();
 		}
 		return status;
 	}

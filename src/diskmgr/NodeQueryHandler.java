@@ -127,7 +127,6 @@ public class NodeQueryHandler {
 					status = FAIL;
 					e1.printStackTrace();
 				}
-				System.out.println("t = " + t);
 				if(t == null) {
 					done = true;
 					break;
@@ -140,6 +139,11 @@ public class NodeQueryHandler {
 					status = FAIL;
 					e.printStackTrace();
 				}
+			}
+			try {
+				iscan.close();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 		return status;
@@ -198,7 +202,11 @@ public class NodeQueryHandler {
 				i++;
 			}
 			//sortNodes(nodes);
-
+			try {
+				iscan.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return status;
 	}
@@ -250,6 +258,11 @@ public class NodeQueryHandler {
 				i++;
 			}
 			sortNodes1(nodes,argv);
+			try {
+				iscan.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return status;
 	}
@@ -307,6 +320,11 @@ public class NodeQueryHandler {
 				iscan.close();
 			} catch (IndexException | IOException e) {
 				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				iscan.close();
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -397,6 +415,11 @@ public class NodeQueryHandler {
 				}
 
 			}
+			try {
+				isscan.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		try {
 			incomingEdges = new String[nodes.getNodeCnt()];
@@ -451,6 +474,11 @@ public class NodeQueryHandler {
 				System.out.println("Outgoing Edges are:");
 				for(int i = 0; i < outgoingEdgeCount; i++) {
 					System.out.print(outgoingEdges[i] + "	");
+				}
+				try {
+					eiscan.close();
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		} else {
@@ -557,6 +585,11 @@ public class NodeQueryHandler {
 					e.printStackTrace();
 				}
 			}
+			try {
+				iscan.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 		}
 		incomingEdges = new String[nodesArray.length][nodesArray.length];
@@ -620,6 +653,11 @@ public class NodeQueryHandler {
 						System.out.print(outgoingEdges[j][i1] + "	");
 					}
 				}
+				try {
+					eiscan.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		} else {
 			System.out.println("There is no node which has the given distance from the target descriptor");
@@ -636,14 +674,6 @@ public class NodeQueryHandler {
 		AttrType [] jtype = new AttrType[2];
 		jtype[0] = new AttrType (AttrType.attrString);
 		jtype[1] = new AttrType (AttrType.attrDesc);
-		try {
-			//f = new NodeHeapFile("priyekant");
-		}
-		catch (Exception e) {
-			status = FAIL;
-			System.err.println ("*** Could not create heap file\n");
-			e.printStackTrace();
-		}
 		Nscan scan = null;
 		if ( status == OK ) {	
 			System.out.println ("  - Scan the records\n");
@@ -738,6 +768,7 @@ public class NodeQueryHandler {
 				}
 			}
 			sortNodes(nodesArray);
+			scan.closescan();
 		}
 
 		return status;

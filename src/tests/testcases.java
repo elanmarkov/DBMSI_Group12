@@ -1,4 +1,4 @@
-
+package tests;
 
 import global.SystemDefs;
 
@@ -56,7 +56,7 @@ public class testcases {
 			
 			if(splited[0].equals("batchnodeinsert")) {
 				if(!graphExists){
-					sysdef = new SystemDefs(splited[2],1000,100,"Clock");
+					sysdef = new SystemDefs(splited[2],1000,200,"Clock");
 					try {
 					SystemDefs.JavabaseDB.init();
 					} catch (Exception e) {
@@ -103,6 +103,11 @@ public class testcases {
 					
 				}
 			} else if(splited[0].equals("nodequery")) {
+				try {
+					//SystemDefs.JavabaseBM.resetNumBuffers(100);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				PCounter.initialize();
 				String[] newSplited = new String[splited.length-1];
 				System.arraycopy(splited, 1, newSplited, 0, newSplited.length);
@@ -117,12 +122,13 @@ public class testcases {
 				}
 			} else if(splited[0].equals("edgequery")) {
 				PCounter.initialize();
-				
+				String[] newSplited = new String[splited.length-1];
+				System.arraycopy(splited, 1, newSplited, 0, newSplited.length);
 				if(!graphExists) {
 					System.out.println("Graph DB does not exist");
 				} else {
 					EdgeQuery eQuery = new EdgeQuery();
-					boolean _pass = eQuery.runTests(splited);
+					boolean _pass = eQuery.runTests(newSplited);
 					if(_pass) {
 						printReadWriteCount();
 					}

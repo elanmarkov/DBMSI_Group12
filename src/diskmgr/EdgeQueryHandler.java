@@ -513,7 +513,7 @@ public class EdgeQueryHandler {
 		String filename = edges.getFileName();
 		Tuple t = null;
 		int edgeCount = 0;
-		int  lowerbound = Integer.parseInt(argv[5]), upperbound = Integer.parseInt(argv[6]);
+		int  lowerbound = Integer.parseInt(argv[4]), upperbound = Integer.parseInt(argv[5]);
 		try {
 			edgeCount = edges.getEdgeCnt();
 		} catch (Exception e1) {
@@ -954,7 +954,7 @@ public class EdgeQueryHandler {
 		boolean status = OK;
 		EID eid = new EID();
 		EdgeHeapFile f = edges;
-		int  lowerbound = Integer.parseInt(argv[5]), upperbound = Integer.parseInt(argv[6]);
+		int  lowerbound = Integer.parseInt(argv[4]), upperbound = Integer.parseInt(argv[5]);
 		Escan scan = null;
 		if ( status == OK ) {	
 			System.out.println ("  - Scan the records\n");

@@ -11,13 +11,10 @@ import diskmgr.*;
 import global.*;
 import btree.*;
 
-
+/** Class for the batch edge delete test.
+Passes parameters to handler and runs program. */
 class BatchEdgeDelete implements GlobalConst{
-	
-	
-	
-	
-
+	/** Passes parameters to handler for current DB and outputs result of test. */
 	public void batchedgedeletefunction (String[] args) throws FileNotFoundException
 	{
 		BatchEdgeDeleteHandler BH = SystemDefs.JavabaseDB.getBatchEdgeDeleteHandler();

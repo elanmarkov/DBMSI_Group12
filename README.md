@@ -12,11 +12,15 @@ Shalmali Bhoir
 Current project completed up to phase 2.
 
 To run the old features:  
-Use make db; make test as for the phase 1 items.
+Use:  
+make db; make test  
+as for the phase 1 items.
 
 The new graph tests will run with make test with the rest of the old tests.
 
-To run just the new tests: run bash command make db; make graphtest in the src folder.
+To run just the new tests: run bash command: 
+make db; make graphtest  
+in the src folder.
 
 The graphtest implements six queries:  
 Batch Node Insert  

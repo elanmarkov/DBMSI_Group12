@@ -1,4 +1,4 @@
-package tests;
+
 
 import global.SystemDefs;
 
@@ -117,13 +117,12 @@ public class testcases {
 				}
 			} else if(splited[0].equals("edgequery")) {
 				PCounter.initialize();
-				String[] newSplited = new String[splited.length-1];
-				System.arraycopy(splited, 1, newSplited, 0, newSplited.length);
+				
 				if(!graphExists) {
 					System.out.println("Graph DB does not exist");
 				} else {
 					EdgeQuery eQuery = new EdgeQuery();
-					boolean _pass = eQuery.runTests(newSplited);
+					boolean _pass = eQuery.runTests(splited);
 					if(_pass) {
 						printReadWriteCount();
 					}

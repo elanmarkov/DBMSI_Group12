@@ -183,8 +183,8 @@ public class EdgeQueryHandler {
 		attrSize[1] = 4;
 		attrSize[2] = 4;
 		attrSize[3] = 4;
-		attrSize[2] = 4;
-		attrSize[3] = 4;
+		attrSize[4] = 4;
+		attrSize[5] = 4;
 		IndexScan iscan = null;
 		String filename = edges.getFileName();
 		Tuple t = null;
@@ -245,8 +245,8 @@ public class EdgeQueryHandler {
 		attrSize[1] = 4;
 		attrSize[2] = 4;
 		attrSize[3] = 4;
-		attrSize[2] = 4;
-		attrSize[3] = 4;
+		attrSize[4] = 4;
+		attrSize[5] = 4;
 		IndexScan iscan = null;
 		String filename = edges.getFileName();
 		Tuple t = null;
@@ -311,8 +311,8 @@ public class EdgeQueryHandler {
 		attrSize[1] = 4;
 		attrSize[2] = 4;
 		attrSize[3] = 4;
-		attrSize[2] = 4;
-		attrSize[3] = 4;
+		attrSize[4] = 4;
+		attrSize[5] = 4;
 		IndexScan iscan = null;
 		String filename = edges.getFileName();
 		Tuple t = null;
@@ -377,8 +377,8 @@ public class EdgeQueryHandler {
 		attrSize[1] = 4;
 		attrSize[2] = 4;
 		attrSize[3] = 4;
-		attrSize[2] = 4;
-		attrSize[3] = 4;
+		attrSize[4] = 4;
+		attrSize[5] = 4;
 		IndexScan iscan = null;
 		String filename = edges.getFileName();
 		Tuple t = null;
@@ -443,8 +443,8 @@ public class EdgeQueryHandler {
 		attrSize[1] = 4;
 		attrSize[2] = 4;
 		attrSize[3] = 4;
-		attrSize[2] = 4;
-		attrSize[3] = 4;
+		attrSize[4] = 4;
+		attrSize[5] = 4;
 		IndexScan iscan = null;
 		String filename = edges.getFileName();
 		Tuple t = null;
@@ -509,13 +509,13 @@ public class EdgeQueryHandler {
 		attrSize[1] = 4;
 		attrSize[2] = 4;
 		attrSize[3] = 4;
-		attrSize[2] = 4;
-		attrSize[3] = 4;
+		attrSize[4] = 4;
+		attrSize[5] = 4;
 		IndexScan iscan = null;
 		String filename = edges.getFileName();
 		Tuple t = null;
 		int edgeCount = 0;
-		int  lowerbound = Integer.parseInt(argv[4]), upperbound = Integer.parseInt(argv[5]);
+		int  lowerbound = Integer.parseInt(argv[5]), upperbound = Integer.parseInt(argv[6]);
 		try {
 			edgeCount = edges.getEdgeCnt();
 		} catch (Exception e1) {
@@ -563,141 +563,113 @@ public class EdgeQueryHandler {
 
 
 		boolean status = OK;
-		AttrType[] attrType = new AttrType[4];
+		AttrType[] attrType = new AttrType[6];
 		attrType[0] = new AttrType(AttrType.attrString);
 		attrType[1] = new AttrType(AttrType.attrInteger);
 		attrType[2] = new AttrType(AttrType.attrInteger);
 		attrType[3] = new AttrType(AttrType.attrInteger);
-		FldSpec[] projlist = new FldSpec[4];
+		attrType[4] = new AttrType(AttrType.attrInteger);
+		attrType[5] = new AttrType(AttrType.attrInteger);
+		FldSpec[] projlist = new FldSpec[6];
 		RelSpec rel = new RelSpec(RelSpec.outer); 
 		projlist[0] = new FldSpec(rel, 1);
 		projlist[1] = new FldSpec(rel, 2);
 		projlist[2] = new FldSpec(rel, 3);
 		projlist[3] = new FldSpec(rel, 4);
-		short[] attrSize = new short[4];
-		attrSize[0] = 8;
-		attrSize[1] = 8;
-		attrSize[2] = 8;
+		projlist[4] = new FldSpec(rel, 5);
+		projlist[5] = new FldSpec(rel, 6);
+		short[] attrSize = new short[6];
+		attrSize[0] = Tuple.LABEL_MAX_LENGTH;
+		attrSize[1] = 4;
+		attrSize[2] = 4;
 		attrSize[3] = 4;
-		IndexScan scan = null;
-		String filename = nodes.getFileName();
+		attrSize[4] = 4;
+		attrSize[5] = 4;
+
+		IndexScan iscan = null;
+		String filename = edges.getFileName();
 		int i = 0;
-		EID eid = new EID();
 		EdgeHeapFile f = edges;
 		int edgeCount  = 0;
 
 		try {
 			edgeCount = edges.getEdgeCnt();
-		} catch (HFBufMgrException e1) {
+		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		} catch (InvalidSlotNumberException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidTupleSizeException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}catch (Exception e) {
-			e.printStackTrace();
 		}
+		NID[][] nodesArray = new NID[edgeCount][2];
 
-		RID[][] edgesArray = new RID[edgeCount][3];
-		AttrType [] jtype = new AttrType[1];
-		jtype[0] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrDesc);
-		try {
-			//f = new NodeHeapFile("priyekant");
-		}
-		catch (Exception e) {
-			status = FAIL;
-			System.err.println ("*** Could not create heap file\n");
-			e.printStackTrace();
-		}
 
 
 
 		if ( status == OK ) {
 			try {
-				scan = new IndexScan(new IndexType(IndexType.B_Index), filename, "BTreeIndex", attrType, attrSize, 4, 4, projlist, null, 3, false);
+				iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGELABEL", attrType, attrSize, 6, 6, projlist, null, 1, false);
 			}
 			catch (Exception e) {
 				status = FAIL;
 				e.printStackTrace();
 			}
-			Edge edge = new Edge();
+			Tuple t = null;
+			String[] EdgeLabels = new String[edgeCount];
 			i=0;
-			try {
-				try {
-					edge = (Edge)scan.get_next();
-				} catch (IndexException | UnknownKeyTypeException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			} catch (IOException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			}
-			while(edge!=null){
 
+			try {
+				t = iscan.getNextEdge();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			while(t!=null){
+				Edge edge = new Edge(t);
 				try{
-					edgesArray[i][0] = eid;
-					edgesArray[i][1] = edge.getSource();
-					edgesArray[i][2] = edge.getDestination();
+					EdgeLabels[i] = edge.getLabel();
+				
+					System.out.println(edge.getLabel());
+					nodesArray[i][0] = edge.getSource();
+					nodesArray[i][1] = edge.getDestination();
 				}
 				catch(Exception e){
 					System.err.println(""+e);
 				}
 				i++; 
+       
+				try {
+					t = iscan.getNextEdge();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			
 			}
+			edgeCount=i;
 			i=0;
 			while(i<edgeCount){
 				int j=i+1;
 				while(j<edgeCount){
-					if(Objects.equals(edgesArray[i][1],edgesArray[j][2]) || Objects.equals(edgesArray[i][2],edgesArray[j][1])){
+					if(nodesArray[i][0].equals(nodesArray[j][1]) || nodesArray[i][1].equals(nodesArray[j][0])
+							|| nodesArray[i][1].equals(nodesArray[j][1]) || nodesArray[i][0].equals(nodesArray[j][0])){
 
-						Edge edge1 = null;
+
 						try {
-							edge1 = f.getEdge((EID)edgesArray[i][0]);
-							Edge edge2 = f.getEdge((EID)edgesArray[j][0]);
-						} catch (InvalidSlotNumberException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						} catch (InvalidTupleSizeException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						} catch (HFException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						} catch (HFDiskMgrException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						} catch (HFBufMgrException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
+
+							System.out.println("["+EdgeLabels[i]+","+EdgeLabels[j]+"]");
 						} catch (Exception e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
-						}
-
-
-						try {
-							edge1.print(jtype);
-
 						} 
-						catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}			    
 
-					}
-				}						
-			}
 
+
+					}			    
+					j++;
+				}
+				i++;
+			}						
 		}
-
 
 
 
@@ -974,7 +946,7 @@ public class EdgeQueryHandler {
 		boolean status = OK;
 		EID eid = new EID();
 		EdgeHeapFile f = edges;
-		int  lowerbound = Integer.parseInt(argv[4]), upperbound = Integer.parseInt(argv[5]);
+		int  lowerbound = Integer.parseInt(argv[5]), upperbound = Integer.parseInt(argv[6]);
 		Escan scan = null;
 		if ( status == OK ) {	
 			System.out.println ("  - Scan the records\n");
@@ -1025,8 +997,7 @@ public class EdgeQueryHandler {
 		EID eid = new EID();
 		EdgeHeapFile f = edges;
 		int edgeCount  = 0;
-		Scanner  sc = new Scanner(System.in);
-		sc.nextLine();
+
 
 		try {
 			edgeCount = edges.getEdgeCnt();
@@ -1034,7 +1005,7 @@ public class EdgeQueryHandler {
 			e1.printStackTrace();
 		}
 
-		RID[][] edgesArray = new RID[edgeCount][3];
+		NID[][] nodesArray = new NID[edgeCount][2];
 		Escan scan = null;
 		if ( status == OK ) {
 			System.out.println ("  - Scan the records\n");
@@ -1053,9 +1024,10 @@ public class EdgeQueryHandler {
 				status = FAIL;
 			}
 		}
-		sc.nextLine();
+
 		if ( status == OK ) {
 			Edge edge = new Edge();
+			String[] edgeLabel = new String[edgeCount];
 			i=0;
 			try {
 				edge = scan.getNext(eid);
@@ -1063,34 +1035,37 @@ public class EdgeQueryHandler {
 				status = FAIL;
 				e2.printStackTrace();
 			}
-			while(edge!=null){
+			while(edge!=null && status){
 				try{
-					edgesArray[i][0] = eid;
-					edgesArray[i][1] = edge.getSource();
-					edgesArray[i][2] = edge.getDestination();
+					edgeLabel[i] = edge.getLabel();
+					nodesArray[i][0] = edge.getSource();
+					nodesArray[i][1] = edge.getDestination();
 				}
 				catch(Exception e){
 					status = FAIL;
-					System.err.println(""+e);
+					System.err.println(""+e+"During Creation."+i);
 				}
 				i++; 
+				try {
+					edge = scan.getNext(eid);
+				} catch (InvalidTupleSizeException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			i=0;
+			scan.closescan();
+
 			while(i<edgeCount){
 				int j=i+1;
 				while(j<edgeCount){
-					if(Objects.equals(edgesArray[i][1],edgesArray[j][2]) || Objects.equals(edgesArray[i][2],edgesArray[j][1])){
+					if(nodesArray[i][0].equals(nodesArray[j][1]) || nodesArray[i][1].equals(nodesArray[j][0])
+							|| nodesArray[i][1].equals(nodesArray[j][1]) || nodesArray[i][0].equals(nodesArray[j][0])){
 
-						Edge edge1 = null,edge2 = null;
+
 						try {
-							edge1 = f.getEdge((EID)edgesArray[i][0]);
-							edge2 = f.getEdge((EID)edgesArray[j][0]);
-						} catch (Exception e1) {
-							status = FAIL;
-							e1.printStackTrace();
-						}
-						try {
-							System.out.println("[ "+ edge1.getLabel() + ", "+ edge2.getLabel() + " ]") ;
+
+							System.out.println("[ "+ edgeLabel[i] + ", "+ edgeLabel[j] + " ]") ;
 						} 
 						catch (Exception e) {
 							status = FAIL;
@@ -1098,12 +1073,14 @@ public class EdgeQueryHandler {
 						}			    
 
 					}
-				}						
+					j++;
+				}		
+				i++;
 			}
 
 		}
-		sc.nextLine();
-		scan.closescan();
+
+
 		return status;
 	}
 }

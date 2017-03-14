@@ -45,7 +45,7 @@ public class BatchEdgeDeleteHandler implements GlobalConst{
 		Scanner   inputFile=null;
 		try{
 			file = new File(System.getProperty("user.dir")
-					+ "/tests/" + filename + ".txt");
+					+ "/" + filename);
 			inputFile = new Scanner(file);
 		}
 		catch(Exception e){

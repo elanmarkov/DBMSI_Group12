@@ -18,7 +18,7 @@ as for the phase 1 items.
 
 The new graph tests will run with make test with the rest of the old tests.
 
-To run just the new tests: run bash command: 
+To run just the new tests: run bash command:  
 make db; make graphtest  
 in the src folder.
 

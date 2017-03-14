@@ -10,9 +10,11 @@ import diskmgr.*;
 import global.*;
 import btree.*;
 
-
+/** Class for the batch node delete test.
+Passes parameters to handler and runs program. */
 class BatchNodeDelete implements GlobalConst
 {	
+	/** Passes parameters to handler for current DB and outputs result of test. */
 	public void runDeleteNode(String args[]) {
 		BatchNodeDeleteHandler BN = SystemDefs.JavabaseDB.getBatchNodeDeleteHandler();
 

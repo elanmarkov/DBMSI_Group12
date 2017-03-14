@@ -13,8 +13,10 @@ import global.*;
 import heap.*;
 import diskmgr.*;
 
-	
+/** Class for the batch node insert test.
+Passes parameters to handler and runs program. */
 	public class batchnodeinsert {
+	/** Passes parameters to handler for current DB and outputs result of test. */
 		public boolean runTests(String NodeFile, PCounter pc) throws 
 		FileNotFoundException, IOException, SpaceNotAvailableException, HFBufMgrException, Exception,
 		InvalidSlotNumberException, InvalidTupleSizeException, HFException, HFDiskMgrException {

@@ -16,7 +16,10 @@ import global.*;
 import diskmgr.*;
 import heap.*;
 
+/** Class for the batch edge insert test.
+Passes parameters to handler and runs program. */
 public class batchedgeinsert {
+	/** Passes parameters to handler for current DB and outputs result of test. */
 	public boolean runTests(String edgeFile, PCounter pc) throws FileNotFoundException, IOException, SpaceNotAvailableException, HFBufMgrException, InvalidSlotNumberException, InvalidTupleSizeException, HFException, HFDiskMgrException, GetFileEntryException, ConstructPageException, AddFileEntryException {
 		System.out.println ("\nRunning Batch Edge Insert tests....\n");
 		BatchEdgeInsertHandler queries = SystemDefs.JavabaseDB.getBatchEdgeInsertHandler();

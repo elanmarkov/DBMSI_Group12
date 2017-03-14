@@ -1,3 +1,7 @@
+/*
+Test Driver for Graph Database test cases by ____.
+CSE 510 Project, Group 12.
+*/
 package tests;
 
 import global.SystemDefs;
@@ -6,12 +10,14 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import diskmgr.PCounter;
 
-
+/** Driver class for the test cases for the Graph Database. */
 public class testcases {
+	/** Prints the read/write count on the DB as of the last operation. */
 	private static void printReadWriteCount() {
 		System.out.println("\nNo. of pages read : " + PCounter.rcounter);
 		System.out.println("No. of pages write : " + PCounter.wcounter);
 	}
+	/** Full menu for graph tests. Gives input format of all queries.*/
 	private static void printLongMenu() {
 		System.out.println("Graph Database Test Cases ");
 		System.out.println("Format of command line input:\n");
@@ -38,9 +44,12 @@ public class testcases {
 		System.out.println("Simple Edge Query (Task 15 Query):");
 		System.out.println("edgequery GRAPHDBNAME NUMBUF QTYPE INDEX [QUERYOPTIONS]\n\n");
 	}
+	/** Short menu for graph tests. Gives list of possible entries.*/
 	private static void printShortMenu() {
 		System.out.println("Enter menu to print the menu, exit to exit, or a command line input to execute:");
 	}
+	/** Main test driver for Graph Database tests. Runs any of the six tests as specified by command line input. 
+	Also displays menus and read/write statistics. */
 	public static void main(String args[])
 	{
 		SystemDefs sysdef; 

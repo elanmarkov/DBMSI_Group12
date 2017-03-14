@@ -136,7 +136,7 @@ public class EdgeQueryHandler {
 	{
 
 		boolean status = OK;
-		AttrType[] attrType = new AttrType[6];
+		AttrType[] attrType = new AttrType[6];				//Initiating the Index Scan......
 		attrType[0] = new AttrType(AttrType.attrString);
 		attrType[1] = new AttrType(AttrType.attrInteger);
 		attrType[2] = new AttrType(AttrType.attrInteger);
@@ -162,7 +162,7 @@ public class EdgeQueryHandler {
 		String filename = edges.getFileName();
 		Tuple t = null;
 		try {
-			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGELABEL", attrType, attrSize, 6, 6, projlist, null, 1, false);
+			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGELABEL", attrType, attrSize, 6, 6, projlist, null, 1, false);//IndexScan Initiated
 		}
 		catch(Exception e) {
 			status = FAIL;
@@ -203,7 +203,7 @@ public class EdgeQueryHandler {
 	public boolean edgeIndexTest1(String argv[])
 	{
 		boolean status = OK;
-		AttrType[] attrType = new AttrType[6];
+		AttrType[] attrType = new AttrType[6];					//Initiating the Index Scan......
 		attrType[0] = new AttrType(AttrType.attrString);
 		attrType[1] = new AttrType(AttrType.attrInteger);
 		attrType[2] = new AttrType(AttrType.attrInteger);
@@ -239,7 +239,7 @@ public class EdgeQueryHandler {
 
 		Edge[] edges = new Edge[edgeCount];
 		try {
-			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGELABEL", attrType, attrSize, 6, 6, projlist, null, 1, false);
+			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGELABEL", attrType, attrSize, 6, 6, projlist, null, 1, false);//IndexScan Initiated
 		}
 		catch(Exception e) {
 			status = FAIL;
@@ -274,7 +274,7 @@ public class EdgeQueryHandler {
 	}
 	public boolean edgeIndexTest2(String argv[]){
 		boolean status = OK;
-		AttrType[] attrType = new AttrType[6];
+		AttrType[] attrType = new AttrType[6];					//Initiating the Index Scan......
 		attrType[0] = new AttrType(AttrType.attrString);
 		attrType[1] = new AttrType(AttrType.attrInteger);
 		attrType[2] = new AttrType(AttrType.attrInteger);
@@ -310,7 +310,7 @@ public class EdgeQueryHandler {
 
 		Edge[] edges = new Edge[edgeCount];
 		try {
-			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGELABEL", attrType, attrSize, 6, 6, projlist, null, 1, false);
+			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGELABEL", attrType, attrSize, 6, 6, projlist, null, 1, false);//IndexScan Initiated
 		}
 		catch(Exception e) {
 			status = FAIL;
@@ -344,7 +344,7 @@ public class EdgeQueryHandler {
 		return status;	
 	}
 	public boolean edgeIndexTest3(String argv[]){
-		boolean status = OK;
+		boolean status = OK;						//Initiating the Index Scan......
 		AttrType[] attrType = new AttrType[6];
 		attrType[0] = new AttrType(AttrType.attrString);
 		attrType[1] = new AttrType(AttrType.attrInteger);
@@ -381,7 +381,7 @@ public class EdgeQueryHandler {
 
 		Edge[] edges = new Edge[edgeCount];
 		try {
-			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGELABEL", attrType, attrSize, 6, 6, projlist, null, 1, false);
+			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGELABEL", attrType, attrSize, 6, 6, projlist, null, 1, false);//IndexScan Initiated
 		}
 		catch(Exception e) {
 			status = FAIL;
@@ -415,7 +415,7 @@ public class EdgeQueryHandler {
 		return status;	
 	}
 	public  boolean edgeIndexTest4(String argv[]){
-		boolean status = OK;
+		boolean status = OK;						//Initiating the Index Scan......
 		AttrType[] attrType = new AttrType[6];
 		attrType[0] = new AttrType(AttrType.attrString);
 		attrType[1] = new AttrType(AttrType.attrInteger);
@@ -452,7 +452,7 @@ public class EdgeQueryHandler {
 
 		Edge[] edges = new Edge[edgeCount];
 		try {
-			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGEWEIGHT", attrType, attrSize, 6, 6, projlist, null, 6, false);
+			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGEWEIGHT", attrType, attrSize, 6, 6, projlist, null, 6, false);//IndexScan Initiated
 		}
 		catch(Exception e) {
 			status = FAIL;
@@ -463,7 +463,7 @@ public class EdgeQueryHandler {
 			while(!done) {
 				t = new Tuple();
 				try {
-					t = iscan.getNextEdge();
+					t = iscan.getNextEdge();	//Getting the next Edge
 				} catch (Exception e) {
 					status = FAIL;
 					e.printStackTrace();
@@ -476,7 +476,7 @@ public class EdgeQueryHandler {
 				edges[i] = edge;
 				i++;
 			}
-			sortWeights(edges);
+			sortWeights(edges);				//Passing the edges with weights to the sortWeights Function.
 			try {
 				iscan.close();
 			} catch (Exception e) {
@@ -487,7 +487,7 @@ public class EdgeQueryHandler {
 	}
 	public boolean edgeIndexTest5(String argv[]){
 		boolean status = OK;
-		AttrType[] attrType = new AttrType[6];
+		AttrType[] attrType = new AttrType[6];				//Initiating the Index Scan......
 		attrType[0] = new AttrType(AttrType.attrString);
 		attrType[1] = new AttrType(AttrType.attrInteger);
 		attrType[2] = new AttrType(AttrType.attrInteger);
@@ -520,11 +520,11 @@ public class EdgeQueryHandler {
 			status = FAIL;
 			e1.printStackTrace();
 		}
-		int i = 0;
+	
 
-		Edge[] edges = new Edge[edgeCount];
+		
 		try {
-			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGEWEIGHT", attrType, attrSize, 6, 6, projlist, null, 6, false);
+			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGEWEIGHT", attrType, attrSize, 6, 6, projlist, null, 6, false);//IndexScan Initiated
 		}
 		catch(Exception e) {
 			status = FAIL;
@@ -566,7 +566,7 @@ public class EdgeQueryHandler {
 
 
 		boolean status = OK;
-		AttrType[] attrType = new AttrType[6];
+		AttrType[] attrType = new AttrType[6];				//Initiating the Index Scan......
 		attrType[0] = new AttrType(AttrType.attrString);
 		attrType[1] = new AttrType(AttrType.attrInteger);
 		attrType[2] = new AttrType(AttrType.attrInteger);
@@ -608,7 +608,7 @@ public class EdgeQueryHandler {
 
 		if ( status == OK ) {
 			try {
-				iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGELABEL", attrType, attrSize, 6, 6, projlist, null, 1, false);
+				iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGELABEL", attrType, attrSize, 6, 6, projlist, null, 1, false);//IndexScan Initiated
 			}
 			catch (Exception e) {
 				status = FAIL;
@@ -654,7 +654,7 @@ public class EdgeQueryHandler {
 				int j=i+1;
 				while(j<edgeCount){
 					if(nodesArray[i][0].equals(nodesArray[j][1]) || nodesArray[i][1].equals(nodesArray[j][0])
-							|| nodesArray[i][1].equals(nodesArray[j][1]) || nodesArray[i][0].equals(nodesArray[j][0])){
+							|| nodesArray[i][1].equals(nodesArray[j][1]) || nodesArray[i][0].equals(nodesArray[j][0])){    //Check whether the two edges are incident edges.
 
 
 						try {
@@ -693,7 +693,7 @@ public class EdgeQueryHandler {
 		if ( status == OK ) {
 			System.out.println ("  - Scan the records\n");
 			try {
-				scan = f.openScan();
+				scan = f.openScan();		//Initiating the Escan
 			}
 			catch (Exception e) {
 				status = FAIL;
@@ -719,7 +719,7 @@ public class EdgeQueryHandler {
 						done = true;
 						break;
 					}
-					print(edge,nodes);
+					print(edge,nodes);	//printing the edge.
 				}
 				catch (Exception e) {
 					status = FAIL;
@@ -774,7 +774,7 @@ public class EdgeQueryHandler {
 						done = true;
 						break;
 					}
-					edgesArray[i] = f.getEdge(eid);
+					edgesArray[i] = f.getEdge(eid);	// Populating the edgesArray Array with edges.
 					i++;
 				}
 				catch (Exception e) {
@@ -783,7 +783,7 @@ public class EdgeQueryHandler {
 				}
 			}
 			scan.closescan();
-			sortEdges(edgesArray,0);
+			sortEdges(edgesArray,0);	//Passing the Array of edges for sorting.
 		}
 		return status;
 	}
@@ -828,7 +828,7 @@ public class EdgeQueryHandler {
 						done = true;
 						break;
 					}
-					edgesArray[i] = f.getEdge(eid);
+					edgesArray[i] = f.getEdge(eid); //Populating the edgesArray
 					i++;
 				}
 				catch (Exception e) {
@@ -837,7 +837,7 @@ public class EdgeQueryHandler {
 				}
 			}
 			scan.closescan();
-			sortEdges(edgesArray,1);
+			sortEdges(edgesArray,1);	//Edges sent for sorting.
 		}
 		return status;
 	}

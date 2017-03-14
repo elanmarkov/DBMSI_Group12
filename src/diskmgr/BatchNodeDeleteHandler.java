@@ -35,15 +35,15 @@ public class BatchNodeDeleteHandler{
 
 	public void runbatchnodedelete(String dbname, String filename) throws Exception{
 		boolean status = OK;
-		//  Batchnode Delete Start
-		PCounter     pageRW      = new PCounter();
+		//  BatchNodeDelete Start
+		PCounter     pageRW      = new PCounter();			//Initiating the PCounter.
 		int          pages_read  = pageRW.rcounter;
 		int 	     pages_write = pageRW.wcounter;
 		NodeHeapFile nodeheap    = nodes;
 		File         file = null;
 
 		try{
-			file = new File(System.getProperty("user.dir")
+			file = new File(System.getProperty("user.dir")	//Opening the NODEFILENAME File.
 					+ "/tests/" + filename + ".txt");
 		}
 		catch(Exception e){
@@ -88,6 +88,7 @@ public class BatchNodeDeleteHandler{
 								catch(Exception e) {
 									System.out.println("Error during deleting the Edge");
 									e.printStackTrace();
+									status = FAIL;
 								}
 							}
 
@@ -101,6 +102,7 @@ public class BatchNodeDeleteHandler{
 						catch(Exception e) {
 							System.out.println("Error during node deletion.");
 							e.printStackTrace();
+							status = FAIL;
 						}
 					} 
 					node = nscan.getNext(nid);
@@ -111,10 +113,17 @@ public class BatchNodeDeleteHandler{
 
 			inputFile.close();
 		}
+		// Taking care of Output now.
 		pages_read  = pageRW.rcounter - pages_read;
 		pages_write = pageRW.wcounter - pages_write;
+		if(status) {
+			
+		System.out.println("..............Batch Node Deletion Performed successfully............");}
+		else {
+			System.out.println("..............Batch Node Delete Not Successful................");
+		}
 		System.out.println("Number of Pages Read: "+pages_read+" Number of Page writes performed: "+pages_write);
-		System.out.println("Number of Total Nodes in the Database are:"+SystemDefs.JavabaseDB.getNodeCnt());
+		System.out.println("Number of Total Nodes in the Database are:"+SystemDefs.JavabaseDB.getNodeCnt() + "Number of Total Edges in the Database are"+SystemDefs.JavabaseDB.getEdgeCnt());
 
 
 	}

@@ -627,7 +627,7 @@ public class EdgeQueryHandler {
 				try{
 					EdgeLabels[i] = edge.getLabel();
 				
-					System.out.println(edge.getLabel());
+					
 					nodesArray[i][0] = edge.getSource();
 					nodesArray[i][1] = edge.getDestination();
 				}
@@ -1043,7 +1043,7 @@ public class EdgeQueryHandler {
 				}
 				catch(Exception e){
 					status = FAIL;
-					System.err.println(""+e+"During Creation."+i);
+					System.err.println(""+e);
 				}
 				i++; 
 				try {

@@ -168,7 +168,7 @@ public class IndexUtils {
 		if (selects[0].type1.attrType != AttrType.attrSymbol && selects[0].type2.attrType != AttrType.attrSymbol) {
 			throw new InvalidSelectionException("IndexUtils.java: Invalid selection condition");
 		}
-		if (selects[1].type1.attrType != AttrType.attrSymbol && selects[1].type2.attrType != AttrType.attrSymbol) {
+		if (selects[1] != null && selects[1].type1.attrType != AttrType.attrSymbol && selects[1].type2.attrType != AttrType.attrSymbol) {
 			throw new InvalidSelectionException("IndexUtils.java: Invalid selection condition");
 		}
 

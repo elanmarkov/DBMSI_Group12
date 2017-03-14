@@ -92,7 +92,7 @@ public class ZFileScan  extends IndexFileScan
 	  this.loKey = new DescriptorKey(low);
 	  this.hiKey = new DescriptorKey(high);
 	  this.center = key;
-	  this.bFile = bFile;
+	  this.bFile = bfile;
 	  this.distance =distance;
 	  this.stack = new Stack<StringKey>();
 	  this.low = Utility.conver5Dto1D(this.loKey);
@@ -131,6 +131,7 @@ public void setDistance(int distance) {
     throws ScanIteratorException
     {
 	  KeyDataEntry entry = getNextDataInRange();
+	  //KeyDataEntry entry = getNextDataInRangeOptimised();
 	  return entry;
     }
 
@@ -153,7 +154,7 @@ private KeyDataEntry getNextDataInRange() throws ScanIteratorException {
 				  	((DescriptorKey)this.hiKey).getKey(),desc);
 		  if(isInHyperRectangle && centerPoint !=null){
 			  // check if it point is inside the circle in case of distance search
-			  if(this.distance > centerPoint.distance(desc)){
+			  if(!(centerPoint.distance(desc)<=this.distance)){
 				  isInHyperRectangle = false;
 			  }
 		  }
@@ -197,7 +198,7 @@ private KeyDataEntry getNextDataInRangeOptimised() throws ScanIteratorException 
 			  misCounter=0;
 			  if(centerPoint !=null){
 				  // check if it point is inside the circle in case of distance search
-				  if(this.distance > centerPoint.distance(desc)){
+				  if(!(centerPoint.distance(desc)<=this.distance)){
 					  isInHyperRectangle = false;
 				  }
 			  }

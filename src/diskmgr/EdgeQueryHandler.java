@@ -1,4 +1,5 @@
-package diskmgr;
+/*Edge Queries program by Harshdeep Sandhu adopted from Task 14 code implementing it for edges.
+ * */package diskmgr;
 
 import java.io.*;
 import java.util.Objects;

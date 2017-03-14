@@ -1,24 +1,25 @@
+/* Batch Node Insert Handler by Shalmali bhoir
+ * 
+ */
+
 package diskmgr;
 
 import java.io.*;
-import bufmgr.*;
+
 import global.*;
 import btree.*;
 import zindex.*;
 import heap.*;
-import iterator.*;
-import index.*;
 
 public class BatchNodeInsertHandler {
 	private final static boolean OK = true;
 	private final static boolean FAIL = false;
 	NodeHeapFile nodes;
 	EdgeHeapFile edges;
-	BTreeFile nodeLabels;
+	BTreeFile nodeLabels, edgeLabels, edgeWeights;
 	ZCurve nodeDesc;
-	BTreeFile edgeLabels;
-	BTreeFile edgeWeights;
 	graphDB db;
+	
 	public BatchNodeInsertHandler(NodeHeapFile nodes, EdgeHeapFile edges, BTreeFile nodeLabels, 
 	ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights, graphDB db) {
 
@@ -30,6 +31,7 @@ public class BatchNodeInsertHandler {
 		this.edgeWeights = edgeWeights;
 		this.db = db;
 	}
+	
 	public boolean test1(String nodefilename, PCounter pc)
 			throws FileNotFoundException, IOException, SpaceNotAvailableException, 
 			HFBufMgrException, InvalidSlotNumberException, InvalidTupleSizeException, 
@@ -40,15 +42,14 @@ public class BatchNodeInsertHandler {
 		NID n = new NID();
 		NID nodeid = new NID(); 
 		NodeHeapFile nodeHeapFile;
-		int[] descVal = new int[5];
-		byte[] nodeByteArray;
-		AttrType[] ntype = new AttrType[2];
-		ntype[1] = new AttrType(AttrType.attrString);
-		ntype[0] = new AttrType(AttrType.attrDesc);
 		
+		int rcount = pc.rcounter;
+		int wcount = pc.wcounter;
+		
+		// Access NodeHeapFile in the graph database
 		try
 		{
-			nodeHeapFile = nodes;//new NodeHeapFile("file_1");
+			nodeHeapFile = nodes;
 		}
 		catch(Exception e)
 		{
@@ -59,100 +60,41 @@ public class BatchNodeInsertHandler {
 		
 
 		BufferedReader br = new BufferedReader(new FileReader(System.getProperty("user.dir")
-				+ '/' + nodefilename));
+				+ "/tests/" + nodefilename));
 
 		while ((line = br.readLine()) != null)
 		{
 			String[] splited = line.split("\\s+");
 			nodelabel = splited[0];
 
-			// Set the node fields
+			// Set the node fields and insert the node
 			Node newnode = new Node();
 			newnode.setLabel(nodelabel);
+			
 			Descriptor nodedesc = new Descriptor();
 			nodedesc.set(Integer.parseInt(splited[1]), Integer.parseInt(splited[2]), 
 					Integer.parseInt(splited[3]), Integer.parseInt(splited[4]), 
 					Integer.parseInt(splited[5]));
+			
 			newnode.setDesc(nodedesc);
+			
 			try{
-			db.insertNode(newnode);
+				db.insertNode(newnode);
 			} catch(Exception e){
 				e.printStackTrace();
 			}
-			
-
 		}
 		br.close();
-
-		System.out.println("Rec count " + nodeHeapFile.getRecCnt());
-
+		
 		// Output relevant statistics
-		int rcount = pc.rcounter;
-		int wcount = pc.wcounter;
+		rcount = pc.rcounter - rcount;
+		wcount = pc.wcounter - wcount;
 		System.out.println("Node Count after batch insertion on graph database: " + nodes.getNodeCnt());
 		System.out.println("Edge Count after batch insertion on graph database: " + edges.getEdgeCnt());
 		System.out.println("No. of disk pages read during batch insertion on graph database: " + rcount);
-		System.out.println("No. of disk pages written during batch insertion on graph database: " + rcount);
+		System.out.println("No. of disk pages written during batch insertion on graph database: " + wcount);
 		
-			if ( status == OK )
-				System.out.println ("  Test completed successfully.\n");
-			return status; 
-		
-		/*NodeHeapFile nodeHeapFile = sysdef.JavabaseDB.getNodes();
-		System.out.println("rec count" + nodeHeapFile.getNodeCnt());
-		Nscan scan = null;
-
-		AttrType[] ntype = new AttrType[2];
-		ntype[1] = new AttrType(AttrType.attrString);
-		ntype[0] = new AttrType(AttrType.attrDesc);
-		NID n = new NID();
-		boolean status = OK;
-		if ( status == OK ) {	
-			System.out.println ("  - Scan the records just inserted\n");
-
-			try {
-				scan = nodeHeapFile.openScan();
-			}
-			catch (Exception e) {
-				status = FAIL;
-				System.err.println ("*** Error opening scan\n");
-				e.printStackTrace();
-			}
-
-			if ( status == OK &&  SystemDefs.JavabaseBM.getNumUnpinnedBuffers() 
-					== SystemDefs.JavabaseBM.getNumBuffers() ) {
-				System.err.println ("*** The heap-file scan has not pinned the first page\n");
-				status = FAIL;
-			}
-		}	
-		
-
-		int len, i = 0;
-		DummyRecord rec = null;
-		Node node = new Node();
-        node = scan.getNext(n);
-		boolean done = false;
-		while(!done){
-		try {
-			System.out.println("in scan");
-				node = scan.getNext(n);
-				if(node != null){
-					System.out.println("BatchNodeInsertDriver.test1() "+node.getLength());
-				}
-			}
-			catch (Exception e) {
-				//status = FAIL;
-				e.printStackTrace();
-			}
-			if(node == null){
-				done = true;
-				break;
-			}
-			node.print(ntype);
-		}
-		scan.closescan();
-
-		return true;*/
-		}
+		return status; 
+	}
 }
 

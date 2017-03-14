@@ -1,3 +1,4 @@
+/*Batch Node Delete by Harshdeep Singh Sandhu*/
 package diskmgr;
 
 import java.io.*;

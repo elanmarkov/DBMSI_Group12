@@ -20,7 +20,6 @@ import diskmgr.*;
 		InvalidSlotNumberException, InvalidTupleSizeException, HFException, HFDiskMgrException {
 			System.out.println ("\nRunning Batch Node Insert tests....\n");
 			BatchNodeInsertHandler queries = SystemDefs.JavabaseDB.getBatchNodeInsertHandler();
-			System.out.println("Queries = " + queries);
 			boolean _pass = queries.test1(NodeFile, pc);
 			System.out.print ("\n" + "... Batch Node Insert tests ");
 			System.out.print (_pass==true ? "completed successfully." : "failed.");

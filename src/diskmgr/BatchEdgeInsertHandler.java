@@ -1,6 +1,11 @@
+/* Batch Edge Insert Handler by Shalmali Bhoir
+ * 
+ */
 package diskmgr;
 
 import java.io.*;
+import java.util.Objects;
+
 import bufmgr.*;
 import global.*;
 import btree.*;
@@ -16,11 +21,10 @@ public class BatchEdgeInsertHandler {
 	public static final int LABEL_MAX_LENGTH =6; 
 	NodeHeapFile nodes;
 	EdgeHeapFile edges;
-	BTreeFile nodeLabels;
+	BTreeFile nodeLabels, edgeLabels, edgeWeights;
 	ZCurve nodeDesc;
-	BTreeFile edgeLabels;
-	BTreeFile edgeWeights;
 	graphDB db;
+	
 	public BatchEdgeInsertHandler(NodeHeapFile nodes, EdgeHeapFile edges, BTreeFile nodeLabels, 
 	ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights, graphDB db) {
 
@@ -32,26 +36,24 @@ public class BatchEdgeInsertHandler {
 		this.edgeWeights = edgeWeights;
 		this.db = db;
 	}
+	
 	public boolean test1(String edgeFileName,PCounter pc) 
 			throws FileNotFoundException, IOException, SpaceNotAvailableException, 
 			HFBufMgrException, InvalidSlotNumberException, InvalidTupleSizeException, 
-			HFException, HFDiskMgrException
-	{
+			HFException, HFDiskMgrException {
 		boolean status = OK;
-		String line;
-		String nodelabel;
+		String line, nodelabel;
 		EID eId = new EID();
 		EID edgeId = new EID();
 		Node scanned_node;
-		byte[] edgeByteArray;
-		NodeHeapFile nodeHeapFile;
-		EdgeHeapFile edgeHeapFile;
+
+		int rcount = pc.rcounter;
+		int wcount = pc.wcounter;
 		
-		nodeHeapFile = nodes;
-		edgeHeapFile = edges;
-		System.out.print(System.getProperty("user.dir"));
+		NodeHeapFile nodeHeapFile = nodes;
+		
 		BufferedReader br = new BufferedReader(new FileReader(System.getProperty("user.dir")
-				+ '/' +  edgeFileName));
+				+ "/tests/" +  edgeFileName));
 
 		while ((line = br.readLine()) != null)
 		{
@@ -63,15 +65,16 @@ public class BatchEdgeInsertHandler {
 			NID sourceNid = new NID();
 			NID desNid = new NID();
 			
-			Nscan scan = nodeHeapFile.openScan();
-			NID nid = new NID();
-			scanned_node = scan.getNext(nid); 
 			boolean srcFound = false;
 			boolean destFound = false;
 			
+			Nscan scan = nodeHeapFile.openScan();
+			NID nid = new NID();
+			scanned_node = scan.getNext(nid); 
+			
 			do
 			{	
-				if (scanned_node == null)
+				if (Objects.equals(scanned_node,null))
 				{
 					srcFound = true;
 					destFound = true;
@@ -84,7 +87,6 @@ public class BatchEdgeInsertHandler {
 						try {
 							Node n = nodeHeapFile.getNode(nid);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						srcFound = true;
@@ -110,32 +112,14 @@ public class BatchEdgeInsertHandler {
 			}
 		}
 		
-		System.out.println("Rec count " + edgeHeapFile.getRecCnt());
-		
 		// Output releavant statistics
+		rcount = pc.rcounter - rcount;
+		wcount = pc.wcounter - wcount;
 		System.out.println("Node Count after batch insertion on graph database: " + nodes.getNodeCnt());
 		System.out.println("Edge Count after batch insertion on graph database: " + edges.getEdgeCnt());
 		System.out.println("No. of disk pages read during batch insertion on graph database: " + pc.rcounter);
 		System.out.println("No. of disk pages written during batch insertion on graph database: " + pc.wcounter);
 
-		if ( status == OK )
-			System.out.println ("  Test completed successfully.\n");
 		return status; 
 		}
-	
-	public String getFixedLengthLable(String label) {
-		if(label.length() >LABEL_MAX_LENGTH){
-			return label.substring(0,LABEL_MAX_LENGTH);
-		}else{
-			StringBuffer sb = new StringBuffer();
-			int len = label.length();
-			while(len<LABEL_MAX_LENGTH){
-				sb.append(LABEL_CONSTANT);
-				len++;
-			}
-			sb.append(label);
-			return sb.toString();
-		}
-	}
-
 }

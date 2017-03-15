@@ -38,7 +38,7 @@ public class BatchEdgeDeleteHandler implements GlobalConst{
         boolean status = OK;
 		EdgeHeapFile edgeheap = edges;
 		NodeHeapFile nodeheap = nodes;
-		PCounter         pcounter = new PCounter();
+		PCounter         pcounter = new PCounter();			//Initiating the PCounter.
 		int       pages_read  = pcounter.rcounter;
 		int 	  pages_write = pcounter.wcounter;
 		File 	  file;

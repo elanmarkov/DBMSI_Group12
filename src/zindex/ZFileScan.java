@@ -1,9 +1,8 @@
 package zindex;
 
 /*
- * @(#) BTIndexPage.java   98/05/14
- * Copyright (c) 1998 UW.  All Rights Reserved.
- *         Author: Xiaohu Li (xioahu@cs.wisc.edu)
+ * @(#) ZFileScan.java   
+ *         Author: Jayanth Kumar M J
  *
  */
 import java.io.IOException;
@@ -32,9 +31,11 @@ import global.Descriptor;
 import global.GlobalConst;
 
 /**
- * BTFileScan implements a search/iterate interface to B+ tree 
- * index files (class BTreeFile).  It derives from abstract base
+ * ZFileScan implements a search/iterate interface to Multidimensional data
+ * index files (class ZCurve).  It derives from abstract base
  * class IndexFileScan.  
+ * It provides two Api's, range scan on with low and high key,
+ * and a range scan with key and all points within specific distance from the key
  */
 public class ZFileScan  extends IndexFileScan
              implements  GlobalConst
@@ -51,6 +52,27 @@ public class ZFileScan  extends IndexFileScan
   private StringKey low;
   private StringKey high;
   
+  /** create a scan with given keys
+   * Cases:
+   *      (1) lo_key = null, hi_key = null
+   *              scan the whole index [0,0,0,0,0] to [10000,10000,10000,10000,10000]
+   *      (2) lo_key = null, hi_key!= null
+   *              range scan from [0,0,0,0,0] to the hi_key
+   *      (3) lo_key!= null, hi_key = [10000,10000,10000,10000,10000]
+   *              range scan from the lo_key to max
+   *      (4) lo_key!= null, hi_key!= null, lo_key = hi_key
+   *              exact match ( might not unique)
+   *      (5) lo_key!= null, hi_key!= null, lo_key < hi_key
+   *              range scan from lo_key to hi_key
+   *@param lo_key the key where we begin scanning. Input parameter.
+   *@param hi_key the key where we stop scanning. Input parameter.
+   *@exception IOException error from the lower layer
+   *@exception KeyNotMatchException key is not integer key nor string key
+   *@exception IteratorException iterator error
+   *@exception ConstructPageException error in BT page constructor
+   *@exception PinPageException error when pin a page
+   *@exception UnpinPageException error when unpin a page
+   */
   public ZFileScan(BTreeFile bFile, KeyClass loKey, KeyClass hiKey) throws KeyNotMatchException, IteratorException, ConstructPageException, PinPageException, UnpinPageException, IOException {
 	this.bFile = bFile;
 	this.loKey = loKey;
@@ -75,6 +97,19 @@ public class ZFileScan  extends IndexFileScan
 	this.bTreeScan = bFile.new_scan(this.low, this.high);
   }
   
+  /** create a scan with given keys
+   * Cases:
+   *     (1) lowkey = @Descriptor - distance, highkey = @Descriptor + distance
+   *              range scan from lo_key to hi_key
+   *@param lo_key the key where we begin scanning. Input parameter.
+   *@param hi_key the key where we stop scanning. Input parameter.
+   *@exception IOException error from the lower layer
+   *@exception KeyNotMatchException key is not integer key nor string key
+   *@exception IteratorException iterator error
+   *@exception ConstructPageException error in BT page constructor
+   *@exception PinPageException error when pin a page
+   *@exception UnpinPageException error when unpin a page
+   */
   public ZFileScan(BTreeFile bfile, KeyClass key, int distance) throws KeyNotMatchException, IteratorException, ConstructPageException, PinPageException, UnpinPageException, IOException{
 	  Descriptor low = new Descriptor();
 	  Descriptor point =((DescriptorKey)key).getKey();
@@ -101,12 +136,20 @@ public class ZFileScan  extends IndexFileScan
 	  this.bTreeScan = bFile.new_scan(this.low, this.high);
   }
 
+ /*
+  * this method, take individual descriptors and reduces it by distance
+  * and returns the value, which will be used in low key
+  */
 private int getCirclesLowerBound(int distance, int dimVal) {
 	int val = dimVal-distance;
 	  val = val>=0 ? val : 0;
 	return val;
 }
 
+/*
+ * this method, take individual descriptors and increases it by distance
+ * and returns the value, which will be used in high key
+ */
 private int getCirclesUpperBound(int distance, int dimVal) {
 	int val = dimVal+distance;
 	  val = val<=10000 ? val : 10000;
@@ -135,6 +178,13 @@ public void setDistance(int distance) {
 	  return entry;
     }
 
+  /*
+   * Does a naive scan on all the data from low key till high key
+   * every time it finds a node, it check if node is within the range.
+   * if its within range returns the node, else gets the next node,
+   * till it finds a node in range
+   */
+  
 private KeyDataEntry getNextDataInRange() throws ScanIteratorException {
 	KeyDataEntry entry =null;
 	  boolean isInHyperRectangle =false;
@@ -162,6 +212,26 @@ private KeyDataEntry getNextDataInRange() throws ScanIteratorException {
 	return entry;
 }
 
+/*
+ * Initiate a scan with low key and high key.
+ * Fetches the next element from the btree. 
+ * Checks if the element falls within the range of given 5D descriptor.
+ * If it does returns the element. Else it increments the misCounter by one 
+ * If the misCounter reaches a threshold, 
+ * has been set to 32(as its 5D, there are chances that 
+ * it will come back in the range after 32 misses if it’s close to the corners)
+ * Once it crosses the threshold, it will Invoke Z Divide on the region.
+ * The Z divide will find the common bit pattern in the key, 
+ * and cuts the space in a specific dimension, 
+ * where the 1st bit between the two keys change.
+ * And it returns a new Little Maximum (max key for the upper space) 
+ * and Big minimum (and a min key for the lower space).
+ * If the min is lower than the last reported key, 
+ * which did not fall in the range. A new scan will be initiated for the lower space, 
+ * else the upper space is divided again using the Z divide.
+ * This division is implemented every time when threshold is crossed, 
+ * once the scan in the upper space is complete, a scan in the lower space will be done.
+ */
 
 private KeyDataEntry getNextDataInRangeOptimised() throws ScanIteratorException {
 	int misCounter =0;

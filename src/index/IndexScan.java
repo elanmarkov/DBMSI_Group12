@@ -293,6 +293,12 @@ public class IndexScan extends Iterator {
 		}
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see iterator.Iterator#getNextNode()
+	 * Need to be refactored, very unmaintainable code.
+	 * method just takes the tuples and sets it to node an returns it.
+	 */
 	public Node getNextNode() throws IOException,
 	   JoinsException ,
 	   IndexException,
@@ -328,6 +334,12 @@ public class IndexScan extends Iterator {
 		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see iterator.Iterator#getNextNode()
+	 * Need to be refactored, very unmaintainable code.
+	 * method just takes the tuples and sets it to Edge an returns it.
+	 */
 	public Edge getNextEdge() throws IOException,
 	   JoinsException ,
 	   IndexException,

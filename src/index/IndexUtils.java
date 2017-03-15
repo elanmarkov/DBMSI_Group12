@@ -154,6 +154,31 @@ public class IndexUtils {
 
 	}
 
+	/**
+	 * ZTree_scan opens a Zcurve scan based on selection conditions
+	 * 
+	 * @param selects
+	 *            conditions to apply
+	 * @param indFile
+	 *            the index (ZCurve) file
+	 * @return an instance of IndexFileScan (BTreeFileScan)
+	 * @exception IOException
+	 *                from lower layer
+	 * @exception UnknownKeyTypeException
+	 *                only int and string keys are supported
+	 * @exception InvalidSelectionException
+	 *                selection conditions (selects) not valid
+	 * @exception KeyNotMatchException
+	 *                Keys do not match
+	 * @exception UnpinPageException
+	 *                unpin page failed
+	 * @exception PinPageException
+	 *                pin page failed
+	 * @exception IteratorException
+	 *                iterator exception
+	 * @exception ConstructPageException
+	 *                failed to construct a header page
+	 */
 	public static IndexFileScan ZTree_scan(CondExpr[] selects, IndexFile indFile)
 			throws IOException, UnknownKeyTypeException, InvalidSelectionException, KeyNotMatchException,
 			UnpinPageException, PinPageException, IteratorException, ConstructPageException {

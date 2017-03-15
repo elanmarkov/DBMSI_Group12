@@ -357,12 +357,15 @@ static boolean check_string(attrNode N)
   return true;
 }
 
+/*
+ * takes a ddescriptor key and converts it to 1 Dimension by bit shuffling
+ */
 public static StringKey conver5Dto1D(KeyClass key){
 	Descriptor vector5d = ((DescriptorKey)key).getKey();
 	String[] vectors = new String[5]; 
 	//System.out.println("Utility.conver5Dto1D() 1");
 	for(int i=0;i<vectors.length;i++){
-		vectors[i]=get8BitStringRepresentation(vector5d.get(i));
+		vectors[i]=getBitStringRepresentation(vector5d.get(i));
 	}
 	//System.out.println("Utility.conver5Dto1D() 2" );
 	StringBuffer StringKey = new StringBuffer();
@@ -375,8 +378,10 @@ public static StringKey conver5Dto1D(KeyClass key){
 	}
 	return new StringKey(StringKey.toString());
 }
-
-public static String get8BitStringRepresentation(int val) {
+/*
+ * takes a Int values and converts it to 16bit representation.
+ */
+public static String getBitStringRepresentation(int val) {
 	String binaryString = Integer.toBinaryString(val);
 	int len = binaryString.length();
 	StringBuffer sb = new StringBuffer();
@@ -387,6 +392,9 @@ public static String get8BitStringRepresentation(int val) {
 	return sb.append(binaryString).toString();
 }
 
+/*
+ * takes a string key and converts it to back to 5D vector.
+ */
 public static Descriptor convert1Dto5D(String key){
 	int i=0;
 	StringBuffer[] sb = new StringBuffer[5];
@@ -409,6 +417,10 @@ public static Descriptor convert1Dto5D(String key){
 	return desc;
 }
 
+/*
+ * Given a high and low descriptor and a target descriptor.
+ * Method checks if the descriptor falls in range.
+ */
 public static boolean checkIfPointFallsWithInRange(Descriptor lowKey, Descriptor highKey, Descriptor desc) {
 	for(int i =0 ; i<NUMBER_OF_DIMENSIONS;i++){
 		if(!(lowKey.get(i)<=desc.get(i) && highKey.get(i) >=desc.get(i))){

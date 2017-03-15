@@ -1,4 +1,4 @@
-/*Edge Queries program by Harshdeep Sandhu adopted from Task 14 code implementing it for edges.
+/*Edge Queries program by Harshdeep Sandhu adopted from Task 14 and implemented for Edges.
  * */package diskmgr;
 
 import java.io.*;
@@ -131,11 +131,8 @@ public class EdgeQueryHandler {
 			}
 		}
 	}
-
-	public boolean edgeIndexTest0(String argv[])
-	{
-
-		boolean status = OK;
+    private IndexScan runIndexScan(int scanon) {
+    	
 		AttrType[] attrType = new AttrType[6];				//Initiating the Index Scan......
 		attrType[0] = new AttrType(AttrType.attrString);
 		attrType[1] = new AttrType(AttrType.attrInteger);
@@ -158,11 +155,28 @@ public class EdgeQueryHandler {
 		attrSize[3] = 4;
 		attrSize[4] = 4;
 		attrSize[5] = 4;
+
 		IndexScan iscan = null;
 		String filename = edges.getFileName();
+		try {
+			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGELABEL", attrType, attrSize, 6, 6, projlist, null, scanon, false);
+		} catch (IndexException | InvalidTypeException | InvalidTupleSizeException | UnknownIndexTypeException
+				| IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return iscan;
+		
+    }
+	public boolean edgeIndexTest0(String argv[])
+	{
+		boolean status = OK;
+
+		IndexScan iscan = null;
+		
 		Tuple t = null;
 		try {
-			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGELABEL", attrType, attrSize, 6, 6, projlist, null, 1, false);//IndexScan Initiated
+			iscan = this.runIndexScan(1);//IndexScan Initiated
 		}
 		catch(Exception e) {
 			status = FAIL;
@@ -203,30 +217,8 @@ public class EdgeQueryHandler {
 	public boolean edgeIndexTest1(String argv[])
 	{
 		boolean status = OK;
-		AttrType[] attrType = new AttrType[6];					//Initiating the Index Scan......
-		attrType[0] = new AttrType(AttrType.attrString);
-		attrType[1] = new AttrType(AttrType.attrInteger);
-		attrType[2] = new AttrType(AttrType.attrInteger);
-		attrType[3] = new AttrType(AttrType.attrInteger);
-		attrType[4] = new AttrType(AttrType.attrInteger);
-		attrType[5] = new AttrType(AttrType.attrInteger);
-		FldSpec[] projlist = new FldSpec[6];
-		RelSpec rel = new RelSpec(RelSpec.outer); 
-		projlist[0] = new FldSpec(rel, 1);
-		projlist[1] = new FldSpec(rel, 2);
-		projlist[2] = new FldSpec(rel, 3);
-		projlist[3] = new FldSpec(rel, 4);
-		projlist[4] = new FldSpec(rel, 5);
-		projlist[5] = new FldSpec(rel, 6);
-		short[] attrSize = new short[6];
-		attrSize[0] = Tuple.LABEL_MAX_LENGTH;
-		attrSize[1] = 4;
-		attrSize[2] = 4;
-		attrSize[3] = 4;
-		attrSize[4] = 4;
-		attrSize[5] = 4;
 		IndexScan iscan = null;
-		String filename = edges.getFileName();
+		
 		Tuple t = null;
 		int edgeCount = 0;
 		try {
@@ -239,7 +231,7 @@ public class EdgeQueryHandler {
 
 		Edge[] edges = new Edge[edgeCount];
 		try {
-			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGELABEL", attrType, attrSize, 6, 6, projlist, null, 1, false);//IndexScan Initiated
+			iscan = runIndexScan(1);//IndexScan Initiated
 		}
 		catch(Exception e) {
 			status = FAIL;
@@ -274,30 +266,7 @@ public class EdgeQueryHandler {
 	}
 	public boolean edgeIndexTest2(String argv[]){
 		boolean status = OK;
-		AttrType[] attrType = new AttrType[6];					//Initiating the Index Scan......
-		attrType[0] = new AttrType(AttrType.attrString);
-		attrType[1] = new AttrType(AttrType.attrInteger);
-		attrType[2] = new AttrType(AttrType.attrInteger);
-		attrType[3] = new AttrType(AttrType.attrInteger);
-		attrType[4] = new AttrType(AttrType.attrInteger);
-		attrType[5] = new AttrType(AttrType.attrInteger);
-		FldSpec[] projlist = new FldSpec[6];
-		RelSpec rel = new RelSpec(RelSpec.outer); 
-		projlist[0] = new FldSpec(rel, 1);
-		projlist[1] = new FldSpec(rel, 2);
-		projlist[2] = new FldSpec(rel, 3);
-		projlist[3] = new FldSpec(rel, 4);
-		projlist[4] = new FldSpec(rel, 5);
-		projlist[5] = new FldSpec(rel, 6);
-		short[] attrSize = new short[6];
-		attrSize[0] = Tuple.LABEL_MAX_LENGTH;
-		attrSize[1] = 4;
-		attrSize[2] = 4;
-		attrSize[3] = 4;
-		attrSize[4] = 4;
-		attrSize[5] = 4;
 		IndexScan iscan = null;
-		String filename = edges.getFileName();
 		Tuple t = null;
 		int edgeCount = 0;
 		try {
@@ -310,7 +279,7 @@ public class EdgeQueryHandler {
 
 		Edge[] edges = new Edge[edgeCount];
 		try {
-			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGELABEL", attrType, attrSize, 6, 6, projlist, null, 1, false);//IndexScan Initiated
+			iscan = runIndexScan(1);//IndexScan Initiated
 		}
 		catch(Exception e) {
 			status = FAIL;
@@ -345,30 +314,7 @@ public class EdgeQueryHandler {
 	}
 	public boolean edgeIndexTest3(String argv[]){
 		boolean status = OK;						//Initiating the Index Scan......
-		AttrType[] attrType = new AttrType[6];
-		attrType[0] = new AttrType(AttrType.attrString);
-		attrType[1] = new AttrType(AttrType.attrInteger);
-		attrType[2] = new AttrType(AttrType.attrInteger);
-		attrType[3] = new AttrType(AttrType.attrInteger);
-		attrType[4] = new AttrType(AttrType.attrInteger);
-		attrType[5] = new AttrType(AttrType.attrInteger);
-		FldSpec[] projlist = new FldSpec[6];
-		RelSpec rel = new RelSpec(RelSpec.outer); 
-		projlist[0] = new FldSpec(rel, 1);
-		projlist[1] = new FldSpec(rel, 2);
-		projlist[2] = new FldSpec(rel, 3);
-		projlist[3] = new FldSpec(rel, 4);
-		projlist[4] = new FldSpec(rel, 5);
-		projlist[5] = new FldSpec(rel, 6);
-		short[] attrSize = new short[6];
-		attrSize[0] = Tuple.LABEL_MAX_LENGTH;
-		attrSize[1] = 4;
-		attrSize[2] = 4;
-		attrSize[3] = 4;
-		attrSize[4] = 4;
-		attrSize[5] = 4;
 		IndexScan iscan = null;
-		String filename = edges.getFileName();
 		Tuple t = null;
 		int edgeCount = 0;
 		try {
@@ -381,7 +327,7 @@ public class EdgeQueryHandler {
 
 		Edge[] edges = new Edge[edgeCount];
 		try {
-			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGELABEL", attrType, attrSize, 6, 6, projlist, null, 1, false);//IndexScan Initiated
+			iscan = runIndexScan(1);//IndexScan Initiated
 		}
 		catch(Exception e) {
 			status = FAIL;
@@ -416,30 +362,7 @@ public class EdgeQueryHandler {
 	}
 	public  boolean edgeIndexTest4(String argv[]){
 		boolean status = OK;						//Initiating the Index Scan......
-		AttrType[] attrType = new AttrType[6];
-		attrType[0] = new AttrType(AttrType.attrString);
-		attrType[1] = new AttrType(AttrType.attrInteger);
-		attrType[2] = new AttrType(AttrType.attrInteger);
-		attrType[3] = new AttrType(AttrType.attrInteger);
-		attrType[4] = new AttrType(AttrType.attrInteger);
-		attrType[5] = new AttrType(AttrType.attrInteger);
-		FldSpec[] projlist = new FldSpec[6];
-		RelSpec rel = new RelSpec(RelSpec.outer); 
-		projlist[0] = new FldSpec(rel, 1);
-		projlist[1] = new FldSpec(rel, 2);
-		projlist[2] = new FldSpec(rel, 3);
-		projlist[3] = new FldSpec(rel, 4);
-		projlist[4] = new FldSpec(rel, 5);
-		projlist[5] = new FldSpec(rel, 6);
-		short[] attrSize = new short[6];
-		attrSize[0] = Tuple.LABEL_MAX_LENGTH;
-		attrSize[1] = 4;
-		attrSize[2] = 4;
-		attrSize[3] = 4;
-		attrSize[4] = 4;
-		attrSize[5] = 4;
 		IndexScan iscan = null;
-		String filename = edges.getFileName();
 		Tuple t = null;
 		int edgeCount = 0;
 		try {
@@ -452,7 +375,7 @@ public class EdgeQueryHandler {
 
 		Edge[] edges = new Edge[edgeCount];
 		try {
-			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGEWEIGHT", attrType, attrSize, 6, 6, projlist, null, 6, false);//IndexScan Initiated
+			iscan = runIndexScan(6);//IndexScan Initiated
 		}
 		catch(Exception e) {
 			status = FAIL;
@@ -487,44 +410,12 @@ public class EdgeQueryHandler {
 	}
 	public boolean edgeIndexTest5(String argv[]){
 		boolean status = OK;
-		AttrType[] attrType = new AttrType[6];				//Initiating the Index Scan......
-		attrType[0] = new AttrType(AttrType.attrString);
-		attrType[1] = new AttrType(AttrType.attrInteger);
-		attrType[2] = new AttrType(AttrType.attrInteger);
-		attrType[3] = new AttrType(AttrType.attrInteger);
-		attrType[4] = new AttrType(AttrType.attrInteger);
-		attrType[5] = new AttrType(AttrType.attrInteger);
-		FldSpec[] projlist = new FldSpec[6];
-		RelSpec rel = new RelSpec(RelSpec.outer); 
-		projlist[0] = new FldSpec(rel, 1);
-		projlist[1] = new FldSpec(rel, 2);
-		projlist[2] = new FldSpec(rel, 3);
-		projlist[3] = new FldSpec(rel, 4);
-		projlist[4] = new FldSpec(rel, 5);
-		projlist[5] = new FldSpec(rel, 6);
-		short[] attrSize = new short[6];
-		attrSize[0] = Tuple.LABEL_MAX_LENGTH;
-		attrSize[1] = 4;
-		attrSize[2] = 4;
-		attrSize[3] = 4;
-		attrSize[4] = 4;
-		attrSize[5] = 4;
 		IndexScan iscan = null;
-		String filename = edges.getFileName();
 		Tuple t = null;
-		int edgeCount = 0;
 		int  lowerbound = Integer.parseInt(argv[4]), upperbound = Integer.parseInt(argv[5]);
-		try {
-			edgeCount = edges.getEdgeCnt();
-		} catch (Exception e1) {
-			status = FAIL;
-			e1.printStackTrace();
-		}
 	
-
-		
 		try {
-			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGEWEIGHT", attrType, attrSize, 6, 6, projlist, null, 6, false);//IndexScan Initiated
+			iscan = runIndexScan(6);//IndexScan Initiated
 		}
 		catch(Exception e) {
 			status = FAIL;
@@ -566,33 +457,8 @@ public class EdgeQueryHandler {
 
 
 		boolean status = OK;
-		AttrType[] attrType = new AttrType[6];				//Initiating the Index Scan......
-		attrType[0] = new AttrType(AttrType.attrString);
-		attrType[1] = new AttrType(AttrType.attrInteger);
-		attrType[2] = new AttrType(AttrType.attrInteger);
-		attrType[3] = new AttrType(AttrType.attrInteger);
-		attrType[4] = new AttrType(AttrType.attrInteger);
-		attrType[5] = new AttrType(AttrType.attrInteger);
-		FldSpec[] projlist = new FldSpec[6];
-		RelSpec rel = new RelSpec(RelSpec.outer); 
-		projlist[0] = new FldSpec(rel, 1);
-		projlist[1] = new FldSpec(rel, 2);
-		projlist[2] = new FldSpec(rel, 3);
-		projlist[3] = new FldSpec(rel, 4);
-		projlist[4] = new FldSpec(rel, 5);
-		projlist[5] = new FldSpec(rel, 6);
-		short[] attrSize = new short[6];
-		attrSize[0] = Tuple.LABEL_MAX_LENGTH;
-		attrSize[1] = 4;
-		attrSize[2] = 4;
-		attrSize[3] = 4;
-		attrSize[4] = 4;
-		attrSize[5] = 4;
-
 		IndexScan iscan = null;
-		String filename = edges.getFileName();
 		int i = 0;
-		EdgeHeapFile f = edges;
 		int edgeCount  = 0;
 
 		try {
@@ -608,7 +474,7 @@ public class EdgeQueryHandler {
 
 		if ( status == OK ) {
 			try {
-				iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGELABEL", attrType, attrSize, 6, 6, projlist, null, 1, false);//IndexScan Initiated
+				iscan = runIndexScan(1);//IndexScan Initiated
 			}
 			catch (Exception e) {
 				status = FAIL;
@@ -855,7 +721,7 @@ public class EdgeQueryHandler {
 		Edge[] edgesArray = new Edge[edgeCount];
 		Escan scan = null;
 		if ( status == OK ) {	
-			System.out.println ("  - Scan the records\n");
+
 			try {
 				scan = f.openScan();
 			}

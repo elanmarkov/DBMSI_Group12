@@ -114,10 +114,10 @@ public class BatchEdgeDeleteHandler implements GlobalConst{
 			inputFile.close();
 			pages_read  = pcounter.rcounter - pages_read;
 			pages_write = pcounter.wcounter - pages_write;
-			System.out.println("Number of Pages Read: "+pages_read+" Number of Page writes performed: "+pages_write);
+			System.out.println("Number of Pages Read: "+pages_read+"\nNumber of Page writes performed: "+pages_write);
 			int edgecnt = db.getEdgeCnt();
 			int nodecnt = db.getNodeCnt();
-			System.out.println("Total Edge Count: "+ edgecnt + "Total node Count: "+ nodecnt);
+			System.out.println("Total Edge Count: "+ edgecnt + "\nTotal node Count: "+ nodecnt);
 
 		}
 	}

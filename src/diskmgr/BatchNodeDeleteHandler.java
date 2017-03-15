@@ -67,15 +67,14 @@ public class BatchNodeDeleteHandler{
 				node = nscan.getNext(nid);
 				Node          tempNode = new Node();
 				tempNode.setLabel(inputnodelabel);
-				
-				while(!node.equals(null)){	//while 02 for going through the nodeheapfile looking for the particular node
+				while(node != null){	//while 02 for going through the nodeheapfile looking for the particular node
 
 					
 					String label = node.getLabel();
 					
 
 					if(Objects.equals(label,tempNode.getLabel())){	// nid with the given nodelabel found
-						System.out.println(node.equals(null));
+						//System.out.println(node.equals(null));
 						Escan escan = edgeheap.openScan();
 						EID eid = new EID();
 						Edge edge = new Edge();
@@ -86,7 +85,7 @@ public class BatchNodeDeleteHandler{
 									db.deleteEdge(eid);
 								}
 								catch(Exception e) {
-									System.out.println("Error during deleting the Edge");
+									System.err.println("Error during deleting the Edge");
 									e.printStackTrace();
 									status = FAIL;
 								}
@@ -100,17 +99,15 @@ public class BatchNodeDeleteHandler{
 							db.deleteNode(nid);
 						}
 						catch(Exception e) {
-							System.out.println("Error during node deletion.");
+							System.err.println("Error during node deletion.");
 							e.printStackTrace();
 							status = FAIL;
 						}
 					} 
 					node = nscan.getNext(nid);
 				}
-
 				nscan.closescan();
 			}
-
 			inputFile.close();
 		}
 		// Taking care of Output now.
@@ -121,9 +118,9 @@ public class BatchNodeDeleteHandler{
 		System.out.println("..............Batch Node Deletion Performed successfully............");}
 		else {
 			System.out.println("..............Batch Node Delete Not Successful................");
-		}
-		System.out.println("Number of Pages Read: "+pages_read+" Number of Page writes performed: "+pages_write);
-		System.out.println("Number of Total Nodes in the Database are:"+SystemDefs.JavabaseDB.getNodeCnt() + "Number of Total Edges in the Database are"+SystemDefs.JavabaseDB.getEdgeCnt());
+		};
+		System.out.println("Number of Pages Read: "+pages_read+"\nNumber of Page writes performed: "+pages_write);
+		System.out.println("Number of Total Nodes in the Database are:"+SystemDefs.JavabaseDB.getNodeCnt() + "\nNumber of Total Edges in the Database are"+SystemDefs.JavabaseDB.getEdgeCnt());
 
 
 	}

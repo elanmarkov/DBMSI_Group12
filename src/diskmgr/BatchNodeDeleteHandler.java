@@ -44,7 +44,7 @@ public class BatchNodeDeleteHandler{
 
 		try{
 			file = new File(System.getProperty("user.dir")	//Opening the NODEFILENAME File.
-					+ "/tests/" + filename + ".txt");
+					+ "/" + filename);
 		}
 		catch(Exception e){
 			System.out.println("Could not open the InputFile.");

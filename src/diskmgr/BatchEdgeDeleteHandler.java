@@ -99,6 +99,7 @@ public class BatchEdgeDeleteHandler implements GlobalConst{
 						Node desnode    = nodeheap.getNode(desnid);
 
 						if(Objects.equals(desnode.getLabel(),node2.getLabel()) && Objects.equals(sourcenode.getLabel(),node1.getLabel())){   // Checking if the edge is the one we are looking for.
+							System.out.println("Edge Delete:"+edge.getLabel());
 							db.deleteEdge(eid);
 						}
 

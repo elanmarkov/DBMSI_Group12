@@ -82,6 +82,7 @@ public class BatchNodeDeleteHandler{
 						while(!Objects.equals(edge,null)){		// trying to find the edges with destination and source node
 							if(edge.getSource().equals(nid) || edge.getDestination().equals(nid)){
 								try {
+									System.out.println("Edge Delete:"+edge.getLabel());
 									db.deleteEdge(eid);
 								}
 								catch(Exception e) {
@@ -95,7 +96,8 @@ public class BatchNodeDeleteHandler{
 						}
 						escan.closescan();
 
-						try {
+						try {   
+							System.out.println("Node Deleted:"+node.getLabel());
 							db.deleteNode(nid);
 						}
 						catch(Exception e) {

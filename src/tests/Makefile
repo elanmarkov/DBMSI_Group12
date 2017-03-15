@@ -72,10 +72,8 @@ sortmerge: SMJoin
 
 # test Graph test cases
 
-Graph:testcases.java
+graph: 
 	$(JAVAC) testcases.java
-
-graph: Graph
 	$(JAVA) tests.testcases
 
 

@@ -60,7 +60,7 @@ public class BatchNodeInsertHandler {
 		
 
 		BufferedReader br = new BufferedReader(new FileReader(System.getProperty("user.dir")
-				+ "/tests/" + nodefilename));
+				+ "/" + nodefilename));
 
 		while ((line = br.readLine()) != null)
 		{

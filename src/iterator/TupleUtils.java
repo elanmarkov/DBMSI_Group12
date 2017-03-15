@@ -80,14 +80,6 @@ public class TupleUtils
     if (t1_s.compareTo( t2_s)<0)return -1;
     return 0;
     
-  case AttrType.attrDesc:
-    try {
-      t1_d = t1.getDescFld(t1_fld_no);
-        t2_d = t2.getDescFld(t2_fld_no);
-        return t1_d.distance(t2_d);
-    } catch (FieldNumberOutOfBoundException e) {
-      throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
-    }
   default:
     
     throw new UnknowAttrType(null, "Don't know how to handle attrSymbol, attrNull");
@@ -96,7 +88,7 @@ public class TupleUtils
     }
 
   
-  /* This function is overloaded to take two extra parameters
+  /* This function is overloaded to take two extra parameters descriptor and target
 */
 
   public static double CompareTupleWithTuple(AttrType fldType,
@@ -203,7 +195,9 @@ public class TupleUtils
     {
       return CompareTupleWithTuple(fldType, t1, t1_fld_no, value, t1_fld_no);
     }
-  
+ /**
+  * This function compares tuple1 with tuple2 whose attribute type is Descriptor
+  */
   public static double CompareTupleWithValue(AttrType fldType,
       Tuple  t1, int t1_fld_no,
       Tuple  value,
@@ -239,7 +233,9 @@ return CompareTupleWithTuple(fldType, t1, t1_fld_no, value, t1_fld_no, distance,
         return false;
           return true;
         }
-  
+ /**
+  * overloaded the Equal method to accomodate tuple equality for Descriptor attribute
+  */
   public static boolean Equal(Tuple t1, Tuple t2, AttrType types[], int len, double distance, Descriptor target)
     throws IOException,UnknowAttrType,TupleUtilsException
     {
@@ -313,6 +309,13 @@ return CompareTupleWithTuple(fldType, t1, t1_fld_no, value, t1_fld_no, distance,
       throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
     }
     break;
+  case AttrType.attrDesc:
+    try {
+        value.setDescFld(fld_no, tuple.getDescFld(fld_no));
+      }catch (FieldNumberOutOfBoundException e){
+        throw new TupleUtilsException(e, "FieldNumberOutOfBoundException is caught by TupleUtils.java");
+      }
+      break;
   default:
     throw new UnknowAttrType(null, "Don't know how to handle attrSymbol, attrNull");
     

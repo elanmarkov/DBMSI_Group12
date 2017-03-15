@@ -668,7 +668,9 @@ public class Sort extends Iterator implements GlobalConst
       throw new SortException(e, "Sort.java: op_buf.setHdr() failed");
     }
   }
-  
+  /**
+   * overloaded sort constructor to sort tuples based on Descriptor type attribute
+   */
   public Sort(AttrType[] in,         
           short      len_in,             
           short[]    str_sizes,

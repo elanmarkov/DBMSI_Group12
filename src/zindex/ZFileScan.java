@@ -40,7 +40,7 @@ import global.GlobalConst;
 public class ZFileScan  extends IndexFileScan
              implements  GlobalConst
 {
-  private static final int NUMBER_OF_MISSES = 32;
+  private static final int NUMBER_OF_MISSES = 3;
   private BTreeFile bFile;
   private KeyClass loKey;
   private KeyClass hiKey;
@@ -173,8 +173,8 @@ public void setDistance(int distance) {
   public KeyDataEntry get_next() 
     throws ScanIteratorException
     {
-	  KeyDataEntry entry = getNextDataInRange();
-	  //KeyDataEntry entry = getNextDataInRangeOptimised();
+	  //KeyDataEntry entry = getNextDataInRange();
+	  KeyDataEntry entry = getNextDataInRangeOptimised();
 	  return entry;
     }
 
@@ -256,6 +256,19 @@ private KeyDataEntry getNextDataInRangeOptimised() throws ScanIteratorException 
 			}
 		  nextEntry = this.bTreeScan.get_next();
 		  if(nextEntry == null){
+			  while(!stack.isEmpty()){
+				high = stack.pop();
+				low = stack.pop();
+				lastReported=low;
+				destroyAndInitialiseANewScan();
+				nextEntry = this.bTreeScan.get_next();
+				if(nextEntry!=null){
+					break;
+				}
+				misCounter = 0;
+			  }
+		  }
+		  if(stack.isEmpty() && nextEntry ==null){
 			  return null;
 		  }
 		  lastReported = (StringKey) nextEntry.key;
@@ -291,13 +304,12 @@ private KeyDataEntry getNextDataInRangeOptimised() throws ScanIteratorException 
 						if(lastReported.getKey().compareTo(litMax.getKey())<0){
 							this.high = litMax;
 						}
-					}while(lastReported.getKey().compareTo(litMax.getKey())>0);
+					}while(lastReported.getKey().compareTo(litMax.getKey())<0);
 					if(isChanged){
 						misCounter = 0;
 						this.low = bigMin;
 						lastReported = low;
 						destroyAndInitialiseANewScan();
-						//System.out.println("basicFunctionTest.doRangeSearchOnZCurve() after zdivide low "+Integer.parseInt(low,2));
 					}
 			  }
 		  }
@@ -399,8 +411,6 @@ private void destroyAndInitialiseANewScan() {
 		}
 		stack.push(new StringKey(litMax.toString()));
 		stack.push(new StringKey(bigMin.toString()));
-		//System.out.println("basicFunctionTest.ZDivide() low : "+litMax.toString());
-		//System.out.println("basicFunctionTest.ZDivide() high : "+bigMin.toString());
 	}
 }
 

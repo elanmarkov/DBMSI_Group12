@@ -53,7 +53,7 @@ public class BatchEdgeInsertHandler {
 		NodeHeapFile nodeHeapFile = nodes;
 		
 		BufferedReader br = new BufferedReader(new FileReader(System.getProperty("user.dir")
-				+ "/tests/" +  edgeFileName));
+				+ "/" +  edgeFileName));
 
 		while ((line = br.readLine()) != null)
 		{

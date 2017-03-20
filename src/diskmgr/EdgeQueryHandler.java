@@ -1,17 +1,31 @@
 /*Edge Queries program by Harshdeep Sandhu adopted from Task 14 and implemented for Edges.
  * */package diskmgr;
 
-import java.io.*;
-import java.util.Objects;
-import java.util.Scanner;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
-import bufmgr.*;
-import global.*;
-import btree.*;
-import zindex.*;
-import heap.*;
-import iterator.*;
-import index.*;
+import btree.BTreeFile;
+import global.AttrType;
+import global.EID;
+import global.IndexType;
+import global.NID;
+import global.SystemDefs;
+import heap.Edge;
+import heap.EdgeHeapFile;
+import heap.Escan;
+import heap.InvalidTupleSizeException;
+import heap.InvalidTypeException;
+import heap.Node;
+import heap.NodeHeapFile;
+import heap.Tuple;
+import index.IndexException;
+import index.IndexScan;
+import index.UnknownIndexTypeException;
+import iterator.FldSpec;
+import iterator.RelSpec;
+import zindex.ZCurve;
 
 public class EdgeQueryHandler {
 	private final static boolean OK = true;
@@ -51,7 +65,7 @@ public class EdgeQueryHandler {
 		System.out.println(" ]");
 	}
 
-	private void sortEdges(Edge edgesArray[],int sortParameter) 
+	private void sortEdgesold(Edge edgesArray[],int sortParameter) 
 	{
 		Edge temp;
 		Node sourceNode1 = null;
@@ -76,6 +90,7 @@ public class EdgeQueryHandler {
 						edgesArray[j] = temp;
 					}
 				} else if(sortParameter == 1) {
+					System.out.println("EdgeQueryHandler.sortEdges() i: "+i +" j : "+j);
 					try{
 						destinationNode1 = nodes.getNode(edgesArray[i].getDestination());
 						destinationNode2 = nodes.getNode(edgesArray[j].getDestination());
@@ -98,6 +113,7 @@ public class EdgeQueryHandler {
 				}
 			}
 		}
+		System.out.println("EdgeQueryHandler.sortEdges() done sorting ");
 		for(int i = 0; i < edgesArray.length; i++) {
 			try {
 				print(edgesArray[i],nodes);
@@ -106,8 +122,56 @@ public class EdgeQueryHandler {
 				e.printStackTrace();
 			}
 		}
+		System.out.println("EdgeQueryHandler.sortEdges() done printing");
 	}
 
+	private void sortEdges(Edge edgesArray[],int sortParameter) 
+	{
+		Edge temp;
+		Node sourceNode1 = null;
+		Node sourceNode2 = null;
+		Node destinationNode1 = null;
+		Node destinationNode2 = null;
+		Map<String, Edge> map = new TreeMap<String, Edge>();
+		for (int i = 0; i < edgesArray.length; i++) 
+		{
+			String key = null;
+			switch (sortParameter) {
+			case 0:
+				try {
+					sourceNode1 = nodes.getNode(edgesArray[i].getSource());
+					key = sourceNode1.getLabel();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
+			case 1:
+				try {
+					Node destNode = nodes.getNode(edgesArray[i].getDestination());
+					key = destNode.getLabel();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
+			default:
+				key = edgesArray[i].getLabel();
+				break;
+			}
+			map.put(key, edgesArray[i]);
+		}
+		
+		for (Map.Entry<String, Edge> entry : map.entrySet()) {
+            try {
+				print(entry.getValue(),nodes);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
+	}
+	
 	private void sortWeights(Edge edgesArray[]) 
 	{
 		Edge temp;
@@ -704,6 +768,7 @@ public class EdgeQueryHandler {
 			}
 			scan.closescan();
 			sortEdges(edgesArray,1);	//Edges sent for sorting.
+			
 		}
 		return status;
 	}

@@ -56,9 +56,10 @@ public class BatchNodeDeleteHandler{
 
 		// Read lines from the file until no more are left.
 		if(status){
-
+			System.out.println("BatchNodeDeleteHandler.runbatchnodedelete() 1");
 			while (inputFile.hasNext())	//while 01 for going through the BatchNodeFile
 			{
+				System.out.println("BatchNodeDeleteHandler.runbatchnodedelete() 2");
 				// Read the next name.
 				String inputnodelabel = inputFile.nextLine();
 				Nscan           nscan = nodeheap.openScan();
@@ -68,12 +69,9 @@ public class BatchNodeDeleteHandler{
 				Node          tempNode = new Node();
 				tempNode.setLabel(inputnodelabel);
 				
-				while(!node.equals(null)){	//while 02 for going through the nodeheapfile looking for the particular node
-
+				while(node!=null){	//while 02 for going through the nodeheapfile looking for the particular node
 					
 					String label = node.getLabel();
-					
-
 					if(Objects.equals(label,tempNode.getLabel())){	// nid with the given nodelabel found
 						System.out.println(node.equals(null));
 						Escan escan = edgeheap.openScan();
@@ -106,7 +104,7 @@ public class BatchNodeDeleteHandler{
 							e.printStackTrace();
 							status = FAIL;
 						}
-					} 
+					}
 					node = nscan.getNext(nid);
 				}
 

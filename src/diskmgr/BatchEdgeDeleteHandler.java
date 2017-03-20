@@ -35,7 +35,8 @@ public class BatchEdgeDeleteHandler implements GlobalConst{
 	private final static boolean FAIL = false;
 
 	public void runbatchedgedelete(String dbname, String filename) throws InvalidSlotNumberException, HFException, HFDiskMgrException, HFBufMgrException, Exception{
-        boolean status = OK;
+       System.out.println("BatchEdgeDeleteHandler.runbatchedgedelete()");
+		boolean status = OK;
 		EdgeHeapFile edgeheap = edges;
 		NodeHeapFile nodeheap = nodes;
 		PCounter         pcounter = new PCounter();			//Initiating the PCounter.
@@ -83,6 +84,7 @@ public class BatchEdgeDeleteHandler implements GlobalConst{
 				};
 				while(!Objects.equals(edge,null))	
 				{
+					//System.out.println("BatchEdgeDeleteHandler.runbatchedgedelete() edge is not null "+edge);
 					NID sourcenid = edge.getSource();
 					NID desnid = edge.getDestination();
 					String edgelabel = edge.getLabel();
@@ -99,6 +101,7 @@ public class BatchEdgeDeleteHandler implements GlobalConst{
 						Node desnode    = nodeheap.getNode(desnid);
 
 						if(Objects.equals(desnode.getLabel(),node2.getLabel()) && Objects.equals(sourcenode.getLabel(),node1.getLabel())){   // Checking if the edge is the one we are looking for.
+							System.out.println("BatchEdgeDeleteHandler.runbatchedgedelete() deleting");
 							db.deleteEdge(eid);
 						}
 
@@ -108,7 +111,7 @@ public class BatchEdgeDeleteHandler implements GlobalConst{
 				}
 
 				escan.closescan();
-
+				//System.out.println("BatchEdgeDeleteHandler.runbatchedgedelete() in while");
 			}
 
 			inputFile.close();

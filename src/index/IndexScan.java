@@ -168,7 +168,6 @@ public class IndexScan extends Iterator {
 
 		try {
 			nextentry = indScan.get_next();
-			System.out.println("IndexScan.get_next() next entry : "+nextentry);
 		} catch (Exception e) {
 			throw new IndexException(e, "IndexScan.java: BTree error");
 		}

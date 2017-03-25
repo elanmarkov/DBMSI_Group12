@@ -65,73 +65,9 @@ public class EdgeQueryHandler {
 		System.out.println(" ]");
 	}
 
-	private void sortEdgesold(Edge edgesArray[],int sortParameter) 
-	{
-		Edge temp;
-		Node sourceNode1 = null;
-		Node sourceNode2 = null;
-		Node destinationNode1 = null;
-		Node destinationNode2 = null;
-		for (int i = 0; i < edgesArray.length; i++) 
-		{
-			for (int j = i + 1; j < edgesArray.length; j++) 
-			{
-				if(sortParameter == 0) {
-					try{
-						sourceNode1 = nodes.getNode(edgesArray[i].getSource());
-						sourceNode2 = nodes.getNode(edgesArray[j].getSource());
-					} catch(Exception e) {
-						e.printStackTrace();
-					}
-					if (sourceNode1.getLabel().compareTo(sourceNode2.getLabel()) > 0) 
-					{
-						temp = edgesArray[i];
-						edgesArray[i] = edgesArray[j];
-						edgesArray[j] = temp;
-					}
-				} else if(sortParameter == 1) {
-					System.out.println("EdgeQueryHandler.sortEdges() i: "+i +" j : "+j);
-					try{
-						destinationNode1 = nodes.getNode(edgesArray[i].getDestination());
-						destinationNode2 = nodes.getNode(edgesArray[j].getDestination());
-					} catch(Exception e) {
-						e.printStackTrace();
-					}
-					if (destinationNode1.getLabel().compareTo(destinationNode2.getLabel()) > 0) 
-					{
-						temp = edgesArray[i];
-						edgesArray[i] = edgesArray[j];
-						edgesArray[j] = temp;
-					}
-				} else if(sortParameter == 2) {
-					if (edgesArray[i].getLabel().compareTo(edgesArray[j].getLabel()) > 0) 
-					{
-						temp = edgesArray[i];
-						edgesArray[i] = edgesArray[j];
-						edgesArray[j] = temp;
-					}
-				}
-			}
-		}
-		System.out.println("EdgeQueryHandler.sortEdges() done sorting ");
-		for(int i = 0; i < edgesArray.length; i++) {
-			try {
-				print(edgesArray[i],nodes);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		System.out.println("EdgeQueryHandler.sortEdges() done printing");
-	}
-
 	private void sortEdges(Edge edgesArray[],int sortParameter) 
 	{
-		Edge temp;
 		Node sourceNode1 = null;
-		Node sourceNode2 = null;
-		Node destinationNode1 = null;
-		Node destinationNode2 = null;
 		Map<String, Edge> map = new TreeMap<String, Edge>();
 		for (int i = 0; i < edgesArray.length; i++) 
 		{

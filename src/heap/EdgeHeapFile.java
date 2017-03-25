@@ -41,7 +41,7 @@ public class EdgeHeapFile extends Heapfile{
 		Tuple tp= super.getRecord(eid);
 		if(tp!=null){
 			Edge edge = new Edge(tp.data, 0);
-			try {
+			/*try {
 				String eLbl = Convert.getStrValue(0, edge.data, Edge.LABEL_MAX_LENGTH+2);
 				
 				NID srcId = new NID();
@@ -58,7 +58,7 @@ public class EdgeHeapFile extends Heapfile{
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}*/
 			return edge;
 		}else{
 			return null;

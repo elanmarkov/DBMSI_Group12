@@ -33,7 +33,7 @@ public class NodeQueryHandler {
 	private void sortNodes(Node nodes[]) {
 		Node temp;
 		AttrType [] jtype = new AttrType[2];
-		jtype[1] = new AttrType (AttrType.attrString);
+		jtype[0] = new AttrType (AttrType.attrString);
 		jtype[1] = new AttrType (AttrType.attrDesc);
 		for (int i = 0; i < nodes.length; i++) 
 		{
@@ -63,7 +63,7 @@ public class NodeQueryHandler {
 		double tempDis;
 		Node temp;
 		AttrType [] jtype = new AttrType[2];
-		jtype[1] = new AttrType (AttrType.attrString);
+		jtype[0] = new AttrType (AttrType.attrString);
 		jtype[1] = new AttrType (AttrType.attrDesc);
 		target.set(Integer.parseInt(argv[4]), Integer.parseInt(argv[5]),Integer.parseInt(argv[6]),Integer.parseInt(argv[7]),Integer.parseInt(argv[8]));
 		for(int i = 0; i < distance.length; i++) {
@@ -121,7 +121,7 @@ public class NodeQueryHandler {
 			while(!done) {
 				Tuple t = new Tuple();
 				try {
-					t = iscan.getNextNode();
+					t = iscan.get_next();
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					status = FAIL;
@@ -183,7 +183,7 @@ public class NodeQueryHandler {
 			while(!done) {
 				Tuple t = new Tuple();
 				try {
-					t = iscan.getNextNode();
+					t = iscan.get_next();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					status = FAIL;
@@ -195,7 +195,7 @@ public class NodeQueryHandler {
 				}
 				nodes[i] = new Node(t);
 				try {
-					nodes[i].print(null);
+					nodes[i].print(attrType);
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
@@ -245,7 +245,7 @@ public class NodeQueryHandler {
 			while(!done) {
 				Tuple t = new Tuple();
 				try {
-					t = iscan.getNextNode();
+					t = iscan.get_next();
 				} catch (Exception e) {
 					status = FAIL;
 					e.printStackTrace();
@@ -284,10 +284,11 @@ public class NodeQueryHandler {
 		IndexScan iscan = null;
 		CondExpr[] expr = new CondExpr[2];
 	    expr[0] = new CondExpr();
-	    //expr[0].op = new AttrOperator(AttrOperator.aopLE);
+	    expr[0].op = new AttrOperator(AttrOperator.aopLE);
 	    expr[0].operand1.desc = desc;
 	    expr[0].type1 = new AttrType(AttrType.attrDesc);
 	    expr[0].type2 = new AttrType(AttrType.attrSymbol);
+	    expr[0].operand2.symbol = new FldSpec(new RelSpec(RelSpec.outer), 2);
 	    expr[0].distance = distance;
 	    expr[0].next = null;
 	    expr[1] = null;
@@ -304,7 +305,7 @@ public class NodeQueryHandler {
 			while(!done) {
 				Tuple t = new Tuple();
 				try {
-					t = iscan.getNextNode();
+					t = iscan.get_next();
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				} 
@@ -399,7 +400,7 @@ public class NodeQueryHandler {
 			while (!done) { 
 
 				try {
-					t = isscan.getNextNode();
+					t = isscan.get_next();
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -544,15 +545,16 @@ public class NodeQueryHandler {
 		}
 		Node[] nodesArray = new Node[nodeCount];
 		CondExpr[] expr = new CondExpr[2];
-	    expr[0] = new CondExpr();
+		expr[0] = new CondExpr();
 	    expr[0].op = new AttrOperator(AttrOperator.aopLE);
+	    expr[0].operand1.desc = desc;
 	    expr[0].type1 = new AttrType(AttrType.attrDesc);
 	    expr[0].type2 = new AttrType(AttrType.attrSymbol);
-	    expr[0].operand1.desc = desc;
+	    expr[0].operand2.symbol = new FldSpec(new RelSpec(RelSpec.outer), 2);
 	    expr[0].distance = distance;
 	    expr[0].next = null;
 	    expr[1] = null;
-
+	    
 		IndexScan iscan = null;
 		IndexScan eiscan = null;
 		try {
@@ -569,7 +571,7 @@ public class NodeQueryHandler {
 			boolean done = false;
 			while (!done) { 
 				try {
-					t = iscan.getNextNode();
+					t = iscan.get_next();
 					if (t == null) {
 						done = true;
 						break;
@@ -579,6 +581,7 @@ public class NodeQueryHandler {
 						nodesArray[i] = n;
 						i++;
 					//}
+					n.print(attrType);
 				}
 				catch (Exception e) {
 					status = FAIL;

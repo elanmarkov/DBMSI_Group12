@@ -44,10 +44,10 @@ public class NodeHeapFile extends Heapfile{
 		nid.slotNo=rid.slotNo;
 		if(tp!=null){
 			Node node = new Node(tp.data, 0);
-			Descriptor desc = Convert.getDescValue(Node.LABEL_MAX_LENGTH+2, tp.data);
+			/*Descriptor desc = Convert.getDescValue(Node.LABEL_MAX_LENGTH+2, tp.data);
 			String nodeLbl = Convert.getStrValue(0, tp.data, Node.LABEL_MAX_LENGTH+2);
 			node.setDesc(desc);
-			node.setLabel(nodeLbl);
+			node.setLabel(nodeLbl);*/
 			return node;
 		}else{
 			return null;

@@ -22,7 +22,7 @@ public class Escan extends Scan{
 			eid.slotNo=rid.slotNo;
 			if(tp!=null){
 				Edge edge = new Edge(tp.data, 0);
-				try {
+				/*try {
 					String eLbl = Convert.getStrValue(0, edge.data, Edge.LABEL_MAX_LENGTH+2);
 					
 					NID srcId = new NID();
@@ -39,7 +39,7 @@ public class Escan extends Scan{
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				}*/
 				return edge;
 			}else{
 				return null;

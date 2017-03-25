@@ -93,6 +93,7 @@ public class PredEval
 			value.setHdr((short)1, val_type, null);
 			value.setDescFld(1, temp_ptr.operand1.desc);
 			comparison_type.attrType = AttrType.attrDesc;
+			tuple1 = value;
 			break;
 		default:
 		  break;
@@ -102,7 +103,7 @@ public class PredEval
 	      val_type[0] = new AttrType(temp_ptr.type2.attrType);
 	      fld2        = 1;
 	      switch (temp_ptr.type2.attrType)
-		{
+	      {
 		case AttrType.attrInteger:
 		  value.setHdr((short)1, val_type, null);
 		  value.setIntFld(1, temp_ptr.operand2.integer);
@@ -143,7 +144,7 @@ public class PredEval
 		throw new PredEvalException (e,"TupleUtilsException is caught by PredEval.java");
 	      }
 	      op_res = false; 
-	      if(temp_ptr.type1.attrType == AttrType.attrDesc && temp_ptr.type2.attrType == AttrType.attrDesc) {
+	      if(comparison_type.attrType == AttrType.attrDesc) {
 	    	  switch (temp_ptr.op.attrOperator)
 		  		{
 		  		case AttrOperator.aopEQ:

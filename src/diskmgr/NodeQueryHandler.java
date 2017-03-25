@@ -240,24 +240,47 @@ public class NodeQueryHandler {
 			status = FAIL;
 			e.printStackTrace();
 		}
+		Tuple t = null;
 		boolean done = false;
 		if(status == OK) {
 			while(!done) {
-				Tuple t = new Tuple();
+				
 				try {
-					t = iscan.get_next();
+					Tuple check = iscan.get_next();
+					if (check == null){
+						done = true;
+						break;
+					}
+					t = new Tuple(check); 
 				} catch (Exception e) {
 					status = FAIL;
 					e.printStackTrace();
 				}
-				if(t == null) {
-					done = true;
-					break;
-				}
 				nodes[i] = new Node(t);
+				/*AttrType [] jtype = new AttrType[2];
+				jtype[0] = new AttrType (AttrType.attrString);
+				jtype[1] = new AttrType (AttrType.attrDesc);
+				try {
+					nodes[i].print(jtype);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}*/
 				i++;
 			}
 			sortNodes1(nodes,argv);
+			/*AttrType [] jtype = new AttrType[2];
+			jtype[0] = new AttrType (AttrType.attrString);
+			jtype[1] = new AttrType (AttrType.attrDesc);
+			for(int as = 0; as < nodes.length; as++) {
+				try {
+					System.out.println("asd\n");
+					nodes[as].print(jtype);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}*/
 			try {
 				iscan.close();
 			} catch (Exception e) {
@@ -564,18 +587,18 @@ public class NodeQueryHandler {
 			status = FAIL;
 			e.printStackTrace();
 		}
-
+		
 		if ( status == OK ) {
-			Tuple t = new Tuple();
-
+			Tuple t = null;
 			boolean done = false;
-			while (!done) { 
+			while (!done) {
 				try {
-					t = iscan.get_next();
-					if (t == null) {
+					Tuple check = iscan.get_next();
+					if (check == null) {
 						done = true;
 						break;
 					}
+					t = new Tuple(check);
 					Node n = new Node(t);
 					//if(n.getDesc().distance(desc) == distance) {
 						nodesArray[i] = n;

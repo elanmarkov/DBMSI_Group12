@@ -12,6 +12,7 @@ import global.EID;
 import global.IndexType;
 import global.NID;
 import global.SystemDefs;
+import global.TupleOrder;
 import heap.Edge;
 import heap.EdgeHeapFile;
 import heap.Escan;
@@ -23,8 +24,17 @@ import heap.Tuple;
 import index.IndexException;
 import index.IndexScan;
 import index.UnknownIndexTypeException;
+import iterator.FileScan;
+import iterator.FileScanException;
 import iterator.FldSpec;
+import iterator.InvalidRelation;
+import iterator.JoinsException;
+import iterator.LowMemException;
 import iterator.RelSpec;
+import iterator.Sort;
+import iterator.SortException;
+import iterator.TupleUtilsException;
+import iterator.UnknowAttrType;
 import zindex.ZCurve;
 
 public class EdgeQueryHandler {
@@ -37,6 +47,7 @@ public class EdgeQueryHandler {
 	BTreeFile edgeLabels;
 	BTreeFile edgeWeights;
 	graphDB db;
+	private static int SORTPGNUM = 9;
 	public EdgeQueryHandler(NodeHeapFile nodes, EdgeHeapFile edges, BTreeFile nodeLabels, 
 			ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights, graphDB db) {
 
@@ -187,7 +198,7 @@ public class EdgeQueryHandler {
 		if(status == OK) {
 			while(!done) {
 				try {
-					t = iscan.getNextEdge();
+					t = iscan.get_next();
 				}
 				catch (Exception e) {
 					status = FAIL;
@@ -242,7 +253,7 @@ public class EdgeQueryHandler {
 			while(!done) {
 				t = new Tuple();
 				try {
-					t = iscan.getNextEdge();
+					t = iscan.get_next();
 				} catch (Exception e) {
 					status = FAIL;
 					e.printStackTrace();
@@ -290,7 +301,7 @@ public class EdgeQueryHandler {
 			while(!done) {
 				t = new Tuple();
 				try {
-					t = iscan.getNextEdge();
+					t = iscan.get_next();
 				} catch (Exception e) {
 					status = FAIL;
 					e.printStackTrace();
@@ -338,7 +349,7 @@ public class EdgeQueryHandler {
 			while(!done) {
 				t = new Tuple();
 				try {
-					t = iscan.getNextEdge();
+					t = iscan.get_next();
 				} catch (Exception e) {
 					status = FAIL;
 					e.printStackTrace();
@@ -386,7 +397,7 @@ public class EdgeQueryHandler {
 			while(!done) {
 				t = new Tuple();
 				try {
-					t = iscan.getNextEdge();	//Getting the next Edge
+					t = iscan.get_next();	//Getting the next Edge
 				} catch (Exception e) {
 					status = FAIL;
 					e.printStackTrace();
@@ -426,7 +437,7 @@ public class EdgeQueryHandler {
 			while(!done) {
 				t = new Tuple();
 				try {
-					t = iscan.getNextEdge();
+					t = iscan.get_next();
 				} catch (Exception e) {
 					status = FAIL;
 					e.printStackTrace();
@@ -485,7 +496,7 @@ public class EdgeQueryHandler {
 			i=0;
 
 			try {
-				t = iscan.getNextEdge();
+				t = iscan.get_next();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -506,7 +517,7 @@ public class EdgeQueryHandler {
 				i++; 
        
 				try {
-					t = iscan.getNextEdge();
+					t = iscan.get_next();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -709,6 +720,24 @@ public class EdgeQueryHandler {
 		return status;
 	}
 	public boolean edgeHeapTest3(String argv[]){
+		AttrType[] attrType = new AttrType[6];				//Initiating the Index Scan......
+		attrType[0] = new AttrType(AttrType.attrString);
+		attrType[1] = new AttrType(AttrType.attrInteger);
+		attrType[2] = new AttrType(AttrType.attrInteger);
+		attrType[3] = new AttrType(AttrType.attrInteger);
+		attrType[4] = new AttrType(AttrType.attrInteger);
+		attrType[5] = new AttrType(AttrType.attrInteger);
+		FldSpec[] projlist = new FldSpec[6];
+		RelSpec rel = new RelSpec(RelSpec.outer); 
+		projlist[0] = new FldSpec(rel, 1);
+		projlist[1] = new FldSpec(rel, 2);
+		projlist[2] = new FldSpec(rel, 3);
+		projlist[3] = new FldSpec(rel, 4);
+		projlist[4] = new FldSpec(rel, 5);
+		projlist[5] = new FldSpec(rel, 6);
+		short[] attrSize = new short[1];
+		attrSize[0] = Tuple.LABEL_MAX_LENGTH;
+		
 		boolean status = OK;
 		int i = 0;
 		EID eid = new EID();
@@ -720,18 +749,17 @@ public class EdgeQueryHandler {
 			e1.printStackTrace();
 		}
 		Edge[] edgesArray = new Edge[edgeCount];
-		Escan scan = null;
+		FileScan scan = null;
 		if ( status == OK ) {	
 
 			try {
-				scan = f.openScan();
-			}
-			catch (Exception e) {
-				status = FAIL;
-				System.err.println ("*** Error opening scan\n");
+				String fileName = edges.getFileName();
+				scan = new FileScan(fileName, attrType, attrSize, (short) 6, 6, projlist, null);
+			} catch (FileScanException | TupleUtilsException | InvalidRelation | IOException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
+			
 			if ( status == OK &&  SystemDefs.JavabaseBM.getNumUnpinnedBuffers() 
 					== SystemDefs.JavabaseBM.getNumBuffers() ) {
 				System.err.println ("*** The heap-file scan has not pinned the first page\n");
@@ -740,26 +768,23 @@ public class EdgeQueryHandler {
 		}
 
 		if ( status == OK ) {
-			Edge edge = new Edge();
-
-			boolean done = false;
-			while (!done) { 
-				try {
-					edge = scan.getNext(eid);	
-					if (edge == null) {
-						done = true;
-						break;
-					}
-					edgesArray[i] = edge;
-					i++;
+			try {
+				Sort sort = new Sort(attrType, (short) 6, attrSize, scan, 1, 
+						new TupleOrder(TupleOrder.Ascending), Tuple.LABEL_MAX_LENGTH, SORTPGNUM);
+				Tuple t=sort.get_next();
+				while(t!=null){
+					Edge e = new Edge(t);
+					print(e, nodes);
+					t=sort.get_next();
 				}
-				catch (Exception e) {
-					status = FAIL;
-					e.printStackTrace();
-				}
-			}
-			scan.closescan();
-			sortEdges(edgesArray,2);
+				scan.close();
+				sort.close();
+			
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				status = FAIL;
+				e.printStackTrace();
+			} 
 		}
 		return status;
 	}

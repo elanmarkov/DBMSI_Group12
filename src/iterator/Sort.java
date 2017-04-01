@@ -104,10 +104,10 @@ public class Sort extends Iterator implements GlobalConst
       temp_tuple =i_buf[i].Get(temp_tuple);  // need io_bufs.java
             
       if (temp_tuple != null) {
-  /*
-  System.out.print("Get tuple from run " + i);
-  temp_tuple.print(_in);
-  */
+  
+  //System.out.print("Get tuple from run " + i);
+  //temp_tuple.print(_in);
+  
   cur_node.tuple = temp_tuple; // no copy needed
   try {
     Q.enq(cur_node);
@@ -797,7 +797,7 @@ public class Sort extends Iterator implements GlobalConst
       
       // generate runs
       Nruns = generate_runs(max_elems_in_heap, _in[_sort_fld-1], sortFldLen);
-      //      System.out.println("Generated " + Nruns + " runs");
+          //System.out.println("Generated " + Nruns + " runs");
       
       // setup state to perform merge of runs. 
       // Open input buffers for all the input file
@@ -817,6 +817,12 @@ public class Sort extends Iterator implements GlobalConst
     else 
       return null; 
   }
+  
+  private void closeSpoofIbuf(){
+	  for (int j=0; j<i_buf.length; j++) {
+		  i_buf[j].close();
+	  }
+  }
 
   /**
    * Cleaning up, including releasing buffer pages from the buffer pool
@@ -826,6 +832,7 @@ public class Sort extends Iterator implements GlobalConst
    */
   public void close() throws SortException, IOException
   {
+	  closeSpoofIbuf();
     // clean up
     if (!closeFlag) {
        
@@ -838,7 +845,7 @@ public class Sort extends Iterator implements GlobalConst
 
       if (useBM) {
   try {
-    free_buffer_pages(_n_pages, bufs_pids);
+	free_buffer_pages(_n_pages, bufs_pids);
   } 
   catch (Exception e) {
     throw new SortException(e, "Sort.java: BUFmgr error");

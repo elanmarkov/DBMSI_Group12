@@ -4,6 +4,7 @@ CSE 510 Project, Group 12.
 */
 package tests;
 
+import global.GlobalConst;
 import global.SystemDefs;
 
 import java.io.FileNotFoundException;
@@ -65,7 +66,7 @@ public class testcases {
 			
 			if(splited[0].equals("batchnodeinsert")) {
 				if(!graphExists){
-					sysdef = new SystemDefs(splited[2],1000,200,"Clock");
+					sysdef = new SystemDefs(splited[2],1000,GlobalConst.NUMBUF+100,"Clock");
 					try {
 					SystemDefs.JavabaseDB.init();
 					} catch (Exception e) {

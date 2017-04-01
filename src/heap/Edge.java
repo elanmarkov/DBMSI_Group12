@@ -14,7 +14,7 @@ public class Edge extends Tuple {
 	public static final AttrType[] types = { new AttrType(AttrType.attrString), new AttrType(AttrType.attrInteger),
 			new AttrType(AttrType.attrInteger), new AttrType(AttrType.attrInteger), new AttrType(AttrType.attrInteger),
 			new AttrType(AttrType.attrInteger) };
-	public static final short[] sizes = { LABEL_MAX_LENGTH, 20 };
+	public static final short[] sizes = { LABEL_MAX_LENGTH, 4,4,4,4,4 };
 	public static final short numFld = 6;
 
 	public Edge() {
@@ -71,7 +71,7 @@ public class Edge extends Tuple {
 		}
 		if (tp != null) {
 			this.data = tp.data;
-			try {
+			/*try {
 				this.label = Convert.getStrValue(0, this.data, Edge.LABEL_MAX_LENGTH + 2);
 				NID srcId = new NID();
 				srcId.pageNo.pid = Convert.getIntValue(Edge.LABEL_MAX_LENGTH + 2, this.data);
@@ -84,7 +84,7 @@ public class Edge extends Tuple {
 				this.weight = Convert.getIntValue(Edge.LABEL_MAX_LENGTH + 2 + 4 + 4 + 4 + 4, this.data);
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
+			}*/
 		}
 	}
 
@@ -215,10 +215,10 @@ public class Edge extends Tuple {
 
 	public void print(AttrType type[]) throws IOException {
 		System.out.print("[");
-		System.out.print("edge label : " + this.label);
-		System.out.print("source : slotNo : " + this.source.slotNo + ", pageNo :" + this.source.pageNo);
-		System.out.print("Destination : slotNo : " + this.destination.slotNo + ", pageNo :" + this.destination.pageNo);
-		System.out.print("weight : " + this.weight);
+		System.out.print("edge label : " + this.getLabel());
+		System.out.print("source : slotNo : " + this.getSource().slotNo + ", pageNo :" + this.getSource().pageNo);
+		System.out.print("Destination : slotNo : " + this.getDestination().slotNo + ", pageNo :" + this.getDestination().pageNo);
+		System.out.print("weight : " + this.getWeight());
 		System.out.println("]");
 	}
 

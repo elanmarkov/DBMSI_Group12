@@ -112,8 +112,8 @@ public class graphDB extends DB {
 	   	HFBufMgrException,
 	   	HFDiskMgrException,
 	   	Exception {
-		nodes = new NodeHeapFile(null);
-		edges = new EdgeHeapFile(null);
+		nodes = new NodeHeapFile("nodes");
+		edges = new EdgeHeapFile("edges");
 		nodeDesc = new ZCurve(filename + "NODEDESC");
 		if(type == 1) {
 		// full delete

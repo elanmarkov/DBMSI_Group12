@@ -110,6 +110,7 @@ public class BatchEdgeInsertHandler {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			scan.closescan();
 		}
 		
 		// Output releavant statistics

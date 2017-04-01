@@ -1,13 +1,16 @@
 /*
 Test Driver for Graph Database test cases by ____.
 CSE 510 Project, Group 12.
-*/
+ */
 package tests;
 
 import global.SystemDefs;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+
+import bufmgr.BufMgr;
 import diskmgr.PCounter;
 
 /** Driver class for the test cases for the Graph Database. */
@@ -54,7 +57,8 @@ public class testcases {
 	{
 		SystemDefs sysdef; 
 		boolean exit = false;
-		boolean graphExists = false;
+		String graphDB = null;
+		int numBuf = 500;
 		PCounter pc = new PCounter();
 		printLongMenu();
 		do {	
@@ -62,85 +66,75 @@ public class testcases {
 			Scanner sc = new Scanner(System.in);
 			String line = sc.nextLine();
 			String[] splited = line.split("\\s+");
-			
+			if(splited[0].equals("batchnodeinsert") || splited[0].equals("batchedgeinsert") || 
+					splited[0].equals("batchnodedelete") || splited[0].equals("batchedgedelete")) {
+				graphDB = splited[2];
+			} else if(splited[0].equals("nodequery") || splited[0].equals("edgequery")) {
+				graphDB = splited[1];
+				numBuf = Integer.parseInt(splited[2]);
+			}
+			File f = new File(graphDB);
+			if(f.exists()) {
+				SystemDefs.MINIBASE_RESTART_FLAG = true;
+			} else {
+				SystemDefs.MINIBASE_RESTART_FLAG = false;
+			}
+			try {
+				if(SystemDefs.JavabaseDB != null)
+					SystemDefs.JavabaseDB.closeAllFiles();
+				if(SystemDefs.JavabaseDB != null)
+					SystemDefs.JavabaseBM.flushAllPages();
+				sysdef = new SystemDefs(graphDB,1000,numBuf,"Clock");
+				SystemDefs.JavabaseDB.init();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 			if(splited[0].equals("batchnodeinsert")) {
-				if(!graphExists){
-					sysdef = new SystemDefs(splited[2],1000,200,"Clock");
-					try {
-					SystemDefs.JavabaseDB.init();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					graphExists = true;
-				}
 				batchnodeinsert insertObj = new batchnodeinsert();
 				try {
 					insertObj.runTests(splited[1],pc);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
+
 			} else if(splited[0].equals("batchedgeinsert")) {
-				if(!graphExists) {
-					System.out.println("Graph DB does not exist");
-				} else {
-					batchedgeinsert insertObj = new batchedgeinsert();
-					try {
-					insertObj.runTests(splited[1],pc);
-					} catch(Exception e) {
-						e.printStackTrace();
-					}
-				}
-			} else if(splited[0].equals("batchnodedelete")) {
-				if(!graphExists) {
-					System.out.println("Graph DB does not exist");
-				} else {
-					BatchNodeDelete deleteObj = new BatchNodeDelete();
-					deleteObj.runDeleteNode(splited);
-				}
-			} else if(splited[0].equals("batchedgedelete")) {
-				if(!graphExists) {
-					System.out.println("Graph DB does not exist");
-				} else {
-					BatchEdgeDelete deleteObj = new BatchEdgeDelete();
-					try {
-						deleteObj.batchedgedeletefunction(splited);
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					
-				}
-			} else if(splited[0].equals("nodequery")) {
+				batchedgeinsert insertObj = new batchedgeinsert();
 				try {
-					//SystemDefs.JavabaseBM.resetNumBuffers(100);
-				} catch (Exception e) {
+					insertObj.runTests(splited[1],pc);
+				} catch(Exception e) {
 					e.printStackTrace();
 				}
+			} else if(splited[0].equals("batchnodedelete")) {
+				BatchNodeDelete deleteObj = new BatchNodeDelete();
+				deleteObj.runDeleteNode(splited);
+
+			} else if(splited[0].equals("batchedgedelete")) {
+				BatchEdgeDelete deleteObj = new BatchEdgeDelete();
+				try {
+					deleteObj.batchedgedeletefunction(splited);
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else if(splited[0].equals("nodequery")) {
 				PCounter.initialize();
 				String[] newSplited = new String[splited.length-1];
 				System.arraycopy(splited, 1, newSplited, 0, newSplited.length);
-				if(!graphExists) {
-					System.out.println("Graph DB does not exist");
-				} else {
-					nodequery nQuery = new nodequery();
-					boolean _pass = nQuery.runTests(newSplited);
-					if(_pass) {
-						printReadWriteCount();
-					}
+				nodequery nQuery = new nodequery();
+				boolean _pass = nQuery.runTests(newSplited);
+				if(_pass) {
+					printReadWriteCount();
 				}
 			} else if(splited[0].equals("edgequery")) {
 				PCounter.initialize();
 				String[] newSplited = new String[splited.length-1];
 				System.arraycopy(splited, 1, newSplited, 0, newSplited.length);
-				if(!graphExists) {
-					System.out.println("Graph DB does not exist");
-				} else {
-					EdgeQuery eQuery = new EdgeQuery();
-					boolean _pass = eQuery.runTests(newSplited);
-					if(_pass) {
-						printReadWriteCount();
-					}
+
+				EdgeQuery eQuery = new EdgeQuery();
+				boolean _pass = eQuery.runTests(newSplited);
+				if(_pass) {
+					printReadWriteCount();
 				}
 			} else if(splited[0].equals("exit")) {
 				exit = true;
@@ -148,7 +142,7 @@ public class testcases {
 			} else if(splited[0].equals("menu")) {
 				printLongMenu();
 			}
-			
+
 		} while(!exit);
 	}
 }

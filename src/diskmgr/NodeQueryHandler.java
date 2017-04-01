@@ -108,9 +108,17 @@ public class NodeQueryHandler {
 		attrSize[1] = 10;
 		IndexScan iscan = null;
 		String filename = nodes.getFileName();
+		String zfilename = nodeDesc.getFileName();
+		
+		try {
+			System.out.println("NodeQueryHandler.nodeIndexTest0()" + filename+ " record count " +nodes.getNodeCnt() +" zfilename " + zfilename);
+		} catch (Exception e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		} 
 		//need to change test1.in to actual rel name
 		try {
-			iscan = new IndexScan(new IndexType(IndexType.Z_Index), filename, "GraphDB0NODEDESC", attrType, attrSize, 2, 2, projlist, null, 2, false);
+			iscan = new IndexScan(new IndexType(IndexType.Z_Index), filename, zfilename, attrType, attrSize, 2, 2, projlist, null, 2, false);
 		}
 		catch (Exception e) {
 			status = FAIL;
@@ -172,7 +180,7 @@ public class NodeQueryHandler {
 		Node nodes[] = new Node[nodeCount];
 		//need to change test1.in to actual rel name
 		try {
-			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0NODELABEL" , attrType, attrSize, 2, 2, projlist, null, 1, false);
+			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDBNODELABEL" , attrType, attrSize, 2, 2, projlist, null, 1, false);
 		}
 		catch (Exception e) {
 			status = FAIL;
@@ -234,7 +242,7 @@ public class NodeQueryHandler {
 		Node nodes[] = new Node[nodeCount];
 		//need to change test1.in to actual rel name
 		try {
-			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0NODELABEL", attrType, attrSize, 2, 2, projlist, null, 1, false);
+			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDBNODELABEL", attrType, attrSize, 2, 2, projlist, null, 1, false);
 		}
 		catch (Exception e) {
 			status = FAIL;
@@ -317,7 +325,7 @@ public class NodeQueryHandler {
 	    expr[1] = null;
 		String filename = nodes.getFileName();
 		try {
-			iscan = new IndexScan(new IndexType(IndexType.Z_Index), filename, "GraphDB0NODEDESC", attrType, attrSize, 2, 2, projlist, expr, 2, false);
+			iscan = new IndexScan(new IndexType(IndexType.Z_Index), filename, "GraphDBNODEDESC", attrType, attrSize, 2, 2, projlist, expr, 2, false);
 		}
 		catch (Exception e) {
 			status = FAIL;
@@ -409,7 +417,7 @@ public class NodeQueryHandler {
 		IndexScan eiscan = null;
 
 		try {
-			isscan = new IndexScan(new IndexType(IndexType.B_Index), Nfilename, "GraphDB0NODELABEL", attrType, attrSize, 2, 2, projlist, null, 1, false);
+			isscan = new IndexScan(new IndexType(IndexType.B_Index), Nfilename, "GraphDBNODELABEL", attrType, attrSize, 2, 2, projlist, null, 1, false);
 		}
 		catch (Exception e) {
 			status = FAIL;
@@ -454,7 +462,7 @@ public class NodeQueryHandler {
 		if(nodeExists) {
 
 			try {
-				eiscan = new IndexScan(new IndexType(IndexType.B_Index), Efilename, "GraphDB0EDGELABEL", EattrType, EattrSize, 6, 6, Eprojlist, null, 1, false);
+				eiscan = new IndexScan(new IndexType(IndexType.B_Index), Efilename, "GraphDBEDGELABEL", EattrType, EattrSize, 6, 6, Eprojlist, null, 1, false);
 			}
 			catch (Exception e) {
 				status = FAIL;
@@ -581,7 +589,7 @@ public class NodeQueryHandler {
 		IndexScan iscan = null;
 		IndexScan eiscan = null;
 		try {
-			iscan = new IndexScan(new IndexType(IndexType.Z_Index), Nfilename, "GraphDB0NODEDESC", attrType, attrSize, 2, 2, projlist, expr, 2, false);
+			iscan = new IndexScan(new IndexType(IndexType.Z_Index), Nfilename, "GraphDBNODEDESC", attrType, attrSize, 2, 2, projlist, expr, 2, false);
 		}
 		catch (Exception e) {
 			status = FAIL;
@@ -626,7 +634,7 @@ public class NodeQueryHandler {
 			status = OK;
 			if ( status == OK ) {
 				try {
-					eiscan = new IndexScan(new IndexType(IndexType.B_Index), Efilename, "GraphDB0EDGELABEL", EattrType, EattrSize, 6, 6, Eprojlist, null, 1, false);
+					eiscan = new IndexScan(new IndexType(IndexType.B_Index), Efilename, "GraphDBEDGELABEL", EattrType, EattrSize, 6, 6, Eprojlist, null, 1, false);
 				}
 				catch (Exception e) {
 					status = FAIL;

@@ -173,6 +173,18 @@ public class ZCurve extends IndexFile{
 		return this.btree.Delete(key, rid);
 	}
 	
+	public void close() {
+		try {
+		this.btree.close();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public String getFileName() {
+		return this.fileName;
+	}
+	
 	
 	
 }

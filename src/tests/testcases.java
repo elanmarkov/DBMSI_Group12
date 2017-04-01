@@ -4,6 +4,7 @@ CSE 510 Project, Group 12.
  */
 package tests;
 
+import global.GlobalConst;
 import global.SystemDefs;
 
 import java.io.File;

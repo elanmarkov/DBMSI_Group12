@@ -257,7 +257,9 @@ public class Tuple implements GlobalConst {
 	public String getStrFld(int fldNo) throws IOException, FieldNumberOutOfBoundException {
 		String val;
 		if ((fldNo > 0) && (fldNo <= fldCnt)) {
-			val = Convert.getStrValue(fldOffset[fldNo - 1], data, fldOffset[fldNo] - fldOffset[fldNo - 1]); // strlen+2
+			int length = fldOffset[fldNo] - fldOffset[fldNo - 1];
+			//System.out.println("Tuple.getStrFld() len : "+length);
+			val = Convert.getStrValue(fldOffset[fldNo - 1], data, length); // strlen+2
 			return val;
 		} else
 			throw new FieldNumberOutOfBoundException(null, "TUPLE:TUPLE_FLDNO_OUT_OF_BOUND");
@@ -581,8 +583,8 @@ public class Tuple implements GlobalConst {
 	}
 
 	public static String getFixedLengthLable(String label) {
-		/*
-		if (label.length() > LABEL_MAX_LENGTH) {
+		
+		/*if (label.length() > LABEL_MAX_LENGTH) {
 			return label.substring(0, LABEL_MAX_LENGTH);
 		} else {
 			StringBuffer sb = new StringBuffer();

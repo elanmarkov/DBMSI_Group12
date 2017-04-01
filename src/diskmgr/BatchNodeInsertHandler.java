@@ -84,6 +84,8 @@ public class BatchNodeInsertHandler {
 				e.printStackTrace();
 			}
 		}
+		nodeLabels.close();
+		nodeDesc.close();
 		br.close();
 		
 		// Output relevant statistics

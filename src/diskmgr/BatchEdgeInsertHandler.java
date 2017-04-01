@@ -54,7 +54,7 @@ public class BatchEdgeInsertHandler {
 		
 		BufferedReader br = new BufferedReader(new FileReader(System.getProperty("user.dir")
 				+ "/" +  edgeFileName));
-
+		Nscan scan =null;
 		while ((line = br.readLine()) != null)
 		{
 			String[] splited = line.split("\\s+");
@@ -68,10 +68,9 @@ public class BatchEdgeInsertHandler {
 			boolean srcFound = false;
 			boolean destFound = false;
 			
-			Nscan scan = nodeHeapFile.openScan();
+			scan = nodeHeapFile.openScan();
 			NID nid = new NID();
 			scanned_node = scan.getNext(nid); 
-			
 			do
 			{	
 				if (Objects.equals(scanned_node,null))
@@ -110,7 +109,17 @@ public class BatchEdgeInsertHandler {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			scan.closescan();
+			if(scan!=null){
+				scan.closescan();
+			}
+		}
+		try {
+			edgeLabels.close();
+			edgeWeights.close();
+		} catch (PageUnpinnedException | InvalidFrameNumberException | HashEntryNotFoundException
+				| ReplacerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		// Output releavant statistics

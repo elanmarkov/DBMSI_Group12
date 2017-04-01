@@ -35,6 +35,10 @@ import btree.PinPageException;
 import btree.RecordNotFoundException;
 import btree.RedistributeException;
 import btree.UnpinPageException;
+import bufmgr.HashEntryNotFoundException;
+import bufmgr.InvalidFrameNumberException;
+import bufmgr.PageUnpinnedException;
+import bufmgr.ReplacerException;
 import catalog.Utility;
 import global.AttrType;
 import global.RID;
@@ -185,6 +189,24 @@ public class ZCurve extends IndexFile{
 		return this.fileName;
 	}
 	
+	
+	public void close(){
+		try {
+			this.btree.close();
+		} catch (PageUnpinnedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidFrameNumberException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (HashEntryNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ReplacerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	
 }

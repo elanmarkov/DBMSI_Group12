@@ -466,7 +466,7 @@ public class NodeQueryHandler {
 				boolean done = false;
 				while (!done) { 
 					try {
-						et = eiscan.getNextEdge();
+						et = eiscan.get_next();
 						if (et == null) {
 							done = true;
 							break;
@@ -604,7 +604,7 @@ public class NodeQueryHandler {
 						nodesArray[i] = n;
 						i++;
 					//}
-					n.print(attrType);
+					//n.print(attrType);
 				}
 				catch (Exception e) {
 					status = FAIL;
@@ -639,7 +639,7 @@ public class NodeQueryHandler {
 				boolean done = false;
 				while (!done) { 
 					try {
-						t = eiscan.getNextEdge();
+						t = eiscan.get_next();
 						if (t == null) {
 							done = true;
 							break;

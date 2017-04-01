@@ -130,56 +130,5 @@ public abstract class Iterator implements Flags {
     return tmpId;
 
   } // end of newPage
-  
-  /**
-   *abstract method, every subclass must implement it.
-   *@return the result tuple
-   *@exception IOException I/O errors
-   *@exception JoinsException some join exception
-   *@exception IndexException exception from super class    
-   *@exception InvalidTupleSizeException invalid tuple size
-   *@exception InvalidTypeException tuple type not valid
-   *@exception PageNotReadException exception from lower layer
-   *@exception TupleUtilsException exception from using tuple utilities
-   *@exception PredEvalException exception from PredEval class
-   *@exception SortException sort exception
-   *@exception LowMemException memory error
-   *@exception UnknowAttrType attribute type unknown
-   *@exception UnknownKeyTypeException key type unknown
-   *@exception Exception other exceptions
-   */
-  public Node getNextNode() 
-    throws IOException,
-	   JoinsException ,
-	   IndexException,
-	   InvalidTupleSizeException,
-	   InvalidTypeException, 
-	   PageNotReadException,
-	   TupleUtilsException, 
-	   PredEvalException,
-	   SortException,
-	   LowMemException,
-	   UnknowAttrType,
-	   UnknownKeyTypeException,
-	   Exception
-	   {
-	  	return null;
-	   }
-  
-  public Edge getNextEdge() 
-		    throws IOException,
-			   JoinsException ,
-			   IndexException,
-			   InvalidTupleSizeException,
-			   InvalidTypeException, 
-			   PageNotReadException,
-			   TupleUtilsException, 
-			   PredEvalException,
-			   SortException,
-			   LowMemException,
-			   UnknowAttrType,
-			   UnknownKeyTypeException,
-			   Exception{
-	  return null;
-  }
+   
 }

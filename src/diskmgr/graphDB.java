@@ -95,7 +95,7 @@ public class graphDB extends DB {
 		super();
 		this.type = type; 
 		graphNum = numGraphDB;
-		filename = "GraphDB" + graphNum;
+		filename = "GraphDB";
 		numGraphDB++;
 		sourceNodes = new ArrayList<nodeRef>();
 		destNodes = new ArrayList<nodeRef>();
@@ -112,8 +112,8 @@ public class graphDB extends DB {
 	   	HFBufMgrException,
 	   	HFDiskMgrException,
 	   	Exception {
-		nodes = new NodeHeapFile("nodes");
-		edges = new EdgeHeapFile("edges");
+		nodes = new NodeHeapFile(filename + "NODEHEAP");
+		edges = new EdgeHeapFile(filename + "EDGEHEAP");
 		nodeDesc = new ZCurve(filename + "NODEDESC");
 		if(type == 1) {
 		// full delete
@@ -291,5 +291,16 @@ public class graphDB extends DB {
 			iter++;
 		}
 		return found;
+	}
+	
+	public void closeAllFiles() {
+		try{
+			nodeLabels.close();
+			nodeDesc.close();
+			edgeLabels.close();
+			edgeWeights.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

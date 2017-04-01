@@ -113,7 +113,6 @@ public class BatchEdgeInsertHandler {
 				scan.closescan();
 			}
 		}
-		
 		try {
 			edgeLabels.close();
 			edgeWeights.close();

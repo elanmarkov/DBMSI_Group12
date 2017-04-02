@@ -170,7 +170,7 @@ public class EdgeQueryHandler {
 		IndexScan iscan = null;
 		String filename = edges.getFileName();
 		try {
-			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDB0EDGELABEL", attrType, attrSize, 6, 6, projlist, null, scanon, false);
+			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDBEDGELABEL", attrType, attrSize, 6, 6, projlist, null, scanon, false);
 		} catch (IndexException | InvalidTypeException | InvalidTupleSizeException | UnknownIndexTypeException
 				| IOException e) {
 			// TODO Auto-generated catch block
@@ -555,12 +555,7 @@ public class EdgeQueryHandler {
 				e.printStackTrace();
 			}
 		}
-
-
-
 		return status;
-
-
 	}
 	public boolean edgeHeapTest0(String argv[]){
 		boolean status = OK;
@@ -739,16 +734,6 @@ public class EdgeQueryHandler {
 		attrSize[0] = Tuple.LABEL_MAX_LENGTH;
 		
 		boolean status = OK;
-		int i = 0;
-		EID eid = new EID();
-		EdgeHeapFile f = edges;
-		int edgeCount  = 0;
-		try {
-			edgeCount = edges.getEdgeCnt();
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
-		Edge[] edgesArray = new Edge[edgeCount];
 		FileScan scan = null;
 		if ( status == OK ) {	
 
@@ -789,29 +774,36 @@ public class EdgeQueryHandler {
 		return status;
 	}
 	public boolean edgeHeapTest4(String argv[]){
+		AttrType[] attrType = new AttrType[6];				//Initiating the Index Scan......
+		attrType[0] = new AttrType(AttrType.attrString);
+		attrType[1] = new AttrType(AttrType.attrInteger);
+		attrType[2] = new AttrType(AttrType.attrInteger);
+		attrType[3] = new AttrType(AttrType.attrInteger);
+		attrType[4] = new AttrType(AttrType.attrInteger);
+		attrType[5] = new AttrType(AttrType.attrInteger);
+		FldSpec[] projlist = new FldSpec[6];
+		RelSpec rel = new RelSpec(RelSpec.outer); 
+		projlist[0] = new FldSpec(rel, 1);
+		projlist[1] = new FldSpec(rel, 2);
+		projlist[2] = new FldSpec(rel, 3);
+		projlist[3] = new FldSpec(rel, 4);
+		projlist[4] = new FldSpec(rel, 5);
+		projlist[5] = new FldSpec(rel, 6);
+		short[] attrSize = new short[1];
+		attrSize[0] = Tuple.LABEL_MAX_LENGTH;
+		
 		boolean status = OK;
-		int i = 0;
-		EID eid = new EID();
-		EdgeHeapFile f = edges;
-		int edgeCount  = 0;
-		try {
-			edgeCount = edges.getEdgeCnt();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		Edge[] edgesArray = new Edge[edgeCount];
-		Escan scan = null;
+		FileScan scan = null;
 		if ( status == OK ) {	
-			System.out.println ("  - Scan the records\n");
+
 			try {
-				scan = f.openScan();
-			}
-			catch (Exception e) {
-				status = FAIL;
-				System.err.println ("*** Error opening scan\n");
+				String fileName = edges.getFileName();
+				scan = new FileScan(fileName, attrType, attrSize, (short) 6, 6, projlist, null);
+			} catch (FileScanException | TupleUtilsException | InvalidRelation | IOException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
+			
 			if ( status == OK &&  SystemDefs.JavabaseBM.getNumUnpinnedBuffers() 
 					== SystemDefs.JavabaseBM.getNumBuffers() ) {
 				System.err.println ("*** The heap-file scan has not pinned the first page\n");
@@ -820,25 +812,23 @@ public class EdgeQueryHandler {
 		}
 
 		if ( status == OK ) {
-			Edge edge = new Edge();
-			boolean done = false;
-			while (!done) { 
-				try {
-					edge = scan.getNext(eid);	
-					if (edge == null) {
-						done = true;
-						break;
-					}
-					edgesArray[i] = edge;
-					i++;
+			try {
+				Sort sort = new Sort(attrType, (short) 6, attrSize, scan, 6, 
+						new TupleOrder(TupleOrder.Ascending), Tuple.LABEL_MAX_LENGTH, SORTPGNUM);
+				Tuple t=sort.get_next();
+				while(t!=null){
+					Edge e = new Edge(t);
+					print(e, nodes);
+					t=sort.get_next();
 				}
-				catch (Exception e) {
-					status = FAIL;
-					e.printStackTrace();
-				}
-			}
-			scan.closescan();
-			sortWeights(edgesArray);
+				scan.close();
+				sort.close();
+			
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				status = FAIL;
+				e.printStackTrace();
+			} 
 		}
 		return status;
 	}

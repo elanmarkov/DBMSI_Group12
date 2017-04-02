@@ -18,6 +18,7 @@ public class NodeQueryHandler {
 	ZCurve nodeDesc;
 	BTreeFile edgeLabels;
 	BTreeFile edgeWeights;
+	private static int SORTPGNUM = 9;
 	graphDB db;
 	public NodeQueryHandler(NodeHeapFile nodes, EdgeHeapFile edges, BTreeFile nodeLabels, 
 			ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights, graphDB db) {
@@ -30,32 +31,6 @@ public class NodeQueryHandler {
 		this.db = db;
 	}
 	
-	private void sortNodes(Node nodes[]) {
-		Node temp;
-		AttrType [] jtype = new AttrType[2];
-		jtype[0] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrDesc);
-		for (int i = 0; i < nodes.length; i++) 
-		{
-			for (int j = i + 1; j < nodes.length; j++) 
-			{
-				if (nodes[i].getLabel().compareTo(nodes[j].getLabel()) > 0) 
-				{
-					temp = nodes[i];
-					nodes[i] = nodes[j];
-					nodes[j] = temp;
-				}
-			}
-		}
-		for(int i = 0; i < nodes.length; i++) {
-			try {
-				nodes[i].print(jtype);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
 	private void sortNodes1(Node nodes[], String argv[]) {
 		int length = nodes.length;
 		double[] distance = new double[length];
@@ -209,7 +184,6 @@ public class NodeQueryHandler {
 				}
 				i++;
 			}
-			//sortNodes(nodes);
 			try {
 				iscan.close();
 			} catch (Exception e) {
@@ -265,30 +239,9 @@ public class NodeQueryHandler {
 					e.printStackTrace();
 				}
 				nodes[i] = new Node(t);
-				/*AttrType [] jtype = new AttrType[2];
-				jtype[0] = new AttrType (AttrType.attrString);
-				jtype[1] = new AttrType (AttrType.attrDesc);
-				try {
-					nodes[i].print(jtype);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}*/
 				i++;
 			}
 			sortNodes1(nodes,argv);
-			/*AttrType [] jtype = new AttrType[2];
-			jtype[0] = new AttrType (AttrType.attrString);
-			jtype[1] = new AttrType (AttrType.attrDesc);
-			for(int as = 0; as < nodes.length; as++) {
-				try {
-					System.out.println("asd\n");
-					nodes[as].print(jtype);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}*/
 			try {
 				iscan.close();
 			} catch (Exception e) {
@@ -750,31 +703,32 @@ public class NodeQueryHandler {
 		return status;
 	}
 	public boolean nodeHeapTest1(String argv[]){
+		AttrType[] attrType = new AttrType[2];				//Initiating the Index Scan......
+		attrType[0] = new AttrType(AttrType.attrString);
+		attrType[1] = new AttrType(AttrType.attrDesc);
+		FldSpec[] projlist = new FldSpec[2];
+		RelSpec rel = new RelSpec(RelSpec.outer); 
+		projlist[0] = new FldSpec(rel, 1);
+		projlist[1] = new FldSpec(rel, 2);
+		short[] attrSize = new short[1];
+		attrSize[0] = Tuple.LABEL_MAX_LENGTH;
+		
+		AttrType [] jtype = new AttrType[2];
+		jtype[0] = new AttrType (AttrType.attrString);
+		jtype[1] = new AttrType (AttrType.attrDesc);
+		
 		boolean status = OK;
-		int i = 0;
-		NID nid = new NID();
-		NodeHeapFile f = nodes;
-		int nodeCount = 0;
-		try {
-			nodeCount = nodes.getNodeCnt();
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			status = FAIL;
-			e1.printStackTrace();
-		}
-		Node[] nodesArray = new Node[nodeCount];
-		Nscan scan = null;
+		FileScan scan = null;
 		if ( status == OK ) {	
-			System.out.println ("  - Scan the records\n");
+
 			try {
-				scan = f.openScan();
-			}
-			catch (Exception e) {
-				status = FAIL;
-				System.err.println ("*** Error opening scan\n");
+				String fileName = nodes.getFileName();
+				scan = new FileScan(fileName, attrType, attrSize, (short) 2, 2, projlist, null);
+			} catch (FileScanException | TupleUtilsException | InvalidRelation | IOException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
+			
 			if ( status == OK &&  SystemDefs.JavabaseBM.getNumUnpinnedBuffers() 
 					== SystemDefs.JavabaseBM.getNumBuffers() ) {
 				System.err.println ("*** The heap-file scan has not pinned the first page\n");
@@ -783,28 +737,24 @@ public class NodeQueryHandler {
 		}
 
 		if ( status == OK ) {
-			Node node = new Node();
-
-			boolean done = false;
-			while (!done) { 
-				try {
-					node = scan.getNext(nid);
-					if (node == null) {
-						done = true;
-						break;
-					}
-					nodesArray[i] = node;
-					i++;
+			try {
+				Sort sort = new Sort(attrType, (short) 2, attrSize, scan, 1, 
+						new TupleOrder(TupleOrder.Ascending), Tuple.LABEL_MAX_LENGTH, SORTPGNUM);
+				Tuple t=sort.get_next();
+				while(t!=null){
+					Node n = new Node(t);
+					n.print(jtype);
+					t=sort.get_next();
 				}
-				catch (Exception e) {
-					status = FAIL;
-					e.printStackTrace();
-				}
-			}
-			sortNodes(nodesArray);
-			scan.closescan();
+				scan.close();
+				sort.close();
+			
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				status = FAIL;
+				e.printStackTrace();
+			} 
 		}
-
 		return status;
 	}
 	public boolean nodeHeapTest2(String argv[]){

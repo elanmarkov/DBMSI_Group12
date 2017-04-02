@@ -179,7 +179,7 @@ public class ZCurve extends IndexFile{
 	
 	public void close() {
 		try {
-		this.btree.close();
+			this.btree.close();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

@@ -759,29 +759,33 @@ public class NodeQueryHandler {
 	}
 	public boolean nodeHeapTest2(String argv[]){
 		boolean status = OK;
-		int i = 0;
-		NID nid = new NID();
-		NodeHeapFile f = nodes;
-		int nodeCount = 0;
-		try {
-			nodeCount = nodes.getNodeCnt();
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		} 
-		Node[] nodesArray = new Node[nodeCount];
-
-		Nscan scan = null;
+		/*Descriptor target = new Descriptor();
+		target.set(Integer.parseInt(argv[4]), Integer.parseInt(argv[5]),Integer.parseInt(argv[6]),Integer.parseInt(argv[7]),Integer.parseInt(argv[8]));
+		AttrType[] attrType = new AttrType[2];				//Initiating the Index Scan......
+		attrType[0] = new AttrType(AttrType.attrString);
+		attrType[1] = new AttrType(AttrType.attrDesc);
+		FldSpec[] projlist = new FldSpec[2];
+		RelSpec rel = new RelSpec(RelSpec.outer); 
+		projlist[0] = new FldSpec(rel, 1);
+		projlist[1] = new FldSpec(rel, 2);
+		short[] attrSize = new short[1];
+		attrSize[0] = Tuple.LABEL_MAX_LENGTH;
+		
+		AttrType [] jtype = new AttrType[2];
+		jtype[0] = new AttrType (AttrType.attrString);
+		jtype[1] = new AttrType (AttrType.attrDesc);
+		
+		
+		FileScan scan = null;
 		if ( status == OK ) {	
-			System.out.println ("  - Scan the records\n");
+
 			try {
-				scan = f.openScan();
-			}
-			catch (Exception e) {
-				status = FAIL;
-				System.err.println ("*** Error opening scan\n");
+				String fileName = nodes.getFileName();
+				scan = new FileScan(fileName, attrType, attrSize, (short) 2, 2, projlist, null);
+			} catch (FileScanException | TupleUtilsException | InvalidRelation | IOException e) {
 				e.printStackTrace();
 			}
-
+			
 			if ( status == OK &&  SystemDefs.JavabaseBM.getNumUnpinnedBuffers() 
 					== SystemDefs.JavabaseBM.getNumBuffers() ) {
 				System.err.println ("*** The heap-file scan has not pinned the first page\n");
@@ -790,26 +794,24 @@ public class NodeQueryHandler {
 		}
 
 		if ( status == OK ) {
-			Node node = new Node();
-			boolean done = false;
-			while (!done) { 
-				try {
-					node = scan.getNext(nid);
-					if (node == null) {
-						done = true;
-						break;
-					}
-					nodesArray[i] = node;
-					i++;
+			try {
+				Sort sort = new Sort(attrType, (short) 2, attrSize, scan, 2, 0, target, 
+						new TupleOrder(TupleOrder.Ascending), Tuple.LABEL_MAX_LENGTH, SORTPGNUM);
+				Tuple t=sort.get_next();
+				while(t!=null){
+					Node n = new Node(t);
+					n.print(jtype);
+					t=sort.get_next();
 				}
-				catch (Exception e) {
-					status = FAIL;
-					e.printStackTrace();
-				}
-			}
-			scan.closescan();
-			sortNodes1(nodesArray,argv);
-		}
+				scan.close();
+				sort.close();
+			
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				status = FAIL;
+				e.printStackTrace();
+			} 
+		}*/
 		return status;
 	}
 	public boolean nodeHeapTest3(String argv[]){

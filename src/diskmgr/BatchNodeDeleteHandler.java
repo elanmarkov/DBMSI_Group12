@@ -19,7 +19,7 @@ public class BatchNodeDeleteHandler{
 	BTreeFile edgeLabels;
 	BTreeFile edgeWeights;
 	graphDB db;
-	public BatchNodeDeleteHandler(NodeHeapFile nodes, EdgeHeapFile edges, BTreeFile nodeLabels, 
+	public BatchNodeDeleteHandler(NodeHeapFile nodes, EdgeHeapFile edges, BTreeFile nodeLabels,
 			ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights, graphDB db) {
 
 		this.nodes = nodes;
@@ -36,9 +36,6 @@ public class BatchNodeDeleteHandler{
 	public void runbatchnodedelete(String dbname, String filename) throws Exception{
 		boolean status = OK;
 		//  BatchNodeDelete Start
-		PCounter     pageRW      = new PCounter();			//Initiating the PCounter.
-		int          pages_read  = pageRW.rcounter;
-		int 	     pages_write = pageRW.wcounter;
 		NodeHeapFile nodeheap    = nodes;
 		File         file = null;
 
@@ -68,9 +65,9 @@ public class BatchNodeDeleteHandler{
 				node = nscan.getNext(nid);
 				Node          tempNode = new Node();
 				tempNode.setLabel(inputnodelabel);
-				
+
 				while(node!=null){	//while 02 for going through the nodeheapfile looking for the particular node
-					
+
 					String label = node.getLabel();
 					if(Objects.equals(label,tempNode.getLabel())){	// nid with the given nodelabel found
 						System.out.println(node.equals(null));
@@ -114,15 +111,14 @@ public class BatchNodeDeleteHandler{
 			inputFile.close();
 		}
 		// Taking care of Output now.
-		pages_read  = pageRW.rcounter - pages_read;
-		pages_write = pageRW.wcounter - pages_write;
+
 		if(status) {
-			
+
 		System.out.println("..............Batch Node Deletion Performed successfully............");}
 		else {
 			System.out.println("..............Batch Node Delete Not Successful................");
 		}
-		System.out.println("Number of Pages Read: "+pages_read+" Number of Page writes performed: "+pages_write);
+
 		System.out.println("Number of Total Nodes in the Database are:"+SystemDefs.JavabaseDB.getNodeCnt() + "Number of Total Edges in the Database are"+SystemDefs.JavabaseDB.getEdgeCnt());
 
 

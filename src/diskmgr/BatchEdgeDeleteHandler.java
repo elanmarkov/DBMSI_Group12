@@ -20,7 +20,7 @@ public class BatchEdgeDeleteHandler implements GlobalConst{
 	BTreeFile edgeLabels;
 	BTreeFile edgeWeights;
 	graphDB db;
-	public BatchEdgeDeleteHandler(NodeHeapFile nodes, EdgeHeapFile edges, BTreeFile nodeLabels, 
+	public BatchEdgeDeleteHandler(NodeHeapFile nodes, EdgeHeapFile edges, BTreeFile nodeLabels,
 	ZCurve nodeDesc, BTreeFile edgeLabels, BTreeFile edgeWeights, graphDB db) {
 
 		this.nodes = nodes;
@@ -39,9 +39,7 @@ public class BatchEdgeDeleteHandler implements GlobalConst{
 		boolean status = OK;
 		EdgeHeapFile edgeheap = edges;
 		NodeHeapFile nodeheap = nodes;
-		PCounter         pcounter = new PCounter();			//Initiating the PCounter.
-		int       pages_read  = pcounter.rcounter;
-		int 	  pages_write = pcounter.wcounter;
+
 		File 	  file;
 		Scanner   inputFile=null;
 		try{
@@ -51,10 +49,10 @@ public class BatchEdgeDeleteHandler implements GlobalConst{
 		}
 		catch(Exception e){
 			System.out.println("Could not open the InputFile.");
-			
+
 		}
 
-		
+
 		// Read lines from the file until no more are left.
 
 		if(status){
@@ -82,7 +80,7 @@ public class BatchEdgeDeleteHandler implements GlobalConst{
 					System.out.println("No edges in Database.");
 				    status = FAIL;
 				};
-				while(!Objects.equals(edge,null))	
+				while(!Objects.equals(edge,null))
 				{
 					//System.out.println("BatchEdgeDeleteHandler.runbatchedgedelete() edge is not null "+edge);
 					NID sourcenid = edge.getSource();
@@ -94,10 +92,10 @@ public class BatchEdgeDeleteHandler implements GlobalConst{
 					Node node2 = new Node();
 					node2.setLabel(edgeinput[1]);
 					node1.setLabel(edgeinput[0]);
-					
+
 
 					if(Objects.equals(tempedge.getLabel(),edgelabel)){	// Edge Found with given edge Label.
-						Node sourcenode = nodeheap.getNode(sourcenid); 
+						Node sourcenode = nodeheap.getNode(sourcenid);
 						Node desnode    = nodeheap.getNode(desnid);
 
 						if(Objects.equals(desnode.getLabel(),node2.getLabel()) && Objects.equals(sourcenode.getLabel(),node1.getLabel())){   // Checking if the edge is the one we are looking for.
@@ -105,7 +103,7 @@ public class BatchEdgeDeleteHandler implements GlobalConst{
 							db.deleteEdge(eid);
 						}
 
-					} 
+					}
 
 					edge = escan.getNext(eid);
 				}
@@ -115,9 +113,8 @@ public class BatchEdgeDeleteHandler implements GlobalConst{
 			}
 
 			inputFile.close();
-			pages_read  = pcounter.rcounter - pages_read;
-			pages_write = pcounter.wcounter - pages_write;
-			System.out.println("Number of Pages Read: "+pages_read+" Number of Page writes performed: "+pages_write);
+
+
 			int edgecnt = db.getEdgeCnt();
 			int nodecnt = db.getNodeCnt();
 			System.out.println("Total Edge Count: "+ edgecnt + "Total node Count: "+ nodecnt);

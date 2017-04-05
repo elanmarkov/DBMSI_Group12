@@ -101,8 +101,10 @@ public class BatchEdgeInsertHandler {
 			newEdge.setSource(sourceNid);
 			newEdge.setDestination(desNid);
 			newEdge.setWeight(weight);
-			//newEdge.setSourceLabel(srcLabel);
-			//newEdge.setDestinationLabel(destLabel);
+
+			newEdge.setSourceLabel(srcLabel);
+			newEdge.setDestinationLabel(destLabel);
+
 			try{
 				db.insertEdge(newEdge);
 			} catch (Exception e) {

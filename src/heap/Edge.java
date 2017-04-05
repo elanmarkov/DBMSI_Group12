@@ -8,14 +8,16 @@ import global.NID;
 
 public class Edge extends Tuple {
 	private String label;
+	private String sourceLabel;
+	private String destinationLabel;
 	private NID source;
 	private NID destination;
 	private int weight;
 	public static final AttrType[] types = { new AttrType(AttrType.attrString), new AttrType(AttrType.attrInteger),
 			new AttrType(AttrType.attrInteger), new AttrType(AttrType.attrInteger), new AttrType(AttrType.attrInteger),
-			new AttrType(AttrType.attrInteger) };
-	public static final short[] sizes = { LABEL_MAX_LENGTH, 4,4,4,4,4 };
-	public static final short numFld = 6;
+			new AttrType(AttrType.attrInteger), new AttrType(AttrType.attrString), new AttrType(AttrType.attrString) };
+	public static final short[] sizes = { LABEL_MAX_LENGTH, 4,4,4,4,4, LABEL_MAX_LENGTH, LABEL_MAX_LENGTH };
+	public static final short numFld = 8;
 
 	public Edge() {
 		super();
@@ -108,6 +110,26 @@ public class Edge extends Tuple {
 		return weight;
 	}
 
+	public String getSourceLabel() {
+		try {
+			this.sourceLabel = getStrFld(7);
+		} catch (FieldNumberOutOfBoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return sourceLabel;
+	}
+
+	public String getDestinationLabel() {
+		try {
+			this.destinationLabel = getStrFld(8);
+		} catch (FieldNumberOutOfBoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return destinationLabel;
+	}
+
 	public NID getSource() {
 		source = new NID();
 		try {
@@ -139,6 +161,38 @@ public class Edge extends Tuple {
 		this.label = getFixedLengthLable(label);
 		try {
 			setStrFld(1, this.label);
+		} catch (FieldNumberOutOfBoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		/*
+		 * try { Convert.setStrValue(this.label, 0, data); } catch (IOException
+		 * e) { // TODO Auto-generated catch block e.printStackTrace(); }
+		 * tuple_length = getEdgeLength();
+		 */
+		return this;
+	}
+
+	public Edge setSourceLabel(String label) {
+		this.sourceLabel = getFixedLengthLable(label);
+		try {
+			setStrFld(7, this.sourceLabel);
+		} catch (FieldNumberOutOfBoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		/*
+		 * try { Convert.setStrValue(this.label, 0, data); } catch (IOException
+		 * e) { // TODO Auto-generated catch block e.printStackTrace(); }
+		 * tuple_length = getEdgeLength();
+		 */
+		return this;
+	}
+
+	public Edge setDestinationLabel(String label) {
+		this.destinationLabel = getFixedLengthLable(label);
+		try {
+			setStrFld(8, this.destinationLabel);
 		} catch (FieldNumberOutOfBoundException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

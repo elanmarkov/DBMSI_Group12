@@ -4,22 +4,28 @@ CSE 510 Project, Group 12.
  */
 package tests;
 
-import global.GlobalConst;
 import global.SystemDefs;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-
-import bufmgr.BufMgr;
 import diskmgr.PCounter;
 
 /** Driver class for the test cases for the Graph Database. */
 public class testcases {
 	/** Prints the read/write count on the DB as of the last operation. */
+	private static void flushPages() {
+		try {
+			if(SystemDefs.JavabaseDB != null)
+				SystemDefs.JavabaseDB.closeAllFiles();
+			if(SystemDefs.JavabaseDB != null)
+				SystemDefs.JavabaseBM.flushAllPages();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	private static void printReadWriteCount() {
-		System.out.println("\nNo. of pages read : " + PCounter.rcounter);
-		System.out.println("No. of pages write : " + PCounter.wcounter);
+		System.out.println("\nNo. of pages read : " + PCounter.getRCount());
+		System.out.println("No. of pages write : " + PCounter.getWCount());
 	}
 	/** Full menu for graph tests. Gives input format of all queries.*/
 	private static void printLongMenu() {
@@ -52,25 +58,25 @@ public class testcases {
 	private static void printShortMenu() {
 		System.out.println("Enter menu to print the menu, exit to exit, or a command line input to execute:");
 	}
-	/** Main test driver for Graph Database tests. Runs any of the six tests as specified by command line input. 
+	/** Main test driver for Graph Database tests. Runs any of the six tests as specified by command line input.
 	Also displays menus and read/write statistics. */
 	public static void main(String args[])
 	{
-		SystemDefs sysdef; 
+		SystemDefs sysdef;
 		boolean exit = false;
 		String graphDB = null;
-		int numBuf = 500;
-		PCounter pc = new PCounter();
+		int numBuf = 5000;
 		printLongMenu();
-		do {	
+		do {
 			printShortMenu();
+			PCounter.initialize();
 			Scanner sc = new Scanner(System.in);
 			String line = sc.nextLine();
 			String[] splited = line.split("\\s+");
-			if(splited[0].equals("batchnodeinsert") || splited[0].equals("batchedgeinsert") || 
+			if(splited[0].equals("batchnodeinsert") || splited[0].equals("batchedgeinsert") ||
 					splited[0].equals("batchnodedelete") || splited[0].equals("batchedgedelete")) {
 				graphDB = splited[2];
-			} else if(splited[0].equals("nodequery") || splited[0].equals("edgequery")) {
+			} else if(splited[0].equals("nodequery") || splited[0].equals("edgequery") || splited[0].equals("sortMergeJoin")) {
 				graphDB = splited[1];
 				numBuf = Integer.parseInt(splited[2]);
 			}
@@ -81,11 +87,7 @@ public class testcases {
 				SystemDefs.MINIBASE_RESTART_FLAG = false;
 			}
 			try {
-				if(SystemDefs.JavabaseDB != null)
-					SystemDefs.JavabaseDB.closeAllFiles();
-				if(SystemDefs.JavabaseDB != null)
-					SystemDefs.JavabaseBM.flushAllPages();
-				sysdef = new SystemDefs(graphDB,1000,numBuf,"Clock");
+				sysdef = new SystemDefs(graphDB,5000,numBuf,"Clock");
 				SystemDefs.JavabaseDB.init();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -94,22 +96,23 @@ public class testcases {
 			if(splited[0].equals("batchnodeinsert")) {
 				batchnodeinsert insertObj = new batchnodeinsert();
 				try {
-					insertObj.runTests(splited[1],pc);
+					insertObj.runTests(splited[1]);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-
+				flushPages();
 			} else if(splited[0].equals("batchedgeinsert")) {
 				batchedgeinsert insertObj = new batchedgeinsert();
 				try {
-					insertObj.runTests(splited[1],pc);
+					insertObj.runTests(splited[1]);
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
+				flushPages();
 			} else if(splited[0].equals("batchnodedelete")) {
 				BatchNodeDelete deleteObj = new BatchNodeDelete();
 				deleteObj.runDeleteNode(splited);
-
+				flushPages();
 			} else if(splited[0].equals("batchedgedelete")) {
 				BatchEdgeDelete deleteObj = new BatchEdgeDelete();
 				try {
@@ -118,32 +121,26 @@ public class testcases {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				flushPages();
 			} else if(splited[0].equals("nodequery")) {
-				PCounter.initialize();
 				String[] newSplited = new String[splited.length-1];
 				System.arraycopy(splited, 1, newSplited, 0, newSplited.length);
 				nodequery nQuery = new nodequery();
-				boolean _pass = nQuery.runTests(newSplited);
-				if(_pass) {
-					printReadWriteCount();
-				}
+				nQuery.runTests(newSplited);
 			} else if(splited[0].equals("edgequery")) {
-				PCounter.initialize();
 				String[] newSplited = new String[splited.length-1];
 				System.arraycopy(splited, 1, newSplited, 0, newSplited.length);
-
 				EdgeQuery eQuery = new EdgeQuery();
-				boolean _pass = eQuery.runTests(newSplited);
-				if(_pass) {
-					printReadWriteCount();
-				}
+				eQuery.runTests(newSplited);
 			} else if(splited[0].equals("exit")) {
 				exit = true;
 				sc.close();
 			} else if(splited[0].equals("menu")) {
 				printLongMenu();
+			} else if(splited[0].equals("sortMergeJoin")) {
+				SMJoinEdge.performSortMergeJoin();
 			}
-
+			printReadWriteCount();
 		} while(!exit);
 	}
 }

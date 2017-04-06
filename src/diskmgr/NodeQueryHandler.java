@@ -30,7 +30,7 @@ public class NodeQueryHandler {
 		this.edgeWeights = edgeWeights;
 		this.db = db;
 	}
-	
+
 	private void sortNodes1(Node nodes[], String argv[]) {
 		int length = nodes.length;
 		double[] distance = new double[length];
@@ -84,7 +84,7 @@ public class NodeQueryHandler {
 		IndexScan iscan = null;
 		String filename = nodes.getFileName();
 		String zfilename = nodeDesc.getFileName();
-		
+
 		try {
 			System.out.println("NodeQueryHandler.nodeIndexTest0()" + filename+ " record count " +nodes.getNodeCnt() +" zfilename " + zfilename);
 		} catch (Exception e2) {
@@ -226,7 +226,7 @@ public class NodeQueryHandler {
 		boolean done = false;
 		if(status == OK) {
 			while(!done) {
-				
+
 				try {
 					Tuple check = iscan.get_next();
 					if (check == null){
@@ -267,15 +267,15 @@ public class NodeQueryHandler {
 		attrSize[1] = 10;
 		IndexScan iscan = null;
 		CondExpr[] expr = new CondExpr[2];
-	    expr[0] = new CondExpr();
-	    expr[0].op = new AttrOperator(AttrOperator.aopLE);
-	    expr[0].operand1.desc = desc;
-	    expr[0].type1 = new AttrType(AttrType.attrDesc);
-	    expr[0].type2 = new AttrType(AttrType.attrSymbol);
-	    expr[0].operand2.symbol = new FldSpec(new RelSpec(RelSpec.outer), 2);
-	    expr[0].distance = distance;
-	    expr[0].next = null;
-	    expr[1] = null;
+		expr[0] = new CondExpr();
+		expr[0].op = new AttrOperator(AttrOperator.aopLE);
+		expr[0].operand1.desc = desc;
+		expr[0].type1 = new AttrType(AttrType.attrDesc);
+		expr[0].type2 = new AttrType(AttrType.attrSymbol);
+		expr[0].operand2.symbol = new FldSpec(new RelSpec(RelSpec.outer), 2);
+		expr[0].distance = distance;
+		expr[0].next = null;
+		expr[1] = null;
 		String filename = nodes.getFileName();
 		try {
 			iscan = new IndexScan(new IndexType(IndexType.Z_Index), filename, "GraphDBNODEDESC", attrType, attrSize, 2, 2, projlist, expr, 2, false);
@@ -299,7 +299,7 @@ public class NodeQueryHandler {
 				}
 				Node n = new Node(t);
 				//if(n.getDesc().distance(desc) == distance)
-					System.out.println(n.getLabel());
+				System.out.println(n.getLabel());
 			}
 			try {
 				iscan.close();
@@ -315,7 +315,7 @@ public class NodeQueryHandler {
 		}
 		return status;
 	}
-	
+
 	public boolean nodeIndexTest4(String argv[]){
 		boolean status = OK;
 		NID nid = new NID();
@@ -337,14 +337,16 @@ public class NodeQueryHandler {
 		attrSize[0] = Node.LABEL_MAX_LENGTH;
 		attrSize[1] = 10;
 
-		AttrType[] EattrType = new AttrType[6];
+		AttrType[] EattrType = new AttrType[8];
 		EattrType[0] = new AttrType(AttrType.attrString);
 		EattrType[1] = new AttrType(AttrType.attrInteger);
 		EattrType[2] = new AttrType(AttrType.attrInteger);
 		EattrType[3] = new AttrType(AttrType.attrInteger);
 		EattrType[4] = new AttrType(AttrType.attrInteger);
 		EattrType[5] = new AttrType(AttrType.attrInteger);
-		FldSpec[] Eprojlist = new FldSpec[6];
+		EattrType[6] = new AttrType(AttrType.attrString);
+		EattrType[7] = new AttrType(AttrType.attrString);
+		FldSpec[] Eprojlist = new FldSpec[8];
 		RelSpec erel = new RelSpec(RelSpec.outer); 
 		Eprojlist[0] = new FldSpec(erel, 1);
 		Eprojlist[1] = new FldSpec(erel, 2);
@@ -352,13 +354,17 @@ public class NodeQueryHandler {
 		Eprojlist[3] = new FldSpec(erel, 4);
 		Eprojlist[4] = new FldSpec(erel, 5);
 		Eprojlist[5] = new FldSpec(erel, 6);
-		short[] EattrSize = new short[6];
+		Eprojlist[6] = new FldSpec(erel, 7);
+		Eprojlist[7] = new FldSpec(erel, 8);
+		short[] EattrSize = new short[8];
 		EattrSize[0] = Node.LABEL_MAX_LENGTH;
 		EattrSize[1] = 4;
 		EattrSize[2] = 4;
 		EattrSize[3] = 4;
 		EattrSize[4] = 4;
 		EattrSize[5] = 4;
+		EattrSize[6] = 4;
+		EattrSize[7] = 4;
 
 		String incomingEdges[] = null;
 		String outgoingEdges[] = null;
@@ -415,7 +421,7 @@ public class NodeQueryHandler {
 		if(nodeExists) {
 
 			try {
-				eiscan = new IndexScan(new IndexType(IndexType.B_Index), Efilename, "GraphDBEDGELABEL", EattrType, EattrSize, 6, 6, Eprojlist, null, 1, false);
+				eiscan = new IndexScan(new IndexType(IndexType.B_Index), Efilename, "GraphDBEDGELABEL", EattrType, EattrSize, 8, 8, Eprojlist, null, 1, false);
 			}
 			catch (Exception e) {
 				status = FAIL;
@@ -499,14 +505,16 @@ public class NodeQueryHandler {
 		attrSize[0] = Node.LABEL_MAX_LENGTH;
 		attrSize[1] = 10;
 
-		AttrType[] EattrType = new AttrType[6];
+		AttrType[] EattrType = new AttrType[8];
 		EattrType[0] = new AttrType(AttrType.attrString);
 		EattrType[1] = new AttrType(AttrType.attrInteger);
 		EattrType[2] = new AttrType(AttrType.attrInteger);
 		EattrType[3] = new AttrType(AttrType.attrInteger);
 		EattrType[4] = new AttrType(AttrType.attrInteger);
 		EattrType[5] = new AttrType(AttrType.attrInteger);
-		FldSpec[] Eprojlist = new FldSpec[6];
+		EattrType[6] = new AttrType(AttrType.attrString);
+		EattrType[7] = new AttrType(AttrType.attrString);
+		FldSpec[] Eprojlist = new FldSpec[8];
 		RelSpec erel = new RelSpec(RelSpec.outer); 
 		Eprojlist[0] = new FldSpec(erel, 1);
 		Eprojlist[1] = new FldSpec(erel, 2);
@@ -514,13 +522,17 @@ public class NodeQueryHandler {
 		Eprojlist[3] = new FldSpec(erel, 4);
 		Eprojlist[4] = new FldSpec(erel, 5);
 		Eprojlist[5] = new FldSpec(erel, 6);
-		short[] EattrSize = new short[6];
+		Eprojlist[6] = new FldSpec(erel, 7);
+		Eprojlist[7] = new FldSpec(erel, 8);
+		short[] EattrSize = new short[8];
 		EattrSize[0] = Node.LABEL_MAX_LENGTH;
 		EattrSize[1] = 4;
 		EattrSize[2] = 4;
 		EattrSize[3] = 4;
 		EattrSize[4] = 4;
 		EattrSize[5] = 4;
+		EattrSize[6] = 4;
+		EattrSize[7] = 4;
 
 		try{
 			nodeCount = nodes.getNodeCnt();
@@ -530,15 +542,15 @@ public class NodeQueryHandler {
 		Node[] nodesArray = new Node[nodeCount];
 		CondExpr[] expr = new CondExpr[2];
 		expr[0] = new CondExpr();
-	    expr[0].op = new AttrOperator(AttrOperator.aopLE);
-	    expr[0].operand1.desc = desc;
-	    expr[0].type1 = new AttrType(AttrType.attrDesc);
-	    expr[0].type2 = new AttrType(AttrType.attrSymbol);
-	    expr[0].operand2.symbol = new FldSpec(new RelSpec(RelSpec.outer), 2);
-	    expr[0].distance = distance;
-	    expr[0].next = null;
-	    expr[1] = null;
-	    
+		expr[0].op = new AttrOperator(AttrOperator.aopLE);
+		expr[0].operand1.desc = desc;
+		expr[0].type1 = new AttrType(AttrType.attrDesc);
+		expr[0].type2 = new AttrType(AttrType.attrSymbol);
+		expr[0].operand2.symbol = new FldSpec(new RelSpec(RelSpec.outer), 2);
+		expr[0].distance = distance;
+		expr[0].next = null;
+		expr[1] = null;
+
 		IndexScan iscan = null;
 		IndexScan eiscan = null;
 		try {
@@ -548,7 +560,7 @@ public class NodeQueryHandler {
 			status = FAIL;
 			e.printStackTrace();
 		}
-		
+
 		if ( status == OK ) {
 			Tuple t = null;
 			boolean done = false;
@@ -562,8 +574,8 @@ public class NodeQueryHandler {
 					t = new Tuple(check);
 					Node n = new Node(t);
 					//if(n.getDesc().distance(desc) == distance) {
-						nodesArray[i] = n;
-						i++;
+					nodesArray[i] = n;
+					i++;
 					//}
 					//n.print(attrType);
 				}
@@ -587,7 +599,7 @@ public class NodeQueryHandler {
 			status = OK;
 			if ( status == OK ) {
 				try {
-					eiscan = new IndexScan(new IndexType(IndexType.B_Index), Efilename, "GraphDBEDGELABEL", EattrType, EattrSize, 6, 6, Eprojlist, null, 1, false);
+					eiscan = new IndexScan(new IndexType(IndexType.B_Index), Efilename, "GraphDBEDGELABEL", EattrType, EattrSize, 8, 8, Eprojlist, null, 1, false);
 				}
 				catch (Exception e) {
 					status = FAIL;
@@ -712,11 +724,11 @@ public class NodeQueryHandler {
 		projlist[1] = new FldSpec(rel, 2);
 		short[] attrSize = new short[1];
 		attrSize[0] = Tuple.LABEL_MAX_LENGTH;
-		
+
 		AttrType [] jtype = new AttrType[2];
 		jtype[0] = new AttrType (AttrType.attrString);
 		jtype[1] = new AttrType (AttrType.attrDesc);
-		
+
 		boolean status = OK;
 		FileScan scan = null;
 		if ( status == OK ) {	
@@ -728,7 +740,7 @@ public class NodeQueryHandler {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			if ( status == OK &&  SystemDefs.JavabaseBM.getNumUnpinnedBuffers() 
 					== SystemDefs.JavabaseBM.getNumBuffers() ) {
 				System.err.println ("*** The heap-file scan has not pinned the first page\n");
@@ -748,7 +760,7 @@ public class NodeQueryHandler {
 				}
 				scan.close();
 				sort.close();
-			
+
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				status = FAIL;
@@ -759,33 +771,29 @@ public class NodeQueryHandler {
 	}
 	public boolean nodeHeapTest2(String argv[]){
 		boolean status = OK;
-		/*Descriptor target = new Descriptor();
-		target.set(Integer.parseInt(argv[4]), Integer.parseInt(argv[5]),Integer.parseInt(argv[6]),Integer.parseInt(argv[7]),Integer.parseInt(argv[8]));
-		AttrType[] attrType = new AttrType[2];				//Initiating the Index Scan......
-		attrType[0] = new AttrType(AttrType.attrString);
-		attrType[1] = new AttrType(AttrType.attrDesc);
-		FldSpec[] projlist = new FldSpec[2];
-		RelSpec rel = new RelSpec(RelSpec.outer); 
-		projlist[0] = new FldSpec(rel, 1);
-		projlist[1] = new FldSpec(rel, 2);
-		short[] attrSize = new short[1];
-		attrSize[0] = Tuple.LABEL_MAX_LENGTH;
-		
-		AttrType [] jtype = new AttrType[2];
-		jtype[0] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrDesc);
-		
-		
-		FileScan scan = null;
-		if ( status == OK ) {	
+		int i = 0;
+		NID nid = new NID();
+		NodeHeapFile f = nodes;
+		int nodeCount = 0;
+		try {
+			nodeCount = nodes.getNodeCnt();
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		} 
+		Node[] nodesArray = new Node[nodeCount];
 
+		Nscan scan = null;
+		if ( status == OK ) {	
+			System.out.println ("  - Scan the records\n");
 			try {
-				String fileName = nodes.getFileName();
-				scan = new FileScan(fileName, attrType, attrSize, (short) 2, 2, projlist, null);
-			} catch (FileScanException | TupleUtilsException | InvalidRelation | IOException e) {
+				scan = f.openScan();
+			}
+			catch (Exception e) {
+				status = FAIL;
+				System.err.println ("*** Error opening scan\n");
 				e.printStackTrace();
 			}
-			
+
 			if ( status == OK &&  SystemDefs.JavabaseBM.getNumUnpinnedBuffers() 
 					== SystemDefs.JavabaseBM.getNumBuffers() ) {
 				System.err.println ("*** The heap-file scan has not pinned the first page\n");
@@ -794,24 +802,26 @@ public class NodeQueryHandler {
 		}
 
 		if ( status == OK ) {
-			try {
-				Sort sort = new Sort(attrType, (short) 2, attrSize, scan, 2, 0, target, 
-						new TupleOrder(TupleOrder.Ascending), Tuple.LABEL_MAX_LENGTH, SORTPGNUM);
-				Tuple t=sort.get_next();
-				while(t!=null){
-					Node n = new Node(t);
-					n.print(jtype);
-					t=sort.get_next();
+			Node node = new Node();
+			boolean done = false;
+			while (!done) { 
+				try {
+					node = scan.getNext(nid);
+					if (node == null) {
+						done = true;
+						break;
+					}
+					nodesArray[i] = node;
+					i++;
 				}
-				scan.close();
-				sort.close();
-			
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				status = FAIL;
-				e.printStackTrace();
-			} 
-		}*/
+				catch (Exception e) {
+					status = FAIL;
+					e.printStackTrace();
+				}
+			}
+			scan.closescan();
+			sortNodes1(nodesArray,argv);
+		}
 		return status;
 	}
 	public boolean nodeHeapTest3(String argv[]){
@@ -1127,8 +1137,8 @@ public class NodeQueryHandler {
 								outgoingEdges[j][outgoingEdgeCount[j]] = edge.getLabel();
 								outgoingEdgeCount[j]++;
 							} else if(dNode.getLabel().equals(nodesArray[j].getLabel())) {
-									incomingEdges[j][incomingEdgeCount[j]] = edge.getLabel();
-									incomingEdgeCount[j]++;
+								incomingEdges[j][incomingEdgeCount[j]] = edge.getLabel();
+								incomingEdgeCount[j]++;
 							}
 						}
 					}

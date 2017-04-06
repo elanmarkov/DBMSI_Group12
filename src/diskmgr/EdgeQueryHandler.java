@@ -144,6 +144,7 @@ public class EdgeQueryHandler {
 			}
 		}
 	}
+	
     private IndexScan runIndexScan(int scanon) {
 
 		AttrType[] attrType = new AttrType[8];				//Initiating the Index Scan......
@@ -177,8 +178,11 @@ public class EdgeQueryHandler {
 
 		IndexScan iscan = null;
 		String filename = edges.getFileName();
+		String indexName = "GraphDBEDGELABEL";
+		if(scanon == 6)
+			indexName = "GraphDBEDGEWEIGHT";
 		try {
-			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, "GraphDBEDGELABEL", attrType, attrSize, 8, 8, projlist, null, scanon, false);
+			iscan = new IndexScan(new IndexType(IndexType.B_Index), filename, indexName, attrType, attrSize, 8, 8, projlist, null, scanon, false);
 		} catch (IndexException | InvalidTypeException | InvalidTupleSizeException | UnknownIndexTypeException
 				| IOException e) {
 			// TODO Auto-generated catch block
@@ -238,7 +242,6 @@ public class EdgeQueryHandler {
 		boolean status = OK;
 		IndexScan iscan = null;
 
-		Tuple t = null;
 		int edgeCount = 0;
 		try {
 			edgeCount = edges.getEdgeCnt();
@@ -256,23 +259,27 @@ public class EdgeQueryHandler {
 			status = FAIL;
 			e.printStackTrace();
 		}
-		boolean done = false;
+		
 		if(status == OK) {
+			Tuple t = null;
+			boolean done = false;
 			while(!done) {
-				t = new Tuple();
+				//System.out.println("EdgeQueryHandler.edgeIndexTest1()");
 				try {
-					t = iscan.get_next();
-				} catch (Exception e) {
+					Tuple check = iscan.get_next();
+					if (check == null) {
+						done = true;
+						break;
+					}
+					t = new Tuple(check);
+					Edge edge = new Edge(t);
+					edges[i] = edge;
+					i++;
+				}
+				catch (Exception e) {
 					status = FAIL;
 					e.printStackTrace();
 				}
-				if(t == null) {
-					done = true;
-					break;
-				}
-				Edge edge = new Edge(t);
-				edges[i] = edge;
-				i++;
 			}
 			sortEdges(edges,0);
 			try {
@@ -286,7 +293,6 @@ public class EdgeQueryHandler {
 	public boolean edgeIndexTest2(String argv[]){
 		boolean status = OK;
 		IndexScan iscan = null;
-		Tuple t = null;
 		int edgeCount = 0;
 		try {
 			edgeCount = edges.getEdgeCnt();
@@ -304,23 +310,26 @@ public class EdgeQueryHandler {
 			status = FAIL;
 			e.printStackTrace();
 		}
-		boolean done = false;
 		if(status == OK) {
+			Tuple t = null;
+			boolean done = false;
 			while(!done) {
-				t = new Tuple();
+				//System.out.println("EdgeQueryHandler.edgeIndexTest1()");
 				try {
-					t = iscan.get_next();
-				} catch (Exception e) {
+					Tuple check = iscan.get_next();
+					if (check == null) {
+						done = true;
+						break;
+					}
+					t = new Tuple(check);
+					Edge edge = new Edge(t);
+					edges[i] = edge;
+					i++;
+				}
+				catch (Exception e) {
 					status = FAIL;
 					e.printStackTrace();
 				}
-				if(t == null) {
-					done = true;
-					break;
-				}
-				Edge edge = new Edge(t);
-				edges[i] = edge;
-				i++;
 			}
 			sortEdges(edges,1);
 			try {
@@ -334,7 +343,6 @@ public class EdgeQueryHandler {
 	public boolean edgeIndexTest3(String argv[]){
 		boolean status = OK;						//Initiating the Index Scan......
 		IndexScan iscan = null;
-		Tuple t = null;
 		int edgeCount = 0;
 		try {
 			edgeCount = edges.getEdgeCnt();
@@ -352,23 +360,26 @@ public class EdgeQueryHandler {
 			status = FAIL;
 			e.printStackTrace();
 		}
-		boolean done = false;
 		if(status == OK) {
+			Tuple t = null;
+			boolean done = false;
 			while(!done) {
-				t = new Tuple();
+				//System.out.println("EdgeQueryHandler.edgeIndexTest1()");
 				try {
-					t = iscan.get_next();
-				} catch (Exception e) {
+					Tuple check = iscan.get_next();
+					if (check == null) {
+						done = true;
+						break;
+					}
+					t = new Tuple(check);
+					Edge edge = new Edge(t);
+					edges[i] = edge;
+					i++;
+				}
+				catch (Exception e) {
 					status = FAIL;
 					e.printStackTrace();
 				}
-				if(t == null) {
-					done = true;
-					break;
-				}
-				Edge edge = new Edge(t);
-				edges[i] = edge;
-				i++;
 			}
 			sortEdges(edges,2);
 			try {
@@ -382,7 +393,6 @@ public class EdgeQueryHandler {
 	public  boolean edgeIndexTest4(String argv[]){
 		boolean status = OK;						//Initiating the Index Scan......
 		IndexScan iscan = null;
-		Tuple t = null;
 		int edgeCount = 0;
 		try {
 			edgeCount = edges.getEdgeCnt();
@@ -400,23 +410,26 @@ public class EdgeQueryHandler {
 			status = FAIL;
 			e.printStackTrace();
 		}
-		boolean done = false;
 		if(status == OK) {
+			Tuple t = null;
+			boolean done = false;
 			while(!done) {
-				t = new Tuple();
+				//System.out.println("EdgeQueryHandler.edgeIndexTest1()");
 				try {
-					t = iscan.get_next();	//Getting the next Edge
-				} catch (Exception e) {
+					Tuple check = iscan.get_next();
+					if (check == null) {
+						done = true;
+						break;
+					}
+					t = new Tuple(check);
+					Edge edge = new Edge(t);
+					edges[i] = edge;
+					i++;
+				}
+				catch (Exception e) {
 					status = FAIL;
 					e.printStackTrace();
 				}
-				if(t == null) {
-					done = true;
-					break;
-				}
-				Edge edge = new Edge(t);
-				edges[i] = edge;
-				i++;
 			}
 			sortWeights(edges);				//Passing the edges with weights to the sortWeights Function.
 			try {

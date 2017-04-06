@@ -138,7 +138,10 @@ public class testcases {
 			} else if(splited[0].equals("menu")) {
 				printLongMenu();
 			} else if(splited[0].equals("sortMergeJoin")) {
-				SMJoinEdge.performSortMergeJoin();
+				if(splited.length == 4)
+					SMJoinEdge.performSortMergeJoin(splited[3]);
+				else 
+					SMJoinEdge.performSortMergeJoin(null);
 				flushPages();
 			}
 			printReadWriteCount();

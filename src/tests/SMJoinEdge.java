@@ -5,10 +5,15 @@ import heap.Tuple;
 import iterator.SortMergeEdge;
 
 public class SMJoinEdge {
-	
-	public static void performSortMergeJoin() {
-		SortMergeEdge sme = new SortMergeEdge("97");
-		//SortMergeEdge sme = new SortMergeEdge("");  this is also a variation of sort merge edge join
+
+	public static void performSortMergeJoin(String label) {
+		SortMergeEdge sme = null;
+		if(label != null) {
+			sme = new SortMergeEdge(label);
+		} else  {
+			sme = new SortMergeEdge();
+		}
+		
 		AttrType [] jtype = new AttrType[16];
 		jtype[0] = new AttrType (AttrType.attrString);
 		jtype[1] = new AttrType (AttrType.attrString);
@@ -36,9 +41,5 @@ public class SMJoinEdge {
 			}
 		}
 		sme.close();
-	}
-	public static void main(String args[])
-	{
-		performSortMergeJoin();
 	}
 }

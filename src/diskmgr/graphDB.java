@@ -115,11 +115,12 @@ public class graphDB extends DB {
 		nodes = new NodeHeapFile(filename + "NODEHEAP");
 		edges = new EdgeHeapFile(filename + "EDGEHEAP");
 		nodeDesc = new ZCurve(filename + "NODEDESC");
+		// Node/Edge labels can be chosen to be unique or not - but edge weights always allow duplicates (naive delete used)
 		if(type == 1) {
 		// full delete
 			nodeLabels = new BTreeFile(filename + "NODELABEL", AttrType.attrString, KEY_SIZE, 1);
 			edgeLabels = new BTreeFile(filename + "EDGELABEL", AttrType.attrString, KEY_SIZE, 1);
-			edgeWeights = new BTreeFile(filename + "EDGEWEIGHT", AttrType.attrInteger, KEY_SIZE, 1);
+			edgeWeights = new BTreeFile(filename + "EDGEWEIGHT", AttrType.attrInteger, KEY_SIZE, 0);
 		}
 		else {
 		// Otherwise, naive delete
@@ -183,13 +184,13 @@ public class graphDB extends DB {
 	}
 	/** Deletes an edge from the graphDB and performs all relevant bookkeeping. */
 	public void deleteEdge(EID id) throws IOException, Exception {
-		Edge edge = edges.getEdge(id);
+		Edge edge = edges.getEdge(id); 
 		edgeLabels.Delete(new StringKey(edge.getLabel()), id);
 		edgeWeights.Delete(new IntegerKey(edge.getWeight()), id);
-		removeNode(sourceNodes, edge.getSource());
-		removeNode(destNodes, edge.getDestination());
-		removeLabel(labelNames, edge.getLabel());
-		edges.deleteEdge(id);
+		removeNode(sourceNodes, edge.getSource()); 
+		removeNode(destNodes, edge.getDestination()); 
+		removeLabel(labelNames, edge.getLabel()); 
+		edges.deleteEdge(id); 
 		return;
 	}
 	/** Getter function that returns the handler for the given query. */	

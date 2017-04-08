@@ -53,6 +53,7 @@ public class BatchEdgeDeleteHandler implements GlobalConst{
 		}
 
 
+		int iter = 1;
 		// Read lines from the file until no more are left.
 
 		if(status){
@@ -92,14 +93,15 @@ public class BatchEdgeDeleteHandler implements GlobalConst{
 					Node node2 = new Node();
 					node2.setLabel(edgeinput[1]);
 					node1.setLabel(edgeinput[0]);
-
-
+					//System.out.println(tempedge.getLabel() + " " + edgelabel + " " + Objects.equals(edge.getLabel(),edgelabel) + " " + Objects.equals(tempedge.getLabel(),edgelabel));
 					if(Objects.equals(tempedge.getLabel(),edgelabel)){	// Edge Found with given edge Label.
+						//System.out.println(edgelabel + " " + edgeinput[2]);
 						Node sourcenode = nodeheap.getNode(sourcenid);
 						Node desnode    = nodeheap.getNode(desnid);
-
+						//System.out.println(sourcenid + " " + edgeinput[0] + " " + desnid + " " + edgeinput[1]);
 						if(Objects.equals(desnode.getLabel(),node2.getLabel()) && Objects.equals(sourcenode.getLabel(),node1.getLabel())){   // Checking if the edge is the one we are looking for.
-							System.out.println("BatchEdgeDeleteHandler.runbatchedgedelete() deleting");
+							//System.out.println("BatchEdgeDeleteHandler.runbatchedgedelete() deleting" + iter + " " + edgelabel);
+							iter++;
 							db.deleteEdge(eid);
 						}
 

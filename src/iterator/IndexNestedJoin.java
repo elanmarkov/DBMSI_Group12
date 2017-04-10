@@ -20,7 +20,7 @@ public class IndexNestedJoin {
 	public static void edgeSourceJoin (CondExpr nodeCond) {
 		// Edge JOIN (source, node_condition) Node
 	}
-	public static void edgeSourceJoin (CondExpr nodeCond) {
+	public static void edgeDestJoin (CondExpr nodeCond) {
 		// Edge JOIN (dest, node_condition) Node
 	}
 }

@@ -223,6 +223,12 @@ public class graphDB extends DB {
 	public BTFileScan getSourceScan() throws Exception {
 		return nodeLabels.new_scan(null, null);
 	}
+	public BTFileScan getDestScan() throws Exception {
+		return nodeLabels.new_scan(null, null);
+	}
+	public Node getNodeByNID(NID nid) throws Exception {
+		return nodes.getNode(nid);
+	}
 	/** Adds a nodeRef to the given ArrayList. If it is a duplicate, it will simply increment the number of references. */
 	private void addNodeNoDuplicate(ArrayList<nodeRef> list, NID newNode) {
 		boolean duplicate = false;

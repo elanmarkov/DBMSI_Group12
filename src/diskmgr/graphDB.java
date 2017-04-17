@@ -217,6 +217,12 @@ public class graphDB extends DB {
 	public BatchEdgeInsertHandler getBatchEdgeInsertHandler() {
 		return batchEdgeInsert;
 	}
+	public Scan getEdgeOpenScan() throws Exception {
+		return edges.openScan();
+	}
+	public BTFileScan getSourceScan() throws Exception {
+		return nodeLabels.new_scan(null, null);
+	}
 	/** Adds a nodeRef to the given ArrayList. If it is a duplicate, it will simply increment the number of references. */
 	private void addNodeNoDuplicate(ArrayList<nodeRef> list, NID newNode) {
 		boolean duplicate = false;

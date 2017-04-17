@@ -16,8 +16,8 @@ public class IndexNestedJoin extends Iterator {
 	private static boolean OK = true;
 	private static boolean FAIL = false;
 	private Heapfile joinHeap;
-	private static Scan EdgeScan;
-	private static BTFileScan indexSearch;
+	private Scan EdgeScan;
+	private  BTFileScan indexSearch;
 	private boolean status;
 	private AttrType      _in1[],  _in2[];
         private   int        in1_len, in2_len;
@@ -126,7 +126,7 @@ typejoin as per switch statement below. */
 	      }
 		switch(typejoin) {
 		case 0:
-			sourceEdgeJoin(condition);
+			sourceEdgeJoin(rightFilter);
 			break;
 		case 1:
 			destEdgeJoin(condition);
@@ -142,8 +142,8 @@ typejoin as per switch statement below. */
 			close();
 		}
 	}
-	public static void sourceEdgeJoin (CondExpr edgeCond) 
-		throws NestedLoopException {
+	public void sourceEdgeJoin (CondExpr[] edgeCond) 
+		throws NestedLoopException, Exception {
 		// Node JOIN (source, edge_condition) Edge
 		try {
 			EdgeScan = SystemDefs.JavabaseDB.getEdgeOpenScan();
@@ -158,36 +158,37 @@ typejoin as per switch statement below. */
 		    throw new NestedLoopException(e, "failed to access source node index");
 	        }
 		boolean done = false;
-		Edge nextEdge;
-		Node nextNode = null;
+		Tuple nextEdge = null;
+		Tuple nextNode = null;
 		while(!done) {
 			//nextEdge = EdgeScan.getNext(null);
-			if(//condExpr is true
-				true) {
+			if(PredEval.Eval(edgeCond, nextEdge, null, _in2, null) == true) {
 				//nextNode = indexSearch.get_next();
 				while(nextNode != null) {
-					// joinHeap.add(new Tuple(nextNode, nextEdge));
+					Projection.Join(nextEdge, _in1,
+							nextNode, _in2,
+							Jtuple, perm_mat, nOutFlds);
 					//nextNode = indexSearch.get_next();
 					
 				} 			
 			}
 		}
 	}
-	public static void destEdgeJoin (CondExpr edgeCond) {
+	public void destEdgeJoin (CondExpr edgeCond) {
 		// Node JOIN (dest, edge_condition) Edge
 		// Perform Join using all edges that satisfy the condition
 	}
-	public static void edgeSourceJoin (CondExpr nodeCond) {
+	public void edgeSourceJoin (CondExpr nodeCond) {
 		// Edge JOIN (source, node_condition) Node
 		// Perform Join using all nodes that satisfy the condition
 	}
-	public static void edgeDestJoin (CondExpr nodeCond) {
+	public void edgeDestJoin (CondExpr nodeCond) {
 		// Edge JOIN (dest, node_condition) Node
 		// Perform Join using all nodes that satisfy the condition
 	}
-/** Get the next tuple in the joined heap. Returns null if none remaining. 
+/** Get the next tuple in the joined heap. Returns null if none remaining and will then start from beginning. 
 The entire join should have been performed by the above methods. This will just get them from 
-the relevant heap file. */
+the heap file. */
     public Tuple get_next()
     throws IOException,
 	   JoinsException,

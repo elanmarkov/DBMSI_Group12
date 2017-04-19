@@ -31,6 +31,7 @@ public class IndexNestedJoin extends Iterator {
   	private   Tuple     Jtuple;           // Joined tuple
   	private   FldSpec   perm_mat[];
   	private   int        nOutFlds;
+	private IndexNestedJoin leftArg;
 /** Constructor for join of a Tuple and edge or node.
 Parameters as in NestedLoopsJoins class
 IndexNestedJoin as an argument for previous tuple set.
@@ -65,6 +66,7 @@ typejoin as per switch statement below. */
 	}
 /** Constructor for join of a Tuple and edge or node.
 Parameters as in NestedLoopsJoins class
+IndexNestedJoin for merge of a previous join and a node/edge; condition on the edge; use typejoin 4-6 (otherwise, pass null argument)
 CondExpr for condition on edge/nodes
 typejoin as per switch statement below. */
 	public IndexNestedJoin(
@@ -79,6 +81,7 @@ typejoin as per switch statement below. */
 			   String relationName,      
 			   FldSpec   proj_list[],
 			   int        n_out_flds,
+			   IndexNestedJoin arg,
 			   CondExpr condition[],
 			   int typejoin) 
 		throws Exception {
@@ -102,6 +105,7 @@ typejoin as per switch statement below. */
 	      
 	      perm_mat = proj_list;
       	      nOutFlds = n_out_flds;
+	      leftArg = arg;
 
 	      try {
 		t_size = TupleUtils.setup_op_tuple(Jtuple, Jtypes,
@@ -133,6 +137,15 @@ typejoin as per switch statement below. */
 			break;
 		case 3:
 			edgeDestJoin(condition);
+			break;
+		case 4: 
+			tupleEdgeJoin(condition);
+			break; 
+		case 5: 
+			tupleSourceJoin(condition);
+			break;
+		case 6: 
+			tupleDestJoin(condition);
 			break;
 		default: 
 			status = FAIL;
@@ -255,7 +268,7 @@ typejoin as per switch statement below. */
 			indexSearch = SystemDefs.JavabaseDB.getDestScan();
 	        }
 	        catch(Exception e){
-		    throw new NestedLoopException(e, "failed to access source node index");
+		    throw new NestedLoopException(e, "failed to access dest node index");
 	        }
 		RID rid = new RID();
 		Tuple nextEdge = null;
@@ -277,6 +290,90 @@ typejoin as per switch statement below. */
 			} 			
 
 		}
+	}
+	public void tupleDestJoin (CondExpr[] nodeCond) throws NestedLoopException, Exception {
+		// Tuple JOIN (dest, node_condition) Node
+		try {
+			indexSearch = SystemDefs.JavabaseDB.getDestScan();
+	        }
+	        catch(Exception e){
+		    throw new NestedLoopException(e, "failed to access dest node index");
+	        }
+		RID rid = new RID();
+		Tuple nextTuple = null;
+		Tuple nextNode = null;
+		while((nextTuple=leftArg.get_next()) != null) {
+			// Outer loop; check edge condition on all edges in heap
+			
+			while(  (nextNode = 
+				SystemDefs.JavabaseDB.getNodeByNID((NID) // get the node by the NID from the heap
+				((LeafData) indexSearch.get_next().data).getData()) // Get the NID from the index in the proper format
+				) != null) {
+				// Inner loop; iterate over all indexed nodes that meet condition and add the relevant joined tuples to join heap
+				if(PredEval.Eval(nodeCond, nextNode, null, _in2, null) == true) {
+					Projection.Join(nextTuple, _in1,
+							nextNode, _in2,
+							Jtuple, perm_mat, nOutFlds);
+					joinHeap.insertRecord(Jtuple.getTupleByteArray());
+					}
+			} 			
+
+		}
+	}
+	public void tupleSourceJoin (CondExpr[] nodeCond) throws NestedLoopException, Exception {
+		// Tuple JOIN (dest, node_condition) Node
+		try {
+			indexSearch = SystemDefs.JavabaseDB.getSourceScan();
+	        }
+	        catch(Exception e){
+		    throw new NestedLoopException(e, "failed to access source node index");
+	        }
+		RID rid = new RID();
+		Tuple nextTuple = null;
+		Tuple nextNode = null;
+		while((nextTuple=leftArg.get_next()) != null) {
+			// Outer loop; check edge condition on all edges in heap
+			
+			while(  (nextNode = 
+				SystemDefs.JavabaseDB.getNodeByNID((NID) // get the node by the NID from the heap
+				((LeafData) indexSearch.get_next().data).getData()) // Get the NID from the index in the proper format
+				) != null) {
+				// Inner loop; iterate over all indexed nodes that meet condition and add the relevant joined tuples to join heap
+				if(PredEval.Eval(nodeCond, nextNode, null, _in2, null) == true) {
+					Projection.Join(nextTuple, _in1,
+							nextNode, _in2,
+							Jtuple, perm_mat, nOutFlds);
+					joinHeap.insertRecord(Jtuple.getTupleByteArray());
+					}
+			} 			
+
+		}
+	}
+	public void tupleEdgeJoin (CondExpr[] edgeCond) 
+		throws NestedLoopException, Exception {
+		// Tuple JOIN (source, edge_condition) Edge
+		try {
+			EdgeScan = SystemDefs.JavabaseDB.getEdgeOpenScan();
+	        }
+	        catch(Exception e){
+		    throw new NestedLoopException(e, "openScan failed on edges");
+	        }
+		RID rid = new RID();
+		Tuple nextEdge = null;
+		Tuple nextTuple = null;
+		while((nextEdge=EdgeScan.getNext(rid)) != null) {
+			// Outer loop; check edge condition on all edges in heap
+			if(PredEval.Eval(edgeCond, nextEdge, null, _in2, null) == true) {
+				while(  (nextTuple = leftArg.get_next()) != null) {
+					// Inner loop; iterate over all indexed nodes and add the relevant joined tuples to join heap
+					Projection.Join(nextTuple, _in1,
+							nextEdge, _in2,
+							Jtuple, perm_mat, nOutFlds);
+					joinHeap.insertRecord(Jtuple.getTupleByteArray());
+				} 			
+			}
+		}
+		JoinScan = joinHeap.openScan();
 	}
 /** Get the next tuple in the joined heap. Returns null if none remaining and will then start from beginning. 
 The entire join should have been performed by the above methods. This will just get them from 

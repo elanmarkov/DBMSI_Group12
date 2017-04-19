@@ -46,7 +46,6 @@ Contains query handlers in order to control access to internal data structures -
 */
 public class graphDB extends DB {
 	static int numGraphDB = 0;//Global tracker of DB identification number, for file names.
-
 	// Core containers
 	NodeHeapFile nodes;
 	EdgeHeapFile edges;
@@ -54,6 +53,8 @@ public class graphDB extends DB {
 	ZCurve nodeDesc;
 	BTreeFile edgeLabels;
 	BTreeFile edgeWeights;
+	BTreeFile sourceNodesIndex;
+	BTreeFile destNodesIndex;
 
 	// Unique format of filename to be randomly generated
 	String filename;
@@ -121,12 +122,16 @@ public class graphDB extends DB {
 			nodeLabels = new BTreeFile(filename + "NODELABEL", AttrType.attrString, KEY_SIZE, 1);
 			edgeLabels = new BTreeFile(filename + "EDGELABEL", AttrType.attrString, KEY_SIZE, 1);
 			edgeWeights = new BTreeFile(filename + "EDGEWEIGHT", AttrType.attrInteger, KEY_SIZE, 0);
+			sourceNodesIndex = new BTreeFile(filename + "SOURCENODES", AttrType.attrString, KEY_SIZE, 0);
+			destNodesIndex = new BTreeFile(filename + "DESTNODES", AttrType.attrString, KEY_SIZE, 0);
 		}
 		else {
 		// Otherwise, naive delete
 			nodeLabels = new BTreeFile(filename + "NODELABEL", AttrType.attrString, KEY_SIZE, 0);
 			edgeLabels = new BTreeFile(filename + "EDGELABEL", AttrType.attrString, KEY_SIZE, 0);
 			edgeWeights = new BTreeFile(filename + "EDGEWEIGHT", AttrType.attrInteger, KEY_SIZE, 0);
+			sourceNodesIndex = new BTreeFile(filename + "SOURCENODES", AttrType.attrString, KEY_SIZE, 0);
+			destNodesIndex = new BTreeFile(filename + "DESTNODES", AttrType.attrString, KEY_SIZE, 0);
 		}
 		nodeQuery = new NodeQueryHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights, this);
 		edgeQuery = new EdgeQueryHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights, this);
@@ -168,8 +173,8 @@ public class graphDB extends DB {
 		EID id = edges.insertEdge(edge.getEdgeByteArray());
 		edgeLabels.insert(new StringKey(edge.getLabel()), id);
 		edgeWeights.insert(new IntegerKey(edge.getWeight()), id);
-		addNodeNoDuplicate(sourceNodes, edge.getSource());
-		addNodeNoDuplicate(destNodes, edge.getDestination());
+		addNodeNoDuplicate(sourceNodes, sourceNodesIndex, edge.getSource());
+		addNodeNoDuplicate(destNodes, destNodesIndex, edge.getDestination());
 		addLabelNoDuplicate(labelNames, edge.getLabel());
 		return;
 	}
@@ -187,8 +192,8 @@ public class graphDB extends DB {
 		Edge edge = edges.getEdge(id); 
 		edgeLabels.Delete(new StringKey(edge.getLabel()), id);
 		edgeWeights.Delete(new IntegerKey(edge.getWeight()), id);
-		removeNode(sourceNodes, edge.getSource()); 
-		removeNode(destNodes, edge.getDestination()); 
+		removeNode(sourceNodes, sourceNodesIndex, edge.getSource()); 
+		removeNode(destNodes, destNodesIndex, edge.getDestination()); 
 		removeLabel(labelNames, edge.getLabel()); 
 		edges.deleteEdge(id); 
 		return;
@@ -221,19 +226,19 @@ public class graphDB extends DB {
 		return edges.openScan();
 	}
 	public BTFileScan getSourceScan() throws Exception {
-		return nodeLabels.new_scan(null, null);
+		return sourceNodesIndex.new_scan(null, null);
 	}
 	public BTFileScan getDestScan() throws Exception {
-		return nodeLabels.new_scan(null, null);
+		return destNodesIndex.new_scan(null, null);
 	}
 	public Node getNodeByNID(NID nid) throws Exception {
 		return nodes.getNode(nid);
 	}
 	/** Adds a nodeRef to the given ArrayList. If it is a duplicate, it will simply increment the number of references. */
-	private void addNodeNoDuplicate(ArrayList<nodeRef> list, NID newNode) {
+	private void addNodeNoDuplicate(ArrayList<nodeRef> list, BTreeFile index, NID newNode) throws Exception {
 		boolean duplicate = false;
 		nodeRef item;
-		int iter = 0;		
+		int iter = 0;	
 		while(!duplicate && iter < list.size()){
 			item = list.get(iter);
 			if(item.node.equals(newNode)) {
@@ -246,6 +251,7 @@ public class graphDB extends DB {
 		}
 		if(!duplicate) {
 			list.add(new nodeRef(newNode));
+			index.insert(new StringKey(""), newNode);
 		}
 	}
 	/** Adds a labelRef to the given ArrayList. If it is a duplicate, it will simply increment the number of references. */
@@ -268,7 +274,7 @@ public class graphDB extends DB {
 	/** Removes one instance of the given node from the given ArrayList, and deletes the entry if the number
 	of references becomes zero. 
 	Returns true if a deletion occurred; false if item not found. */
-	private boolean removeNode(ArrayList<nodeRef> list, NID rmNode) {
+	private boolean removeNode(ArrayList<nodeRef> list, BTreeFile index, NID rmNode) throws Exception {
 		boolean found = false;
 		int iter = 0;
 		nodeRef item;		
@@ -279,6 +285,7 @@ public class graphDB extends DB {
 				item.ref--;
 				if(item.ref==0) {
 					list.remove(iter); // Delete unreferenced object
+					index.Delete(new StringKey(""), rmNode);
 				}
 			}
 			iter++;
@@ -312,6 +319,8 @@ public class graphDB extends DB {
 			nodeDesc.close();
 			edgeLabels.close();
 			edgeWeights.close();
+			sourceNodesIndex.close();
+			destNodesIndex.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

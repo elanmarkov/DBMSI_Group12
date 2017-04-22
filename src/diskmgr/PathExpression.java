@@ -47,6 +47,7 @@ public class PathExpression{
 	BTreeFile edgeWeights;
 	graphDB db;
 	private Iterator[] nljArray ;
+	Iterator am = null;
 	
 
 	public PathExpression(NodeHeapFile nodes, EdgeHeapFile edges, BTreeFile nodeLabels, ZCurve nodeDesc,
@@ -323,8 +324,7 @@ public class PathExpression{
 				new FldSpec(new RelSpec(RelSpec.innerRel), 7),
 				new FldSpec(new RelSpec(RelSpec.innerRel), 8) };
 		
-	    Iterator am = null;
-		if(inputAttrTypes[0].expType==ExpType.expNodeLabel){
+	    if(inputAttrTypes[0].expType==ExpType.expNodeLabel){
 			CondExpr[] startNodeCondition = getConditionExprOnNodeLabels(labels,1);
 			
 			try {
@@ -442,7 +442,7 @@ public class PathExpression{
 			}
 			
 		}
-		try {
+		/*try {
 			Tuple t =null;
 			while ((t = nljArray[nljArray.length-1].get_next()) != null) {
 				t.print(Jtypes);
@@ -460,9 +460,9 @@ public class PathExpression{
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 		
-		return null;
+		return nljArray[nljArray.length-1];
 	}
 
 	private CondExpr[] getConditionExprOnEdgeWeight(int weight, int fldNum) {
@@ -557,7 +557,14 @@ public class PathExpression{
 
 	
 	public void close() throws IOException, JoinsException, SortException, IndexException {
-		
+		try {
+			am.close();
+			for(int i = 0;i<nljArray.length;i++){
+				nljArray[i].close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 }

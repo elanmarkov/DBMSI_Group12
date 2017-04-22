@@ -6,7 +6,7 @@ import global.Descriptor;
 import global.TupleOrder;
 import heap.Tuple;
 
-public class SortMergeEdge {
+public class SortMergeEdge extends Iterator{
 	private static boolean OK = true;
 	private static boolean FAIL = false;
 	private  CondExpr  OutputFilter[];
@@ -33,6 +33,11 @@ public class SortMergeEdge {
 		setCondExpr(OutputFilter);
 		performSortMergeJoin();
 	}
+	
+	public SortMergeEdge(CondExpr[] expr) {
+		OutputFilter = expr;
+		performSortMergeJoin();
+	}
 
 	private static void setCondExpr(CondExpr[] expr) {
 
@@ -40,8 +45,8 @@ public class SortMergeEdge {
 		expr[0].op    = new AttrOperator(AttrOperator.aopEQ);
 		expr[0].type1 = new AttrType(AttrType.attrSymbol);
 		expr[0].type2 = new AttrType(AttrType.attrSymbol);
-		expr[0].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),7);
-		expr[0].operand2.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),8);
+		expr[0].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),8);
+		expr[0].operand2.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),7);
 
 		expr[1]   = null;
 
@@ -54,14 +59,14 @@ public class SortMergeEdge {
 		expr[0].op    = new AttrOperator(AttrOperator.aopEQ);
 		expr[0].type1 = new AttrType(AttrType.attrSymbol);
 		expr[0].type2 = new AttrType(AttrType.attrString);
-		expr[0].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),7);
+		expr[0].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),8);
 		expr[0].operand2.string = label;
 
 		expr[1].next  = null;
 		expr[1].op    = new AttrOperator(AttrOperator.aopEQ);
 		expr[1].type1 = new AttrType(AttrType.attrSymbol);
 		expr[1].type2 = new AttrType(AttrType.attrString);
-		expr[1].operand1.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),8);
+		expr[1].operand1.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),7);
 		expr[1].operand2.string = label;
 
 
@@ -181,8 +186,8 @@ public class SortMergeEdge {
 		try {
 			sm = new SortMerge(E1types, 8, E1sizes,
 					E2types, 8, E2sizes,
-					7, 4, 
 					8, 4, 
+					7, 4, 
 					50,
 					am, am2, 
 					false, false, ascending,10, y,

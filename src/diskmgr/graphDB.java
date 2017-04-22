@@ -55,6 +55,8 @@ public class graphDB extends DB {
 	BTreeFile edgeWeights;
 	BTreeFile sourceNodesIndex;
 	BTreeFile destNodesIndex;
+	PathExpression pathExpressions;
+	BTreeFile edgeSrcLabels;
 
 	// Unique format of filename to be randomly generated
 	String filename;
@@ -124,6 +126,7 @@ public class graphDB extends DB {
 			edgeWeights = new BTreeFile(filename + "EDGEWEIGHT", AttrType.attrInteger, KEY_SIZE, 0);
 			sourceNodesIndex = new BTreeFile(filename + "SOURCENODES", AttrType.attrString, KEY_SIZE, 0);
 			destNodesIndex = new BTreeFile(filename + "DESTNODES", AttrType.attrString, KEY_SIZE, 0);
+			edgeSrcLabels = new BTreeFile(filename + "EDGESRCLABEL", AttrType.attrString, KEY_SIZE, 0);
 		}
 		else {
 		// Otherwise, naive delete
@@ -132,6 +135,7 @@ public class graphDB extends DB {
 			edgeWeights = new BTreeFile(filename + "EDGEWEIGHT", AttrType.attrInteger, KEY_SIZE, 0);
 			sourceNodesIndex = new BTreeFile(filename + "SOURCENODES", AttrType.attrString, KEY_SIZE, 0);
 			destNodesIndex = new BTreeFile(filename + "DESTNODES", AttrType.attrString, KEY_SIZE, 0);
+			edgeSrcLabels = new BTreeFile(filename + "EDGESRCLABEL", AttrType.attrString, KEY_SIZE, 0);
 		}
 		nodeQuery = new NodeQueryHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights, this);
 		edgeQuery = new EdgeQueryHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights, this);
@@ -139,7 +143,17 @@ public class graphDB extends DB {
 		batchEdgeDelete = new BatchEdgeDeleteHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights, this);
 		batchNodeInsert = new BatchNodeInsertHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights, this);
 		batchEdgeInsert = new BatchEdgeInsertHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights, this);
+		pathExpressions = new PathExpression(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights, this);
 	}
+	
+	/**
+	 * getter for pathExpression
+	 * @return
+	 */
+	public PathExpression getPathExpressions() {
+		return pathExpressions;
+	}
+	
 	/** Getter function that gives current node count. */
 	public int getNodeCnt() throws HFBufMgrException, InvalidSlotNumberException, InvalidTupleSizeException, IOException, HFDiskMgrException {
 		return nodes.getNodeCnt();
@@ -173,6 +187,7 @@ public class graphDB extends DB {
 		EID id = edges.insertEdge(edge.getEdgeByteArray());
 		edgeLabels.insert(new StringKey(edge.getLabel()), id);
 		edgeWeights.insert(new IntegerKey(edge.getWeight()), id);
+		edgeSrcLabels.insert(new StringKey(edge.getSourceLabel()), id);
 		addNodeNoDuplicate(sourceNodes, sourceNodesIndex, edge.getSource());
 		addNodeNoDuplicate(destNodes, destNodesIndex, edge.getDestination());
 		addLabelNoDuplicate(labelNames, edge.getLabel());
@@ -192,6 +207,7 @@ public class graphDB extends DB {
 		Edge edge = edges.getEdge(id); 
 		edgeLabels.Delete(new StringKey(edge.getLabel()), id);
 		edgeWeights.Delete(new IntegerKey(edge.getWeight()), id);
+		edgeSrcLabels.Delete(new StringKey(edge.getSourceLabel()), id);
 		removeNode(sourceNodes, sourceNodesIndex, edge.getSource()); 
 		removeNode(destNodes, destNodesIndex, edge.getDestination()); 
 		removeLabel(labelNames, edge.getLabel()); 
@@ -321,6 +337,7 @@ public class graphDB extends DB {
 			edgeWeights.close();
 			sourceNodesIndex.close();
 			destNodesIndex.close();
+			edgeSrcLabels.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

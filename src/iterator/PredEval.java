@@ -140,7 +140,7 @@ public class PredEval
 	      // Got the arguments, now perform a comparison.
 	      try {
 		comp_res = TupleUtils.CompareTupleWithTuple(comparison_type, tuple1, fld1, tuple2, fld2);
-	      }catch (TupleUtilsException e){
+		  }catch (TupleUtilsException e){
 		throw new PredEvalException (e,"TupleUtilsException is caught by PredEval.java");
 	      }
 	      op_res = false; 
@@ -148,7 +148,9 @@ public class PredEval
 	    	  switch (temp_ptr.op.attrOperator)
 		  		{
 		  		case AttrOperator.aopEQ:
-		  		  if (comp_res == temp_ptr.distance) op_res = true;
+		  			if(temp_ptr.distance == -1 && comp_res == 0.0){
+		  				op_res = true;
+		  			}else if (comp_res == temp_ptr.distance) op_res = true;
 		  		  break;
 		  		case AttrOperator.aopLT:
 		  		  if (comp_res <  temp_ptr.distance) op_res = true;

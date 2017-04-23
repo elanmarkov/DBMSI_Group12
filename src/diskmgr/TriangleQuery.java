@@ -202,15 +202,15 @@ public class TriangleQuery {
   		expr[0].op    = new AttrOperator(AttrOperator.aopEQ);
   		expr[0].type1 = new AttrType(AttrType.attrSymbol);
   		expr[0].type2 = new AttrType(AttrType.attrSymbol);
-  		expr[0].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),7);
-  		expr[0].operand2.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),4);
+  		expr[0].operand1.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),7);
+  		expr[0].operand2.symbol = new FldSpec (new RelSpec(RelSpec.outer),4);
   
   		expr[1].next   = null;
   		expr[1].op    = new AttrOperator(AttrOperator.aopEQ);
   		expr[1].type1 = new AttrType(AttrType.attrSymbol);
   		expr[1].type2 = new AttrType(AttrType.attrSymbol);
-  		expr[1].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),8);
-  		expr[1].operand2.symbol =  new FldSpec (new RelSpec(RelSpec.innerRel),1);
+  		expr[1].operand1.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),8);
+  		expr[1].operand2.symbol =  new FldSpec (new RelSpec(RelSpec.outer),1);
   
   		expr[2].next   = null;
   		expr[2].op    = new AttrOperator(AttrOperator.aopLE);
@@ -233,21 +233,21 @@ public class TriangleQuery {
   		expr[0].op    = new AttrOperator(AttrOperator.aopEQ);
   		expr[0].type1 = new AttrType(AttrType.attrSymbol);
   		expr[0].type2 = new AttrType(AttrType.attrSymbol);
-  		expr[0].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),7);
-  		expr[0].operand2.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),4);
+  		expr[0].operand1.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),7);
+  		expr[0].operand2.symbol = new FldSpec (new RelSpec(RelSpec.outer),4);
   
   		expr[1].next   = null;
   		expr[1].op    = new AttrOperator(AttrOperator.aopEQ);
   		expr[1].type1 = new AttrType(AttrType.attrSymbol);
   		expr[1].type2 = new AttrType(AttrType.attrSymbol);
-  		expr[1].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),8);
-  		expr[1].operand2.symbol =  new FldSpec (new RelSpec(RelSpec.innerRel),1);
+  		expr[1].operand1.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),8);
+  		expr[1].operand2.symbol =  new FldSpec (new RelSpec(RelSpec.outer),1);
   
   		expr[2].next   = null;
   		expr[2].op    = new AttrOperator(AttrOperator.aopLE);
   		expr[2].type1 = new AttrType(AttrType.attrSymbol);
   		expr[2].type2 = new AttrType(AttrType.attrString);
-  		expr[2].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),6);
+  		expr[2].operand1.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),6);
   		expr[2].operand2.string = label;
   
   		expr[3] = null;

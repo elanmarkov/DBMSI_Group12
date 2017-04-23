@@ -59,8 +59,9 @@ public class testcases {
 		System.out.println("Enter menu to print the menu, exit to exit, or a command line input to execute:");
 	}
 	/** Main test driver for Graph Database tests. Runs any of the six tests as specified by command line input.
-	Also displays menus and read/write statistics. */
-	public static void main(String args[])
+	Also displays menus and read/write statistics. 
+	 * @throws FileNotFoundException */
+	public static void main(String args[]) throws FileNotFoundException
 	{
 		SystemDefs sysdef;
 		boolean exit = false;
@@ -76,7 +77,7 @@ public class testcases {
 			if(splited[0].equals("batchnodeinsert") || splited[0].equals("batchedgeinsert") ||
 					splited[0].equals("batchnodedelete") || splited[0].equals("batchedgedelete")) {
 				graphDB = splited[2];
-			} else if(splited[0].equals("nodequery") || splited[0].equals("edgequery") || splited[0].equals("sortMergeJoin")) {
+			} else if(splited[0].equals("nodequery") || splited[0].equals("edgequery") || splited[0].equals("sortMergeJoin") || splited[0].equals("triangleQuery")) {
 				graphDB = splited[1];
 				numBuf = Integer.parseInt(splited[2]);
 			}
@@ -142,6 +143,15 @@ public class testcases {
 					SMJoinEdge.performSortMergeJoin(splited[3]);
 				else 
 					SMJoinEdge.performSortMergeJoin(null);
+				flushPages();
+			} else if(splited[0].equals("triangleQuery")) {
+				if(splited.length > 3) {
+					TriangleQueryTest tq = new TriangleQueryTest(splited[3]);
+					tq=null;
+				}
+				else {
+					System.out.println("Queries not formatted properly.");
+				}
 				flushPages();
 			}
 			printReadWriteCount();

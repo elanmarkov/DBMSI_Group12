@@ -194,7 +194,54 @@ public class SortMergeEdge extends Iterator{
 			Runtime.getRuntime().exit(1);
 		}
 	}
-	public SortMerge performSecondMerge(CondExpr[] expr) {
+	
+	public NestedLoopsJoins performSecondJoin (CondExpr[] expr) {
+		boolean status = OK;
+		AttrType [] E1types = new AttrType[8];
+		E1types[0] = new AttrType(AttrType.attrString);
+		E1types[1] = new AttrType(AttrType.attrInteger);
+		E1types[2] = new AttrType(AttrType.attrInteger);
+		E1types[3] = new AttrType(AttrType.attrInteger);
+		E1types[4] = new AttrType(AttrType.attrInteger);
+		E1types[5] = new AttrType(AttrType.attrInteger);
+		E1types[6] = new AttrType(AttrType.attrString);
+		E1types[7] = new AttrType(AttrType.attrString);
+		
+		short [] E1sizes = new short[3];
+		E1sizes[0] = Tuple.LABEL_MAX_LENGTH;
+		E1sizes[1] = 4;
+		E1sizes[2] = 4;
+		
+		AttrType [] E2types = new AttrType[4];
+		E2types[0] = new AttrType(AttrType.attrString);
+		E2types[1] = new AttrType(AttrType.attrString);
+		E2types[2] = new AttrType(AttrType.attrString);
+		E2types[3] = new AttrType(AttrType.attrString);
+
+		short [] E2sizes = new short[4];
+		E2sizes[0] = 4;
+		E2sizes[1] = 4;
+		E2sizes[2] = 4;
+		E2sizes[3] = 4;
+		
+		FldSpec [] proj_list = new FldSpec[3];
+		proj_list[0] = new FldSpec(new RelSpec(RelSpec.innerRel), 7);
+		proj_list[1] = new FldSpec(new RelSpec(RelSpec.innerRel), 8);
+		proj_list[2] = new FldSpec(new RelSpec(RelSpec.outer), 2);
+		
+		NestedLoopsJoins inl = null;
+		try {
+			inl = new NestedLoopsJoins (E2types, 4, E2sizes,
+					E1types, 8, E1sizes,
+					200,
+					this.sm, "GraphDBEDGEHEAP",
+					expr, null, proj_list, 3);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return inl;
+	}
+	/*public SortMerge performSecondMerge(CondExpr[] expr) {
 		boolean status = OK;
 		
 		AttrType [] E1types = new AttrType[8];
@@ -284,7 +331,7 @@ public class SortMergeEdge extends Iterator{
 			Runtime.getRuntime().exit(1);
 		}
 		return sm1;
-	}
+	}*/
 	
 	public Tuple get_next() {
 		boolean status = OK;

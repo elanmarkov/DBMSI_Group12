@@ -5,8 +5,8 @@ import global.AttrType;
 import heap.Tuple;
 import iterator.CondExpr;
 import iterator.FldSpec;
+import iterator.NestedLoopsJoins;
 import iterator.RelSpec;
-import iterator.SortMerge;
 import iterator.SortMergeEdge;
 
 public class SMJoinEdge {
@@ -54,21 +54,21 @@ public class SMJoinEdge {
 		expr[0].op    = new AttrOperator(AttrOperator.aopEQ);
 		expr[0].type1 = new AttrType(AttrType.attrSymbol);
 		expr[0].type2 = new AttrType(AttrType.attrSymbol);
-		expr[0].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),7);
-		expr[0].operand2.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),4);
+		expr[0].operand1.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),7);
+		expr[0].operand2.symbol = new FldSpec (new RelSpec(RelSpec.outer),4);
 
 		expr[1].next   = null;
 		expr[1].op    = new AttrOperator(AttrOperator.aopEQ);
 		expr[1].type1 = new AttrType(AttrType.attrSymbol);
 		expr[1].type2 = new AttrType(AttrType.attrSymbol);
-		expr[1].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),8);
-		expr[1].operand2.symbol =  new FldSpec (new RelSpec(RelSpec.innerRel),1);
+		expr[1].operand1.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),8);
+		expr[1].operand2.symbol =  new FldSpec (new RelSpec(RelSpec.outer),1);
 
 		expr[2].next   = null;
 		expr[2].op    = new AttrOperator(AttrOperator.aopLE);
 		expr[2].type1 = new AttrType(AttrType.attrSymbol);
 		expr[2].type2 = new AttrType(AttrType.attrInteger);
-		expr[2].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),6);
+		expr[2].operand1.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),6);
 		expr[2].operand2.integer = weights1;
 
 		expr[3] = null;
@@ -88,14 +88,14 @@ public class SMJoinEdge {
 			}
 		}
 
-		AttrType [] jtype = new AttrType[4];
+		/*AttrType [] jtype = new AttrType[4];
 		jtype[0] = new AttrType (AttrType.attrString);
 		jtype[1] = new AttrType (AttrType.attrString);
 		jtype[2] = new AttrType (AttrType.attrString);
 		jtype[3] = new AttrType (AttrType.attrString);
 
 		Tuple t = null;
-		/*while ((t = sme.get_next()) != null) {
+		while ((t = sme.get_next()) != null) {
 			try {
 				t.print(jtype);
 			} catch (Exception e) {
@@ -103,7 +103,7 @@ public class SMJoinEdge {
 			}
 		}*/
 
-		SortMerge sm = sme.performSecondMerge(setCondExprW(2000));
+		NestedLoopsJoins inl = sme.performSecondJoin(setCondExprW(2000));
 		AttrType [] jtype1 = new AttrType[3];
 		jtype1[0] = new AttrType (AttrType.attrString);
 		jtype1[1] = new AttrType (AttrType.attrString);
@@ -111,7 +111,8 @@ public class SMJoinEdge {
 		Tuple t1 = new Tuple();
 		t1 = null;
 		try {
-			while ((t1 = sm.get_next()) != null) {
+			System.out.println("SMJoinEdge.performSortMergeJoin()");
+			while ((t1 = inl.get_next()) != null) {
 				try {
 					t1.print(jtype1);
 				} catch (Exception e) {
@@ -119,7 +120,7 @@ public class SMJoinEdge {
 				}
 			}
 			try{
-				sm.close();
+				inl.close();
 			} catch(Exception e) {
 				e.printStackTrace();
 			}

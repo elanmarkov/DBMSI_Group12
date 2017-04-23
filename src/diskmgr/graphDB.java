@@ -64,6 +64,7 @@ public class graphDB extends DB {
 	// Query handlers
 	NodeQueryHandler nodeQuery;
 	EdgeQueryHandler edgeQuery;
+	PathQueryHandler pathQuery;
 	BatchNodeDeleteHandler batchNodeDelete;
 	BatchEdgeDeleteHandler batchEdgeDelete;
 	BatchNodeInsertHandler batchNodeInsert;
@@ -221,6 +222,10 @@ public class graphDB extends DB {
 	/** Getter function that returns the handler for the given query. */	
 	public EdgeQueryHandler getEdgeQueryHandler() {
 		return edgeQuery;
+	}
+	/** Getter function that returns the handler for the given path query. */
+	public PathQueryHandler getPathQueryHandler() {
+		return pathQuery;
 	}
 	/** Getter function that returns the handler for the given query. */	
 	public BatchNodeDeleteHandler getBatchNodeDeleteHandler() {

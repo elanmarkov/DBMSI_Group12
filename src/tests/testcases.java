@@ -5,9 +5,13 @@ CSE 510 Project, Group 12.
 package tests;
 
 import global.SystemDefs;
+import heap.InvalidTupleSizeException;
+
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
+
 import diskmgr.PCounter;
 
 /** Driver class for the test cases for the Graph Database. */
@@ -60,8 +64,9 @@ public class testcases {
 	}
 	/** Main test driver for Graph Database tests. Runs any of the six tests as specified by command line input.
 	Also displays menus and read/write statistics. 
-	 * @throws FileNotFoundException */
-	public static void main(String args[]) throws FileNotFoundException
+	 * @throws IOException 
+	 * @throws InvalidTupleSizeException */
+	public static void main(String args[]) throws InvalidTupleSizeException, IOException
 	{
 		SystemDefs sysdef;
 		boolean exit = false;
@@ -133,6 +138,10 @@ public class testcases {
 				System.arraycopy(splited, 1, newSplited, 0, newSplited.length);
 				EdgeQuery eQuery = new EdgeQuery();
 				eQuery.runTests(newSplited);
+			} else if (splited[0].equals("PQ1") || splited[0].equals("PQ2") || 
+					splited[0].equals("PQ3")) {
+				PathQuery pQuery = new PathQuery();
+				pQuery.runTests(splited);
 			} else if(splited[0].equals("exit")) {
 				exit = true;
 				sc.close();

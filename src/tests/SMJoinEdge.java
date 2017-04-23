@@ -1,3 +1,6 @@
+/*
+ * This Class is just for testing the functionality of the sort merge join
+ */
 package tests;
 
 import global.AttrOperator;
@@ -88,21 +91,6 @@ public class SMJoinEdge {
 			}
 		}
 
-		/*AttrType [] jtype = new AttrType[4];
-		jtype[0] = new AttrType (AttrType.attrString);
-		jtype[1] = new AttrType (AttrType.attrString);
-		jtype[2] = new AttrType (AttrType.attrString);
-		jtype[3] = new AttrType (AttrType.attrString);
-
-		Tuple t = null;
-		while ((t = sme.get_next()) != null) {
-			try {
-				t.print(jtype);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}*/
-
 		NestedLoopsJoins inl = sme.performSecondJoin(setCondExprW(2000));
 		AttrType [] jtype1 = new AttrType[3];
 		jtype1[0] = new AttrType (AttrType.attrString);
@@ -127,6 +115,5 @@ public class SMJoinEdge {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		//sme.close();
 	}
 }

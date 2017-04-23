@@ -161,23 +161,11 @@ public class SortMergeEdge extends Iterator{
 		}
 
 
-		FldSpec [] proj_list = new FldSpec[16];
-		proj_list[0] = new FldSpec(new RelSpec(RelSpec.outer), 1);
-		proj_list[1] = new FldSpec(new RelSpec(RelSpec.innerRel), 1);
-		proj_list[2] = new FldSpec(new RelSpec(RelSpec.outer), 3);
-		proj_list[3] = new FldSpec(new RelSpec(RelSpec.outer), 4);
-		proj_list[4] = new FldSpec(new RelSpec(RelSpec.outer), 5);
-		proj_list[5] = new FldSpec(new RelSpec(RelSpec.outer), 6);
-		proj_list[6] = new FldSpec(new RelSpec(RelSpec.outer), 7);
-		proj_list[7] = new FldSpec(new RelSpec(RelSpec.outer), 8);
-		proj_list[8] = new FldSpec(new RelSpec(RelSpec.outer), 2);
-		proj_list[9] = new FldSpec(new RelSpec(RelSpec.innerRel), 2);
-		proj_list[10] = new FldSpec(new RelSpec(RelSpec.innerRel), 3);
-		proj_list[11] = new FldSpec(new RelSpec(RelSpec.innerRel), 4);
-		proj_list[12] = new FldSpec(new RelSpec(RelSpec.innerRel), 5);
-		proj_list[13] = new FldSpec(new RelSpec(RelSpec.innerRel), 6);
-		proj_list[14] = new FldSpec(new RelSpec(RelSpec.innerRel), 7);
-		proj_list[15] = new FldSpec(new RelSpec(RelSpec.innerRel), 8); 
+		FldSpec [] proj_list = new FldSpec[4];
+		proj_list[0] = new FldSpec(new RelSpec(RelSpec.outer), 7);
+		proj_list[1] = new FldSpec(new RelSpec(RelSpec.outer), 8);
+		proj_list[2] = new FldSpec(new RelSpec(RelSpec.innerRel), 7);
+		proj_list[3] = new FldSpec(new RelSpec(RelSpec.innerRel), 8); 
 
 		TupleOrder ascending = new TupleOrder(TupleOrder.Ascending);
 		sm = null;
@@ -191,7 +179,7 @@ public class SortMergeEdge extends Iterator{
 					50,
 					am, am2, 
 					false, false, ascending,10, y,
-					OutputFilter, proj_list, 16);
+					OutputFilter, proj_list, 4);
 		}
 		catch (Exception e) {
 			System.err.println("*** join error in SortMerge constructor ***"); 
@@ -206,6 +194,97 @@ public class SortMergeEdge extends Iterator{
 			Runtime.getRuntime().exit(1);
 		}
 	}
+	/*public SortMerge performSecondMerge(CondExpr[] expr) {
+		boolean status = OK;
+		
+		AttrType [] E1types = new AttrType[8];
+		E1types[0] = new AttrType(AttrType.attrString);
+		E1types[1] = new AttrType(AttrType.attrInteger);
+		E1types[2] = new AttrType(AttrType.attrInteger);
+		E1types[3] = new AttrType(AttrType.attrInteger);
+		E1types[4] = new AttrType(AttrType.attrInteger);
+		E1types[5] = new AttrType(AttrType.attrInteger);
+		E1types[6] = new AttrType(AttrType.attrString);
+		E1types[7] = new AttrType(AttrType.attrString);
+
+		//SOS
+		short [] E1sizes = new short[3];
+		E1sizes[0] = Tuple.LABEL_MAX_LENGTH;
+		E1sizes[1] = 4;
+		E1sizes[2] = 4;
+
+		FldSpec [] E1projection = new FldSpec[8];
+		E1projection[0] = new FldSpec(new RelSpec(RelSpec.outer), 1);
+		E1projection[1] = new FldSpec(new RelSpec(RelSpec.outer), 2);
+		E1projection[2] = new FldSpec(new RelSpec(RelSpec.outer), 3);
+		E1projection[3] = new FldSpec(new RelSpec(RelSpec.outer), 4);
+		E1projection[4] = new FldSpec(new RelSpec(RelSpec.outer), 5);
+		E1projection[5] = new FldSpec(new RelSpec(RelSpec.outer), 6);
+		E1projection[6] = new FldSpec(new RelSpec(RelSpec.outer), 7);
+		E1projection[7] = new FldSpec(new RelSpec(RelSpec.outer), 8);
+
+		FileScan am = null;
+		try {
+			am  = new FileScan("GraphDBEDGEHEAP", E1types, E1sizes, 
+					(short)8, (short)8,
+					E1projection, null);
+		}
+		catch (Exception e) {
+			status = FAIL;
+			System.err.println (""+e);
+		}
+
+		if (status != OK) {
+			//bail out
+			System.err.println ("*** Error setting up scan for Edges");
+			Runtime.getRuntime().exit(1);
+		}
+		
+		AttrType [] E2types = new AttrType[4];
+		E2types[0] = new AttrType(AttrType.attrString);
+		E2types[1] = new AttrType(AttrType.attrString);
+		E2types[2] = new AttrType(AttrType.attrString);
+		E2types[3] = new AttrType(AttrType.attrString);
+
+		short [] E2sizes = new short[4];
+		E2sizes[0] = 4;
+		E2sizes[1] = 4;
+		E2sizes[2] = 4;
+		E2sizes[3] = 4;
+		
+		FldSpec [] proj_list = new FldSpec[3];
+		proj_list[0] = new FldSpec(new RelSpec(RelSpec.outer), 7);
+		proj_list[1] = new FldSpec(new RelSpec(RelSpec.outer), 8);
+		proj_list[2] = new FldSpec(new RelSpec(RelSpec.innerRel), 2);
+		
+		TupleOrder ascending = new TupleOrder(TupleOrder.Ascending);
+		SortMerge sm1 = null;
+		Descriptor y = new Descriptor();
+		y.set(-1,-1,-1,-1,-1);
+		try {
+			sm1 = new SortMerge(E1types, 8, E1sizes,
+					E2types, 4, E2sizes,
+					7, 4, 
+					1, 4, 
+					200,
+					am, (iterator.Iterator)this, 
+					false, false, ascending,10, y,
+					expr, proj_list, 3);
+		}
+		catch (Exception e) {
+			System.err.println("*** join error in SortMerge constructor ***"); 
+			status = FAIL;
+			System.err.println (""+e);
+			e.printStackTrace();
+		}
+
+		if (status != OK) {
+			//bail out
+			System.err.println ("*** Error constructing SortMerge");
+			Runtime.getRuntime().exit(1);
+		}
+		return sm1;
+	}*/
 	
 	public Tuple get_next() {
 		boolean status = OK;

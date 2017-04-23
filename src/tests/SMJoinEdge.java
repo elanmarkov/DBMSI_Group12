@@ -1,45 +1,131 @@
 package tests;
 
+import global.AttrOperator;
 import global.AttrType;
 import heap.Tuple;
+import iterator.CondExpr;
+import iterator.FldSpec;
+import iterator.RelSpec;
+import iterator.SortMerge;
 import iterator.SortMergeEdge;
 
 public class SMJoinEdge {
 
+	private static CondExpr[] setCondExprWW(int weights1, int weights2) {
+		CondExpr[] expr = new CondExpr[4];
+		expr[0] = new CondExpr();
+		expr[1] = new CondExpr();
+		expr[2] = new CondExpr();
+		expr[3] = new CondExpr();
+
+		expr[0].next  = null;
+		expr[0].op    = new AttrOperator(AttrOperator.aopEQ);
+		expr[0].type1 = new AttrType(AttrType.attrSymbol);
+		expr[0].type2 = new AttrType(AttrType.attrSymbol);
+		expr[0].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),8);
+		expr[0].operand2.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),7);
+
+		expr[1].next   = null;
+		expr[1].op    = new AttrOperator(AttrOperator.aopEQ);
+		expr[1].type1 = new AttrType(AttrType.attrSymbol);
+		expr[1].type2 = new AttrType(AttrType.attrInteger);
+		expr[1].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),6);
+		expr[1].operand2.integer = weights1;
+
+		expr[2].next   = null;
+		expr[2].op    = new AttrOperator(AttrOperator.aopEQ);
+		expr[2].type1 = new AttrType(AttrType.attrSymbol);
+		expr[2].type2 = new AttrType(AttrType.attrInteger);
+		expr[2].operand1.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),6);
+		expr[2].operand2.integer = weights2;
+
+		expr[3] = null;
+		return expr;
+	}
+
+	private static CondExpr[] setCondExprW(int weights1) {
+		CondExpr[] expr = new CondExpr[4];
+		expr[0] = new CondExpr();
+		expr[1] = new CondExpr();
+		expr[2] = new CondExpr();
+		expr[3] = new CondExpr();
+
+		expr[0].next  = null;
+		expr[0].op    = new AttrOperator(AttrOperator.aopEQ);
+		expr[0].type1 = new AttrType(AttrType.attrSymbol);
+		expr[0].type2 = new AttrType(AttrType.attrSymbol);
+		expr[0].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),7);
+		expr[0].operand2.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),4);
+
+		expr[1].next   = null;
+		expr[1].op    = new AttrOperator(AttrOperator.aopEQ);
+		expr[1].type1 = new AttrType(AttrType.attrSymbol);
+		expr[1].type2 = new AttrType(AttrType.attrSymbol);
+		expr[1].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),8);
+		expr[1].operand2.symbol =  new FldSpec (new RelSpec(RelSpec.innerRel),1);
+
+		expr[2].next   = null;
+		expr[2].op    = new AttrOperator(AttrOperator.aopLE);
+		expr[2].type1 = new AttrType(AttrType.attrSymbol);
+		expr[2].type2 = new AttrType(AttrType.attrInteger);
+		expr[2].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),6);
+		expr[2].operand2.integer = weights1;
+
+		expr[3] = null;
+		return expr;
+	}
+
 	public static void performSortMergeJoin(String label) {
 		SortMergeEdge sme = null;
-		if(label != null) {
-			sme = new SortMergeEdge(label);
-		} else  {
-			sme = new SortMergeEdge();
+		int i = 1;
+		if(i == 1) {
+			sme = new SortMergeEdge(setCondExprWW(2000,2000));
+		} else {
+			if(label != null) {
+				sme = new SortMergeEdge(label);
+			} else  {
+				sme = new SortMergeEdge();
+			}
 		}
-		
-		AttrType [] jtype = new AttrType[16];
+
+		AttrType [] jtype = new AttrType[4];
 		jtype[0] = new AttrType (AttrType.attrString);
 		jtype[1] = new AttrType (AttrType.attrString);
-		jtype[2] = new AttrType (AttrType.attrInteger);
-		jtype[3] = new AttrType (AttrType.attrInteger);
-		jtype[4] = new AttrType (AttrType.attrInteger);
-		jtype[5] = new AttrType (AttrType.attrInteger);
-		jtype[6] = new AttrType (AttrType.attrString);
-		jtype[7] = new AttrType (AttrType.attrString);
-		jtype[8] = new AttrType (AttrType.attrInteger);
-		jtype[9] = new AttrType (AttrType.attrInteger);
-		jtype[10] = new AttrType (AttrType.attrInteger);
-		jtype[11] = new AttrType (AttrType.attrInteger);
-		jtype[12] = new AttrType (AttrType.attrInteger);
-		jtype[13] = new AttrType (AttrType.attrInteger);
-		jtype[14] = new AttrType (AttrType.attrString);
-		jtype[15] = new AttrType (AttrType.attrString);
-		Tuple t = new Tuple();
-		t = null;
-		while ((t = sme.get_next()) != null) {
+		jtype[2] = new AttrType (AttrType.attrString);
+		jtype[3] = new AttrType (AttrType.attrString);
+
+		Tuple t = null;
+		/*while ((t = sme.get_next()) != null) {
 			try {
 				t.print(jtype);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}*/
+
+		SortMerge sm = sme.performSecondMerge(setCondExprW(2000));
+		AttrType [] jtype1 = new AttrType[3];
+		jtype1[0] = new AttrType (AttrType.attrString);
+		jtype1[1] = new AttrType (AttrType.attrString);
+		jtype1[2] = new AttrType (AttrType.attrString);
+		Tuple t1 = new Tuple();
+		t1 = null;
+		try {
+			while ((t1 = sm.get_next()) != null) {
+				try {
+					t1.print(jtype1);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			try{
+				sm.close();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
 		}
-		sme.close();
+		//sme.close();
 	}
 }

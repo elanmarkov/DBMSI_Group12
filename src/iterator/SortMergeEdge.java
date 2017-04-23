@@ -194,7 +194,7 @@ public class SortMergeEdge extends Iterator{
 			Runtime.getRuntime().exit(1);
 		}
 	}
-	/*public SortMerge performSecondMerge(CondExpr[] expr) {
+	public SortMerge performSecondMerge(CondExpr[] expr) {
 		boolean status = OK;
 		
 		AttrType [] E1types = new AttrType[8];
@@ -267,7 +267,7 @@ public class SortMergeEdge extends Iterator{
 					7, 4, 
 					1, 4, 
 					200,
-					am, (iterator.Iterator)this, 
+					am, this.sm, 
 					false, false, ascending,10, y,
 					expr, proj_list, 3);
 		}
@@ -284,7 +284,7 @@ public class SortMergeEdge extends Iterator{
 			Runtime.getRuntime().exit(1);
 		}
 		return sm1;
-	}*/
+	}
 	
 	public Tuple get_next() {
 		boolean status = OK;

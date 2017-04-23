@@ -1,14 +1,18 @@
 package diskmgr;
 
 
+import java.io.IOException;
+
 import global.*;
 import heap.*;
+import index.IndexException;
 import iterator.*;
 
 public class TriangleQuery {
 	
 
 	public SortMergeEdge sme;
+	public NestedLoopsJoins nlj;
 	public TriangleQuery(String query){
 		performTriangleQuery(query);
 	};
@@ -66,10 +70,44 @@ public class TriangleQuery {
 		}
 		sme = new SortMergeEdge(expr);
 		
+		CondExpr[] secondexpr= new CondExpr[4];
+		secondexpr[0] = new CondExpr();
+		secondexpr[1] = new CondExpr();
+		secondexpr[2] = new CondExpr();
+		secondexpr[3] = new CondExpr();
+		if(labels[2].equals("EW")) {
+			int weight = Integer.parseInt(queries[2].substring(2));
+			secondexpr = setCondExprW(weight);
+		}
+		else if(labels[2].equals("EL")) {
+			secondexpr = setCondExprL(queries[2].substring(2));
+		}
+		nlj = sme.performSecondJoin(secondexpr);
 		
-		//performSecondMergeJoint(expr2,sme);
-
-
+	
+	}
+	public Sort performSorting(NestedLoopsJoins input_join) {
+		AttrType[] attrType = new AttrType[3];
+	    attrType[0] = new AttrType(AttrType.attrString);
+	    attrType[1] = new AttrType(AttrType.attrString);
+	    attrType[2] = new AttrType(AttrType.attrString);
+	    
+	    short[] attrSize = new short[3];
+	    attrSize[0] = 4;
+	    attrSize[1] = 4;
+	    attrSize[2] = 4;
+	   
+	    TupleOrder order = new TupleOrder(TupleOrder.Ascending);
+	    Sort sort = null;
+	   
+	    try {
+			sort = new Sort(attrType, (short) 3, attrSize, input_join, 1,order, 3, 100);
+		} catch (SortException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
+	    return sort;
 	}
 
 
@@ -216,7 +254,7 @@ public class TriangleQuery {
   		expr[2].op    = new AttrOperator(AttrOperator.aopLE);
   		expr[2].type1 = new AttrType(AttrType.attrSymbol);
   		expr[2].type2 = new AttrType(AttrType.attrInteger);
-  		expr[2].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),6);
+  		expr[2].operand1.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),6);
   		expr[2].operand2.integer = weight;
   
   		expr[3] = null;

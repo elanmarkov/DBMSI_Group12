@@ -77,7 +77,7 @@ public class testcases {
 			if(splited[0].equals("batchnodeinsert") || splited[0].equals("batchedgeinsert") ||
 					splited[0].equals("batchnodedelete") || splited[0].equals("batchedgedelete")) {
 				graphDB = splited[2];
-			} else if(splited[0].equals("nodequery") || splited[0].equals("edgequery") || splited[0].equals("sortMergeJoin") || splited[0].equals("triangleQuery")) {
+			} else if(splited[0].equals("nodequery") || splited[0].equals("edgequery") || splited[0].equals("sortMergeJoin") || splited[0].equals("TQA") || splited[0].equals("TQB")) {
 				graphDB = splited[1];
 				numBuf = Integer.parseInt(splited[2]);
 			}
@@ -144,10 +144,16 @@ public class testcases {
 				else 
 					SMJoinEdge.performSortMergeJoin(null);
 				flushPages();
-			} else if(splited[0].equals("triangleQuery")) {
+			} else if(splited[0].equals("TQA") ||  splited[0].equals("TQB")) {
 				if(splited.length > 3) {
-					TriangleQueryTest tq = new TriangleQueryTest(splited[3]);
-					tq=null;
+					TriangleQueryTest tq;
+					try {
+						tq = new TriangleQueryTest(splited);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
 				}
 				else {
 					System.out.println("Queries not formatted properly.");

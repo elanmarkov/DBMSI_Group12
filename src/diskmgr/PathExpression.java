@@ -4,14 +4,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import btree.BTreeFile;
-import bufmgr.PageNotReadException;
 import global.AttrOperator;
 import global.AttrType;
 import global.Descriptor;
 import global.ExpType;
 import global.IndexType;
 import heap.EdgeHeapFile;
-import heap.FieldNumberOutOfBoundException;
 import heap.HFBufMgrException;
 import heap.HFDiskMgrException;
 import heap.HFException;
@@ -28,15 +26,10 @@ import iterator.FileScan;
 import iterator.FldSpec;
 import iterator.Iterator;
 import iterator.JoinsException;
-import iterator.LowMemException;
 import iterator.NestedIndexLoopJoin;
 import iterator.NestedLoopException;
-import iterator.PredEvalException;
 import iterator.RelSpec;
 import iterator.SortException;
-import iterator.TupleUtilsException;
-import iterator.UnknowAttrType;
-import iterator.UnknownKeyTypeException;
 import zindex.ZCurve;
 /*
  * @author Jayanth Kumar M J
@@ -192,6 +185,7 @@ public class PathExpression{
 			CondExpr[] startNodeCondition = getConditionExprOnNodeLabels(labels,1);
 			
 			try {
+				System.out.println("(Find tuples on NodeLabel Index File which satisfies Given condition) ");
 				am = getIndexIteratorOnNodeLabel(nodeAttrTypes, nodeProjList, nodeAttrStrSizes, startNodeCondition);
 			} catch (IndexException | InvalidTypeException | InvalidTupleSizeException | UnknownIndexTypeException
 					| IOException e) {
@@ -200,6 +194,7 @@ public class PathExpression{
 		}else if(inputAttrTypes[0].expType == ExpType.expDesc){
 			CondExpr[] startNodeCondition = getConditionExprForDescriptor(values[0],2);
 			try {
+				System.out.println("(Find tuples on node Descriptor Index File which satisfies Given condition) ");
 				am = getIndexIteratorOnDescriptor(nodeAttrTypes, nodeProjList, nodeAttrStrSizes, startNodeCondition);
 			} catch (IndexException | InvalidTypeException | InvalidTupleSizeException | UnknownIndexTypeException
 					| IOException e) {
@@ -229,6 +224,8 @@ public class PathExpression{
 					e.printStackTrace();
 				}
 				CondExpr[] rightFilter = getConditionExprOnNodeLabels(nodelabels, 8);
+				System.out.println(" Join On ( Source label Index file with source condition and"
+						+ "destination Condition (dest_label = next_Descriptor's_label_in_PE))");
 				if(i==1){
 					try {
 						nljArray[j] = getNestedIndexJoinOnSrouceLabel(nodeAttrTypes,2, nodeAttrStrSizes, rightFilter, Etypes,8, Esizes,
@@ -249,6 +246,8 @@ public class PathExpression{
 				ArrayList<String> destLabels = new ArrayList<>();
 				destLabels.add(values[i]);
 				rightFilter = getConditionExprOnNodeLabels(destLabels, 8);
+				System.out.println(" Join On ( Source label Index file with source condition and"
+						+ "destination Condition (dest_label = next_label_in_PE))");
 				if(i==1){
 					try {
 						nljArray[j] = getNestedIndexJoinOnSrouceLabel(nodeAttrTypes,2, nodeAttrStrSizes, rightFilter, Etypes,8, Esizes,
@@ -269,6 +268,8 @@ public class PathExpression{
 				ArrayList<String> edgeLabels = new ArrayList<>();
 				edgeLabels.add(values[i]);
 				rightFilter = getConditionExprOnNodeLabels(edgeLabels, 1);
+				System.out.println(" Join On ( Source label Index file with source condition and"
+						+ "edge label Condition (edge_label = next_edge_label_in_PE))");
 				if(i==1){
 					try {
 						nljArray[j] = getNestedIndexJoinOnSrouceLabel(nodeAttrTypes,2, nodeAttrStrSizes, rightFilter, Etypes,8, Esizes,
@@ -286,6 +287,8 @@ public class PathExpression{
 				}
 				break;
 			case ExpType.expWeight:// for edge weight
+				System.out.println(" Join On ( Source label Index file with source condition and"
+						+ "edge weight Condition (edge_weight <= next_edge_weight_in_PE))");
 				rightFilter = getConditionExprOnEdgeWeight(Integer.parseInt(values[i]), 6);
 				if(i==1){
 					try {
@@ -455,6 +458,7 @@ public class PathExpression{
 			CondExpr[] startNodeCondition = getConditionExprOnNodeLabels(labels,1);
 			
 			try {
+				System.out.println("(Find tuples on NodeLabel Index File which satisfies Given condition) ");
 				am = getIndexIteratorOnNodeLabel(nodeAttrTypes, nodeProjList, nodeAttrStrSizes, startNodeCondition);
 			} catch (IndexException | InvalidTypeException | InvalidTupleSizeException | UnknownIndexTypeException
 					| IOException e) {
@@ -463,6 +467,7 @@ public class PathExpression{
 		}else if(inputAttrType.expType == ExpType.expDesc){
 			CondExpr[] startNodeCondition = getConditionExprForDescriptor(values,2);
 			try {
+				System.out.println("(Find tuples on node Descriptor Index File which satisfies Given condition) ");
 				am = getIndexIteratorOnDescriptor(nodeAttrTypes, nodeProjList, nodeAttrStrSizes, startNodeCondition);
 			} catch (IndexException | InvalidTypeException | InvalidTupleSizeException | UnknownIndexTypeException
 					| IOException e) {
@@ -475,6 +480,7 @@ public class PathExpression{
 			case ExpType.expNoOfEdges:
 				for(int i=0;i<bound;i++){
 					CondExpr[] rightFilter = null;
+					System.out.println(" Join On (Source label Index file with source condition)");
 					if(i==0){
 						try {
 							nlj = getNestedIndexJoinOnSrouceLabel(nodeAttrTypes,2, nodeAttrStrSizes, rightFilter, Etypes,8, Esizes,
@@ -552,6 +558,7 @@ public class PathExpression{
 				totalEdgeWeightCondExpr(sumFilter,bound);
 				while(!done){
 					CondExpr[] rightFilter = getConditionExprOnEdgeWeight(bound, 6);
+					System.out.println(" Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)");
 					if(i==0){
 						try {
 							nlj = getNestedIndexJoinOnSrouceLabel(nodeAttrTypes,2, nodeAttrStrSizes, rightFilter, Etypes,8, Esizes,

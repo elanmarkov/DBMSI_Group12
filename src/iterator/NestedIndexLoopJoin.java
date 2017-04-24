@@ -14,6 +14,7 @@ import index.IndexScan;
 
 public class NestedIndexLoopJoin extends Iterator{
 
+	
 		private static int count = 0;
 		private AttrType _in1[], _in2[];
 		private int in1_len, in2_len;

@@ -26,14 +26,18 @@ public class PathQuery {
 		switch(argv[0]) {
 		case "PQ1":
 			if(argv[3].equals("a")) {
-				System.out.println("PathQuery.runTests() 1");
 				_pass = queries.pathQuery1a(argv[4]);
 			} 
 			else if(argv[3].equals("b")) {
 				_pass = queries.pathQuery1b(argv[4]);
 			}
-			else {
+			else if(argv[3].equals("c")){
 				_pass = queries.pathQuery1c(argv[4]);
+			}
+			else
+			{
+				System.out.println("INVALID PATH EXPRESSION SYNTAX!");
+				break;
 			}
 			break;
 		case "PQ2":
@@ -43,20 +47,29 @@ public class PathQuery {
 				System.out.println("PathQuery.runTests() 3");
 				_pass = queries.pathQuery2b(argv[4]);
 			}
-			else if (argv[0].equals("c"))
+			else if (argv[3].equals("c"))
 			{
-				System.out.println("PathQuery.runTests() 4");
 				_pass = queries.pathQuery2c(argv[4]);
+			}
+			else
+			{
+				System.out.println("INVALID PATH EXPRESSION SYNTAX!");
+				break;
 			}
 			break;
 		case "PQ3":
-			if(Integer.parseInt(argv[0]) == 1) {// change it
+			if(argv[3].equals("a")) {
 				_pass = queries.pathQuery3a(argv[4]);
-			} else if (argv[0].equals("b")){
+			} else if (argv[3].equals("b")){
 				_pass = queries.pathQuery3b(argv[4]);
 			}
-			else{
+			else if (argv[3].equals("c")){
 				_pass = queries.pathQuery3c(argv[4]);
+			}
+			else
+			{
+				System.out.println("INVALID PATH EXPRESSION SYNTAX!");
+				break;
 			}
 			break;
 	

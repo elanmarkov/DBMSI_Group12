@@ -63,8 +63,12 @@ public class NestedIndexLoopJoin extends Iterator{
 		 *            IN PAGES
 		 * @param am1
 		 *            access method for left i/p to join
-		 * @param relationName
-		 *            access hfapfile for right i/p to join
+		 * @param indexedRelName
+		 *            name of the relation on which there is an index
+		 * @param indexName : name of the index field    
+		 * @param itype : index type zindex or btree index    
+		 * @param indexProjList[] : projection list for the index 
+		 * @param indexFldNo : fld number on which there is an index  
 		 * @param outFilter
 		 *            select expressions
 		 * @param rightFilter
@@ -73,6 +77,9 @@ public class NestedIndexLoopJoin extends Iterator{
 		 *            shows what input fields go where in the output tuple
 		 * @param n_out_flds
 		 *            number of outer relation fileds
+		 * @param joinFldNo : feild on which the join is being executed. used for index condition
+		 * @param sumFilter : used for total weight query, 
+		 * 				where sum of a fld in the output tuple shouldn't be more than a given values
 		 * @exception IOException
 		 *                some I/O fault
 		 * @exception NestedLoopException

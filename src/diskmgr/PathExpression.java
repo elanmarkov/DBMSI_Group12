@@ -339,13 +339,14 @@ public class PathExpression{
 	 *This method uses the Nested index loop joins on source labels
 	 *returns an iterator on the path query's output
 	 *For max total weight bound it uses sum relation spec to 
-	 *add to fields and project the result on the output   
-	 * PE1 : NN/(NN/)* /NN
-	 * where NN <- (Node_label | Node_descriptor),
-	 * PE2 : NID /EN (/EN)*
-	 * where EN <- (Edge_label | max edge weight)
-	 * It also handles a combination of PE1 and PE2 as mentioned below
-	 * PE12Hybrid : NN/[(NN/*)(EN/*)]/[(NN)(EN)]
+	 *add to fields and project the result on the output tuple   
+	 *For total number of edges bound, it does index nestedloop join
+	 *on the source lable and stores the intermediate results
+	 *as the Nodes which are reachable within the 
+	 *total number of edges gives should be available in the output. 
+	 *  PE3 : NID //Bound
+	 * where Bound <- (number_of_Edges | Max_total_weight)
+	 * 
 	 */
 	
 	public Iterator evaluateBoundPathExpression(ExpType inputAttrType, String values,ExpType boundType, int bound){
@@ -747,6 +748,9 @@ public class PathExpression{
 	}
 
 		
+	/*
+	 * closes all the iterators which were open for the execution of the path query
+	 */
 	public void close() throws IOException, JoinsException, SortException, IndexException {
 		try {
 			am.close();

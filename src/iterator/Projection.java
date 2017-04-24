@@ -77,6 +77,15 @@ public class Projection
 		  
 		}
 	      break;
+	    case RelSpec.sum:
+	    	int val=0;
+	    	if(perm_mat[i].offset == -1){
+	    		val = t2.getIntFld(perm_mat[i].offset2);
+	    	}else{
+	    		val = t1.getIntFld(perm_mat[i].offset)+t2.getIntFld(perm_mat[i].offset2);
+		    }
+	    	Jtuple.setIntFld(i+1, val);
+	      break;
 	    }
 	}
       return;
@@ -136,7 +145,10 @@ public class Projection
 	
 		}
 	      break;
-	      
+	    case RelSpec.sum:
+	    	int val = t1.getIntFld(perm_mat[i].offset)+t1.getIntFld(i+1);
+	    	Jtuple.setIntFld(i+1, val);
+	      break;
 	    default:
 	      
 	      throw new WrongPermat("something is wrong in perm_mat");

@@ -10,8 +10,10 @@ import global.AttrType;
 import global.Descriptor;
 import global.ExpType;
 import global.IndexType;
-import global.SystemDefs;
 import heap.EdgeHeapFile;
+import heap.HFBufMgrException;
+import heap.HFDiskMgrException;
+import heap.HFException;
 import heap.InvalidTupleSizeException;
 import heap.InvalidTypeException;
 import heap.Node;
@@ -21,6 +23,7 @@ import index.IndexException;
 import index.IndexScan;
 import index.UnknownIndexTypeException;
 import iterator.CondExpr;
+import iterator.FileScan;
 import iterator.FldSpec;
 import iterator.Iterator;
 import iterator.JoinsException;
@@ -36,9 +39,8 @@ import iterator.UnknownKeyTypeException;
 import zindex.ZCurve;
 
 public class PathExpression{
+	private static final String OUTPUT_FILE_NAME = "results";
 	private int amountOfMemoryForEachJoin = 10;
-	private final static boolean OK = true;
-	private final static boolean FAIL = false;
 	NodeHeapFile nodes;
 	EdgeHeapFile edges;
 	BTreeFile nodeLabels;
@@ -48,6 +50,9 @@ public class PathExpression{
 	graphDB db;
 	private Iterator[] nljArray ;
 	Iterator am = null;
+	FileScan fam=null;
+	NodeHeapFile results;
+	NodeHeapFile intermediateFile;
 	
 
 	public PathExpression(NodeHeapFile nodes, EdgeHeapFile edges, BTreeFile nodeLabels, ZCurve nodeDesc,
@@ -59,6 +64,12 @@ public class PathExpression{
 		this.edgeLabels = edgeLabels;
 		this.edgeWeights = edgeWeights;
 		this.db = db;
+		try {
+			results =new NodeHeapFile(OUTPUT_FILE_NAME);
+		} catch (HFException | HFBufMgrException | HFDiskMgrException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void Query2_CondExpr(CondExpr[] expr, CondExpr[] expr2) {
@@ -81,182 +92,6 @@ public class PathExpression{
 		expr2[1] = null;
 	}
 
-	public void query() {
-		System.out.print("**********************Query2 strating *********************\n");
-		System.out.println("PathExpression.query() buffers : "+SystemDefs.JavabaseBM.getNumBuffers()+" "
-				+ "unpinned : "+SystemDefs.JavabaseBM.getNumUnpinnedBuffers());
-		boolean status = OK;
-		
-		IndexType b_index = new IndexType(IndexType.B_Index);
-		CondExpr[] outFilter = new CondExpr[3];
-		outFilter[0] = new CondExpr();
-		outFilter[1] = new CondExpr();
-		outFilter[2] = new CondExpr();
-
-		CondExpr[] outFilter2 = new CondExpr[2];
-		outFilter2[0] = new CondExpr();
-		outFilter2[1] = new CondExpr();
-
-		Query2_CondExpr(outFilter, outFilter2);
-		Tuple t =null;
-
-		AttrType[] Ntypes = { new AttrType(AttrType.attrString), new AttrType(AttrType.attrDesc), };
-
-		AttrType[] Ntypes2 = { new AttrType(AttrType.attrString), new AttrType(AttrType.attrDesc), };
-
-		short[] Nsizes = new short[1];
-		Nsizes[0] = Tuple.LABEL_MAX_LENGTH;
-		AttrType[] Etypes = { new AttrType(AttrType.attrString), new AttrType(AttrType.attrInteger),
-				new AttrType(AttrType.attrInteger), new AttrType(AttrType.attrInteger),
-				new AttrType(AttrType.attrInteger), new AttrType(AttrType.attrInteger),
-				new AttrType(AttrType.attrString), new AttrType(AttrType.attrString), };
-
-		short[] Esizes = new short[3];
-		Esizes[0] = Tuple.LABEL_MAX_LENGTH;
-		Esizes[1] = 4;
-		Esizes[2] = 4;
-		AttrType[] Ntypes3 = { new AttrType(AttrType.attrString), new AttrType(AttrType.attrDesc), };
-
-		short[] Bsizes = new short[2];
-		Bsizes[0] = 30;
-		Bsizes[1] = 20;
-		AttrType[] Jtypes = { new AttrType(AttrType.attrString), 
-				new AttrType(AttrType.attrString),
-				new AttrType(AttrType.attrInteger),
-				new AttrType(AttrType.attrString), 
-				new AttrType(AttrType.attrString), };
-
-		short[] Jsizes = new short[4];
-		Jsizes[0] = Tuple.LABEL_MAX_LENGTH;
-		Jsizes[1] = Tuple.LABEL_MAX_LENGTH;
-		Jsizes[2] = 4;
-		Jsizes[3] = 4;
-		AttrType[] JJtype = { new AttrType(AttrType.attrString), };
-
-		short[] JJsize = new short[1];
-		JJsize[0] = 30;
-		FldSpec[] proj1 = { new FldSpec(new RelSpec(RelSpec.outer), 1), 
-				new FldSpec(new RelSpec(RelSpec.innerRel), 1),
-				new FldSpec(new RelSpec(RelSpec.innerRel), 6), 
-				new FldSpec(new RelSpec(RelSpec.innerRel), 7),
-				new FldSpec(new RelSpec(RelSpec.innerRel), 8) }; // S.sname,
-																	// R.bid
-
-		FldSpec[] Sprojection = { new FldSpec(new RelSpec(RelSpec.outer), 1),
-				new FldSpec(new RelSpec(RelSpec.outer), 2),
-				// new FldSpec(new RelSpec(RelSpec.outer), 3),
-				// new FldSpec(new RelSpec(RelSpec.outer), 4)
-		};
-
-		CondExpr[] selects = new CondExpr[1];
-		selects[0] = null;
-
-		iterator.Iterator am = null;
-
-		AttrType[] attrType = new AttrType[2];
-		attrType[0] = new AttrType(AttrType.attrString);
-		attrType[1] = new AttrType(AttrType.attrDesc);
-		FldSpec[] projlist = new FldSpec[2];
-		RelSpec rel = new RelSpec(RelSpec.outer);
-		projlist[0] = new FldSpec(rel, 1);
-		projlist[1] = new FldSpec(rel, 2);
-		short[] attrSize = new short[1];
-		attrSize[0] = Node.LABEL_MAX_LENGTH;
-		CondExpr[] indexExpr = new CondExpr[2];
-		indexExpr[0] = new CondExpr();
-		indexExpr[0].op = new AttrOperator(AttrOperator.aopEQ);
-		indexExpr[0].type1 = new AttrType(AttrType.attrSymbol);
-		indexExpr[0].type2 = new AttrType(AttrType.attrString);
-		indexExpr[0].operand1.symbol = new FldSpec(new RelSpec(RelSpec.outer), 7);
-		indexExpr[0].operand2.string = "373";
-		indexExpr[0].next = null;
-	    indexExpr[1] = null;
-	    
-		System.out.println("PathExpression.query() ");
-		try {
-			am = getIndexIteratorOnNodeLabel(attrType, projlist, attrSize, null);
-			System.out.println("PathExpression.query() after btree buffers : "+SystemDefs.JavabaseBM.getNumBuffers()+" "
-					+ "unpinned : "+SystemDefs.JavabaseBM.getNumUnpinnedBuffers());
-		}
-		
-		catch (Exception e) {
-			System.err.println("*** Error creating scan for Index scan");
-			System.err.println("" + e);
-			Runtime.getRuntime().exit(1);
-		}
-
-		/*FileScan fam=null;
-		
-		try {
-			fam = new FileScan(nodes.getFileName(),attrType,
-					attrSize, (short) 2, (short)2, projlist, null);
-			System.out.println("PathExpression.query() after btree buffers : "+SystemDefs.JavabaseBM.getNumBuffers()+" "
-					+ "unpinned : "+SystemDefs.JavabaseBM.getNumUnpinnedBuffers());
-		}
-		
-		catch (Exception e) {
-			System.err.println("*** Error creating scan for Index scan");
-			System.err.println("" + e);
-			Runtime.getRuntime().exit(1);
-		}*/
-		//NestedLoopsJoins nlj = null;
-		FldSpec[] indexProjList = new FldSpec[8];
-		RelSpec relation = new RelSpec(RelSpec.outer);
-		indexProjList[0] = new FldSpec(relation, 1);
-		indexProjList[1] = new FldSpec(relation, 2);
-		indexProjList[2] = new FldSpec(relation, 3);
-		indexProjList[3] = new FldSpec(relation, 4);
-		indexProjList[4] = new FldSpec(relation, 5);
-		indexProjList[5] = new FldSpec(relation, 6);
-		indexProjList[6] = new FldSpec(relation, 7);
-		indexProjList[7] = new FldSpec(relation, 8);
-		NestedIndexLoopJoin nlj = null;
-		try {
-			nlj = getNestedIndexJoinOnSrouceLabel(Ntypes,2, Nsizes, indexExpr, Etypes,8, Esizes, indexProjList, am,
-					outFilter, proj1,1);
-			System.out.println("PathExpression.query() after nlj buffers : "+SystemDefs.JavabaseBM.getNumBuffers()+" "
-					+ "unpinned : "+SystemDefs.JavabaseBM.getNumUnpinnedBuffers());
-		} catch (Exception e) {
-			System.err.println("*** Error preparing for nested_loop_join");
-			System.err.println("" + e);
-			e.printStackTrace();
-			Runtime.getRuntime().exit(1);
-		}
-		NestedIndexLoopJoin nlj2 = null;
-		try {
-			nlj2 = new NestedIndexLoopJoin(Jtypes, 5, Jsizes, Etypes, 8, Esizes, 10, nlj, "GraphDBEDGESRCLABEL", new IndexType(IndexType.B_Index),
-					edges.getFileName(), indexProjList, 7, outFilter2, null, proj1, 5,5);
-			/*nlj2 = new NestedLoopsJoins(Jtypes, 5, Jsizes, Etypes, 8, Esizes, 10, nlj, edges.getFileName(), outFilter2,
-					null, proj1, 5);*/
-		} catch (Exception e) {
-			System.err.println("*** Error preparing for nested_loop_join");
-			System.err.println("" + e);
-			Runtime.getRuntime().exit(1);
-		}
-		
-		
-		
-		try {
-			while ((t = nlj2.get_next()) != null) {
-				t.print(Jtypes);
-			}
-		} catch (Exception e) {
-			System.err.println("" + e);
-			e.printStackTrace();
-			Runtime.getRuntime().exit(1);
-		}
-		
-		try {
-			nlj.close();
-			am.close();
-			nlj2.close();
-		} catch (Exception e) {
-			status = FAIL;
-			e.printStackTrace();
-		}
-		System.out.println("PathExpression.query() buffers : "+SystemDefs.JavabaseBM.getNumBuffers()+" "
-				+ "unpinned : "+SystemDefs.JavabaseBM.getNumUnpinnedBuffers());
-	}
 	
 	public Iterator evaluatePathExpression(ExpType[] inputAttrTypes, String[] values){
 		AttrType[] nodeAttrTypes = new AttrType[2];
@@ -357,6 +192,9 @@ public class PathExpression{
 						String nodeLbl = t.getStrFld(1);
 						nodelabels.add(nodeLbl);
 					}
+					if(nodelabels.isEmpty()){
+						nodelabels.add("INVALID_LBL");
+					}
 					zIndexIterator.close();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -365,14 +203,14 @@ public class PathExpression{
 				if(i==1){
 					try {
 						nljArray[j] = getNestedIndexJoinOnSrouceLabel(nodeAttrTypes,2, nodeAttrStrSizes, rightFilter, Etypes,8, Esizes,
-								indexProjList, am, outFilter, proj1,1);
+								indexProjList, am, outFilter, proj1,1,null);
 					} catch (NestedLoopException | IOException e) {
 						e.printStackTrace();
 					}
 				}else{
 					try {
 						nljArray[j] = getNestedIndexJoinOnSrouceLabel(Jtypes, 5,Jsizes, rightFilter, Etypes, 8,Esizes,
-								indexProjList, nljArray[j-1], outFilter2, proj1,5);
+								indexProjList, nljArray[j-1], outFilter2, proj1,5,null);
 					} catch (NestedLoopException | IOException e) {
 						e.printStackTrace();
 					}
@@ -385,14 +223,14 @@ public class PathExpression{
 				if(i==1){
 					try {
 						nljArray[j] = getNestedIndexJoinOnSrouceLabel(nodeAttrTypes,2, nodeAttrStrSizes, rightFilter, Etypes,8, Esizes,
-								indexProjList, am, outFilter, proj1,1);
+								indexProjList, am, outFilter, proj1,1,null);
 					} catch (NestedLoopException | IOException e) {
 						e.printStackTrace();
 					}
 				}else{
 					try {
 						nljArray[j] = getNestedIndexJoinOnSrouceLabel(Jtypes, 5,Jsizes, rightFilter, Etypes, 8,Esizes,
-								indexProjList, nljArray[j-1], outFilter2, proj1,5);
+								indexProjList, nljArray[j-1], outFilter2, proj1,5,null);
 					} catch (NestedLoopException | IOException e) {
 						e.printStackTrace();
 					}
@@ -405,14 +243,14 @@ public class PathExpression{
 				if(i==1){
 					try {
 						nljArray[j] = getNestedIndexJoinOnSrouceLabel(nodeAttrTypes,2, nodeAttrStrSizes, rightFilter, Etypes,8, Esizes,
-								indexProjList, am, outFilter, proj1,1);
+								indexProjList, am, outFilter, proj1,1,null);
 					} catch (NestedLoopException | IOException e) {
 						e.printStackTrace();
 					}
 				}else{
 					try {
 						nljArray[j] = getNestedIndexJoinOnSrouceLabel(Jtypes, 5,Jsizes, rightFilter, Etypes, 8,Esizes,
-								indexProjList, nljArray[j-1], outFilter2, proj1,5);
+								indexProjList, nljArray[j-1], outFilter2, proj1,5,null);
 					} catch (NestedLoopException | IOException e) {
 						e.printStackTrace();
 					}
@@ -423,14 +261,14 @@ public class PathExpression{
 				if(i==1){
 					try {
 						nljArray[j] = getNestedIndexJoinOnSrouceLabel(nodeAttrTypes,2, nodeAttrStrSizes, rightFilter, Etypes,8, Esizes,
-								indexProjList, am, outFilter, proj1,1);
+								indexProjList, am, outFilter, proj1,1,null);
 					} catch (NestedLoopException | IOException e) {
 						e.printStackTrace();
 					}
 				}else{
 					try {
 						nljArray[j] = getNestedIndexJoinOnSrouceLabel(Jtypes, 5,Jsizes, rightFilter, Etypes, 8,Esizes,
-								indexProjList, nljArray[j-1], outFilter2, proj1,5);
+								indexProjList, nljArray[j-1], outFilter2, proj1,5,null);
 					} catch (NestedLoopException | IOException e) {
 						e.printStackTrace();
 					}
@@ -463,6 +301,322 @@ public class PathExpression{
 		}*/
 		
 		return nljArray[nljArray.length-1];
+	}
+	
+	public Iterator evaluateBoundPathExpression(ExpType inputAttrType, String values,ExpType boundType, int bound){
+		AttrType[] nodeAttrTypes = new AttrType[2];
+		nodeAttrTypes[0] = new AttrType(AttrType.attrString);
+		nodeAttrTypes[1] = new AttrType(AttrType.attrDesc);
+		FldSpec[] nodeProjList = new FldSpec[2];
+		RelSpec rel = new RelSpec(RelSpec.outer);
+		nodeProjList[0] = new FldSpec(rel, 1);
+		nodeProjList[1] = new FldSpec(rel, 2);
+		short[] nodeAttrStrSizes = new short[1];
+		nodeAttrStrSizes[0] = Node.LABEL_MAX_LENGTH;
+		
+		ArrayList<String> labels = new ArrayList<>();
+	    labels.add(values);
+	    
+		// edges types
+	    AttrType[] Etypes = { new AttrType(AttrType.attrString), new AttrType(AttrType.attrInteger),
+				new AttrType(AttrType.attrInteger), new AttrType(AttrType.attrInteger),
+				new AttrType(AttrType.attrInteger), new AttrType(AttrType.attrInteger),
+				new AttrType(AttrType.attrString), new AttrType(AttrType.attrString), };
+
+		short[] Esizes = new short[3];
+		Esizes[0] = Tuple.LABEL_MAX_LENGTH;
+		Esizes[1] = 4;
+		Esizes[2] = 4;
+		
+		FldSpec[] indexProjList = new FldSpec[8];
+		RelSpec relation = new RelSpec(RelSpec.outer);
+		indexProjList[0] = new FldSpec(relation, 1);
+		indexProjList[1] = new FldSpec(relation, 2);
+		indexProjList[2] = new FldSpec(relation, 3);
+		indexProjList[3] = new FldSpec(relation, 4);
+		indexProjList[4] = new FldSpec(relation, 5);
+		indexProjList[5] = new FldSpec(relation, 6);
+		indexProjList[6] = new FldSpec(relation, 7);
+		indexProjList[7] = new FldSpec(relation, 8);
+		
+		
+		AttrType[] Jtypes = { new AttrType(AttrType.attrString), 
+				new AttrType(AttrType.attrString),
+				new AttrType(AttrType.attrInteger),
+				new AttrType(AttrType.attrString), 
+				new AttrType(AttrType.attrString), };
+		AttrType[] JtypesWithSum = { new AttrType(AttrType.attrString), 
+				new AttrType(AttrType.attrString),
+				new AttrType(AttrType.attrInteger),
+				new AttrType(AttrType.attrString), 
+				new AttrType(AttrType.attrString),
+				new AttrType(AttrType.attrInteger),};
+
+		short[] Jsizes = new short[4];
+		Jsizes[0] = Tuple.LABEL_MAX_LENGTH;
+		Jsizes[1] = Tuple.LABEL_MAX_LENGTH;
+		Jsizes[2] = 4;
+		Jsizes[3] = 4;
+		
+		FldSpec[] jProjList = new FldSpec[5];
+		jProjList[0] = new FldSpec(relation, 1);
+		jProjList[1] = new FldSpec(relation, 2);
+		jProjList[2] = new FldSpec(relation, 3);
+		jProjList[3] = new FldSpec(relation, 4);
+		jProjList[4] = new FldSpec(relation, 5);
+		
+		FldSpec[] jProjListWithWeight = new FldSpec[6];
+		jProjListWithWeight[0] = new FldSpec(relation, 1);
+		jProjListWithWeight[1] = new FldSpec(relation, 2);
+		jProjListWithWeight[2] = new FldSpec(relation, 3);
+		jProjListWithWeight[3] = new FldSpec(relation, 4);
+		jProjListWithWeight[4] = new FldSpec(relation, 5);
+		jProjListWithWeight[5] = new FldSpec(relation, 6);
+		
+		CondExpr[] outFilter = new CondExpr[3];
+		outFilter[0] = new CondExpr();
+		outFilter[1] = new CondExpr();
+		outFilter[2] = new CondExpr();
+
+		CondExpr[] outFilter2 = new CondExpr[2];
+		outFilter2[0] = new CondExpr();
+		outFilter2[1] = new CondExpr();
+
+		Query2_CondExpr(outFilter, outFilter2);
+		
+		FldSpec[] proj1 = { new FldSpec(new RelSpec(RelSpec.outer), 1), 
+				new FldSpec(new RelSpec(RelSpec.innerRel), 1),
+				new FldSpec(new RelSpec(RelSpec.innerRel), 6), 
+				new FldSpec(new RelSpec(RelSpec.innerRel), 7),
+				new FldSpec(new RelSpec(RelSpec.innerRel), 8)};
+				//new FldSpec(new RelSpec(RelSpec.sum), -1 ,8)};
+				
+		FldSpec[] proj2 = { new FldSpec(new RelSpec(RelSpec.outer), 1), 
+				new FldSpec(new RelSpec(RelSpec.innerRel), 1),
+				new FldSpec(new RelSpec(RelSpec.innerRel), 6), 
+				new FldSpec(new RelSpec(RelSpec.innerRel), 7),
+				new FldSpec(new RelSpec(RelSpec.innerRel), 8),
+				new FldSpec(new RelSpec(RelSpec.sum), -1 ,6)};
+		
+		FldSpec[] proj3 = { new FldSpec(new RelSpec(RelSpec.outer), 1), 
+				new FldSpec(new RelSpec(RelSpec.innerRel), 1),
+				new FldSpec(new RelSpec(RelSpec.innerRel), 6), 
+				new FldSpec(new RelSpec(RelSpec.innerRel), 7),
+				new FldSpec(new RelSpec(RelSpec.innerRel), 8),
+				new FldSpec(new RelSpec(RelSpec.sum), 3 ,6)};
+		
+	    if(inputAttrType.expType==ExpType.expNodeLabel){
+			CondExpr[] startNodeCondition = getConditionExprOnNodeLabels(labels,1);
+			
+			try {
+				am = getIndexIteratorOnNodeLabel(nodeAttrTypes, nodeProjList, nodeAttrStrSizes, startNodeCondition);
+			} catch (IndexException | InvalidTypeException | InvalidTupleSizeException | UnknownIndexTypeException
+					| IOException e) {
+				e.printStackTrace();
+			}
+		}else if(inputAttrType.expType == ExpType.expDesc){
+			CondExpr[] startNodeCondition = getConditionExprForDescriptor(values,2);
+			try {
+				am = getIndexIteratorOnDescriptor(nodeAttrTypes, nodeProjList, nodeAttrStrSizes, startNodeCondition);
+			} catch (IndexException | InvalidTypeException | InvalidTupleSizeException | UnknownIndexTypeException
+					| IOException e) {
+				e.printStackTrace();
+			}
+		}
+	    NestedIndexLoopJoin nlj=null;
+		boolean done =false;
+		switch (boundType.expType) {
+			case ExpType.expNoOfEdges:
+				for(int i=0;i<bound;i++){
+					CondExpr[] rightFilter = null;
+					if(i==0){
+						try {
+							nlj = getNestedIndexJoinOnSrouceLabel(nodeAttrTypes,2, nodeAttrStrSizes, rightFilter, Etypes,8, Esizes,
+									indexProjList, am, outFilter, proj1,1,null);
+						} catch (NestedLoopException | IOException e) {
+							e.printStackTrace();
+						}
+					}else{
+						String prevFileName = "temp"+(i-1);
+						CondExpr[] jFilter = null;
+						try {
+							fam = new FileScan(prevFileName,Jtypes,
+									Jsizes, (short) Jtypes.length, (short)Jtypes.length, jProjList, jFilter);
+						}catch (Exception e) {
+							System.err.println("*** Error creating scan for Index scan");
+							System.err.println("" + e);
+							Runtime.getRuntime().exit(1);
+						}
+						try {
+							nlj = getNestedIndexJoinOnSrouceLabel(Jtypes, 5,Jsizes, rightFilter, Etypes, 8,Esizes,
+									indexProjList, fam, outFilter2, proj1,5,null);
+						} catch (NestedLoopException | IOException e) {
+							e.printStackTrace();
+						}
+					}
+					try {
+						intermediateFile = new NodeHeapFile("temp"+i);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					Tuple t = null;
+					try {
+						while ((t=nlj.get_next())!=null) {
+							Tuple tp = new Tuple();
+							tp.setHdr((short)5, Jtypes, Jsizes);
+							tp.tupleCopy(t);
+							intermediateFile.insertNode(tp.getTupleByteArray());
+							results.insertNode(tp.getTupleByteArray());
+						}
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					try {
+						if(fam!=null){
+							fam.close();
+						}
+						//delete prev intermediate file
+						nlj.close();
+						if(i>0){
+							intermediateFile = new NodeHeapFile("temp"+(i-1));
+							intermediateFile.deleteFile();
+						}
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			try {
+				intermediateFile = new NodeHeapFile("temp"+(bound-1));
+				intermediateFile.deleteFile();
+				if(fam!=null){
+					fam.close();
+				}
+				nlj.close();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+				break;
+			case ExpType.expTotalWeights://node labels
+				int i=0;
+				done = false;
+				CondExpr[] sumFilter = new CondExpr[2];
+				totalEdgeWeightCondExpr(sumFilter,bound);
+				while(!done){
+					CondExpr[] rightFilter = getConditionExprOnEdgeWeight(bound, 6);
+					if(i==0){
+						try {
+							nlj = getNestedIndexJoinOnSrouceLabel(nodeAttrTypes,2, nodeAttrStrSizes, rightFilter, Etypes,8, Esizes,
+									indexProjList, am, outFilter, proj2,1,sumFilter);
+						} catch (NestedLoopException | IOException e) {
+							e.printStackTrace();
+						}
+					}else{
+						String prevFileName = "temp"+(i-1);
+						CondExpr[] jFilter = getConditionExprOnEdgeWeight(bound, 6);
+						try {
+							fam = new FileScan(prevFileName,JtypesWithSum,
+									Jsizes, (short) JtypesWithSum.length, (short)JtypesWithSum.length, jProjListWithWeight, jFilter);
+						}catch (Exception e) {
+							System.err.println("*** Error creating scan for Index scan");
+							System.err.println("" + e);
+							Runtime.getRuntime().exit(1);
+						}
+						try {
+							nlj = getNestedIndexJoinOnSrouceLabel(JtypesWithSum, 6,Jsizes, rightFilter, Etypes, 8,Esizes,
+									indexProjList, fam, outFilter2, proj3,5,sumFilter);
+						} catch (NestedLoopException | IOException e) {
+							e.printStackTrace();
+						}
+					}
+					try {
+						intermediateFile = new NodeHeapFile("temp"+i);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					Tuple t = null;
+					try {
+						boolean hasAtleastOneTuple = false;
+						while ((t=nlj.get_next())!=null) {
+							hasAtleastOneTuple = true;
+							Tuple tp = new Tuple();
+							tp.setHdr((short)6, JtypesWithSum, Jsizes);
+							tp.tupleCopy(t);
+							intermediateFile.insertNode(tp.getTupleByteArray());
+							results.insertNode(tp.getTupleByteArray());
+						}
+						if(!hasAtleastOneTuple){
+							done=true;
+						}
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					try {
+						if(fam!=null){
+							fam.close();
+						}
+						//delete prev intermediate file
+						nlj.close();
+						intermediateFile = new NodeHeapFile("temp"+(i-1));
+						intermediateFile.deleteFile();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					i++;
+				}
+				break;
+			default:
+				System.out.println("Attribute type "+inputAttrType.expType+ " not supported");
+				break;
+		}
+		try {
+			if(boundType.expType == ExpType.expTotalWeights){
+				fam = new FileScan(OUTPUT_FILE_NAME,JtypesWithSum,
+						Jsizes, (short) JtypesWithSum.length, (short)JtypesWithSum.length, jProjListWithWeight, null);
+				/*Tuple t =null;
+				while ((t = fam.get_next()) != null) {
+					t.print(JtypesWithSum);
+				}*/
+			}else{
+				fam = new FileScan(OUTPUT_FILE_NAME,Jtypes,
+						Jsizes, (short) Jtypes.length, (short)Jtypes.length, jProjList, null);
+				/*Tuple t =null;
+				while ((t = fam.get_next()) != null) {
+					t.print(Jtypes);
+				}*/
+			}
+			
+		} catch (Exception e) {
+			System.err.println("" + e);
+			e.printStackTrace();
+			Runtime.getRuntime().exit(1);
+		}
+		
+		/*try {
+			//am.close();
+			fam.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}*/
+		
+		return fam;
+	}
+
+	private void totalEdgeWeightCondExpr(CondExpr[] expr, int bound) {
+
+		expr[0] = new CondExpr();
+		expr[0].next = null;
+		expr[0].op = new AttrOperator(AttrOperator.aopLE);
+		expr[0].type1 = new AttrType(AttrType.attrSymbol);
+		expr[0].type2 = new AttrType(AttrType.attrInteger);
+		expr[0].operand1.symbol = new FldSpec(new RelSpec(RelSpec.outer), 6);
+		expr[0].operand2.integer = bound;
+		expr[1] = null;
+		
 	}
 
 	private CondExpr[] getConditionExprOnEdgeWeight(int weight, int fldNum) {
@@ -531,10 +685,10 @@ public class PathExpression{
 
 	private NestedIndexLoopJoin getNestedIndexJoinOnSrouceLabel(AttrType[] nodeAttrTypes,int numberOfAttrInRel1, short[] nodeAttrStrSizes,
 			CondExpr[] indexExpr, AttrType[] Etypes,int numberOfAttrInRel2, short[] Esizes, FldSpec[] indexProjList, Iterator am,
-			CondExpr[] outFilter, FldSpec[] proj1, int srcLblFldNo) throws IOException, NestedLoopException {
+			CondExpr[] outFilter, FldSpec[] proj1, int srcLblFldNo, CondExpr[] sumFilter) throws IOException, NestedLoopException {
 		NestedIndexLoopJoin nlj;
-		nlj = new NestedIndexLoopJoin(nodeAttrTypes, 2, nodeAttrStrSizes, Etypes, 8, Esizes, amountOfMemoryForEachJoin, am, "GraphDBEDGESRCLABEL", new IndexType(IndexType.B_Index),
-				edges.getFileName(), indexProjList, 7, outFilter, indexExpr, proj1, proj1.length, srcLblFldNo);
+		nlj = new NestedIndexLoopJoin(nodeAttrTypes, numberOfAttrInRel1, nodeAttrStrSizes, Etypes, Etypes.length, Esizes, amountOfMemoryForEachJoin, am, "GraphDBEDGESRCLABEL", new IndexType(IndexType.B_Index),
+				edges.getFileName(), indexProjList, 7, outFilter, indexExpr, proj1, proj1.length, srcLblFldNo, sumFilter);
 		return nlj;
 	}
 
@@ -559,9 +713,15 @@ public class PathExpression{
 	public void close() throws IOException, JoinsException, SortException, IndexException {
 		try {
 			am.close();
-			for(int i = 0;i<nljArray.length;i++){
-				nljArray[i].close();
+			if(nljArray!=null){
+				for(int i = 0;i<nljArray.length;i++){
+					nljArray[i].close();
+				}
 			}
+			if(fam!=null){
+				fam.close();
+			}
+			results.deleteFile();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

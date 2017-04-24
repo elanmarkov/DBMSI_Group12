@@ -364,6 +364,8 @@ return CompareTupleWithTuple(fldType, t1, t1_fld_no, value, t1_fld_no, distance,
       res_attrs[i] = new AttrType(in1[proj_list[i].offset-1].attrType);
     else if (proj_list[i].relation.key == RelSpec.innerRel)
       res_attrs[i] = new AttrType(in2[proj_list[i].offset-1].attrType);
+    else if (proj_list[i].relation.key == RelSpec.sum)
+    	res_attrs[i] = new AttrType(AttrType.attrInteger);
   }
       
       // Now construct the res_str_sizes array.

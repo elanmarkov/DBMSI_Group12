@@ -310,13 +310,170 @@ public class PathQueryHandler {
 		return true;
 	}
 	
-	public boolean pathQuery3a(String exp){
-		return true;
+	public boolean pathQuery3a(String exp) throws IOException{
+		boolean result = false;
+        String[] exp1 = exp.split("/");
+        int bound;
+        ExpType boundType;
+        
+        int sizeOfExp = exp1.length;
+        ExpType expType;
+        String expValue = "";
+        
+        	if (exp1[0].startsWith("ND")){
+        		String[] y = exp1[0].split("ND");
+        		expValue = y[1];
+        		expType = new ExpType(ExpType.expDesc);
+        	}
+        	else if(exp1[0].startsWith("NL")){
+        		String[] y = exp1[0].split("NL");
+        		expValue = y[1];
+        		expType = new ExpType (ExpType.expNodeLabel);
+        	}
+        	else
+        	{
+        		System.out.println("INVALID PATH EXPRESSION");
+        		return false;
+        	}
+        	
+        	if(exp1[1].startsWith("ME")){
+        		exp1[1].split("ME");
+        		bound = Integer.parseInt(exp1[1].split("ME")[1]);
+        		boundType = new ExpType(ExpType.expNoOfEdges);
+        	}
+        	else if(exp1[1].startsWith("TW")){
+        		exp1[1].split("TW");
+        		bound = Integer.parseInt(exp1[1].split("TW")[1]);
+        		boundType = new ExpType(ExpType.expTotalWeights	);
+        	}
+        	else
+        	{
+        		System.out.println("INVALID PATH EXPRESSION");
+        		return false;
+        	}
+        
+        
+        PathExpression pe = SystemDefs.JavabaseDB.getPathExpressions();
+        AttrType[] Jtypes = { new AttrType(AttrType.attrString), 
+				new AttrType(AttrType.attrString),
+				new AttrType(AttrType.attrInteger),
+				new AttrType(AttrType.attrString), 
+				new AttrType(AttrType.attrString),
+				new AttrType(AttrType.attrInteger),};
+        short[] attrSize = new short[4];
+        attrSize[0] = Tuple.LABEL_MAX_LENGTH;
+        attrSize[1] = Tuple.LABEL_MAX_LENGTH;
+        attrSize[2] = 4;
+        attrSize[3] = 4;
+        int[] fldsArray = {1,5};
+        
+        Iterator it = pe.evaluateBoundPathExpression(expType, expValue, boundType, bound);
+        
+        try {
+        	System.out.print("try");
+			Tuple t =null;
+			while ((t = it.get_next()) != null) {
+				t.print(Jtypes, fldsArray);
+				t.print(Jtypes);
+			}
+		} catch (Exception e) {
+			System.err.println("" + e);
+			e.printStackTrace();
+			Runtime.getRuntime().exit(1);
+		}
+        try {
+			pe.close();
+		} catch (JoinsException | SortException | IndexException e) {
+			e.printStackTrace();
+		} 
+        
+        return result;
 	}
 
-	public boolean pathQuery3b(String exp){
-		return true;
-	}
+	public boolean pathQuery3b(String exp) throws IOException{
+		boolean result = false;
+        String[] exp1 = exp.split("/");
+        int bound;
+        ExpType boundType;
+        
+        int sizeOfExp = exp1.length;
+        ExpType expType;
+        String expValue = "";
+        
+        	if (exp1[0].startsWith("ND")){
+        		System.out.println("hello");
+        		String[] y = exp1[0].split("ND");
+        		expValue = y[1];
+        		expType = new ExpType(ExpType.expDesc);
+        	}
+        	else if(exp1[0].startsWith("NL")){
+        		String[] y = exp1[0].split("NL");
+        		expValue = y[1];
+        		expType = new ExpType (ExpType.expNodeLabel);
+        	}
+        	else
+        	{
+        		System.out.println("INVALID PATH EXPRESSION");
+        		return false;
+        	}
+        	
+        	if(exp1[1].startsWith("ME")){
+        		exp1[1].split("ME");
+        		bound = Integer.parseInt(exp1[1].split("ME")[1]);
+        		boundType = new ExpType(ExpType.expNoOfEdges);
+        	}
+        	else if(exp1[1].startsWith("TW")){
+        		exp1[1].split("TW");
+        		bound = Integer.parseInt(exp1[1].split("TW")[1]);
+        		boundType = new ExpType(ExpType.expTotalWeights	);
+        	}
+        	else
+        	{
+        		System.out.println("INVALID PATH EXPRESSION");
+        		return false;
+        	}
+        
+        
+        PathExpression pe = SystemDefs.JavabaseDB.getPathExpressions();
+        AttrType[] Jtypes = { new AttrType(AttrType.attrString), 
+				new AttrType(AttrType.attrString),
+				new AttrType(AttrType.attrInteger),
+				new AttrType(AttrType.attrString), 
+				new AttrType(AttrType.attrString),
+				new AttrType(AttrType.attrInteger),};
+        short[] attrSize = new short[4];
+        attrSize[0] = Tuple.LABEL_MAX_LENGTH;
+        attrSize[1] = Tuple.LABEL_MAX_LENGTH;
+        attrSize[2] = 4;
+        attrSize[3] = 4;
+        int[] fldsArray = {1,5};
+        
+        Iterator it = pe.evaluateBoundPathExpression(expType, expValue, boundType, bound);
+        
+        try {
+			Sort sort = new Sort(Jtypes, (short) 5, attrSize, it, 5,
+					new TupleOrder(TupleOrder.Ascending), 
+					Tuple.LABEL_MAX_LENGTH, SORTPGNUM);
+			Tuple t =null;
+			while ((t = sort.get_next()) != null){
+				t.print(Jtypes, fldsArray);
+				t.print(Jtypes);
+			}
+			it.close();
+			sort.close();
+
+		} catch (Exception e) {
+		
+			e.printStackTrace();
+		}
+        try {
+			pe.close();
+		} catch (JoinsException | SortException | IndexException e) {
+			e.printStackTrace();
+		} 
+        
+        return result;
+        }
 	
 
 	

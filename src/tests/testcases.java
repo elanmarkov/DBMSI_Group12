@@ -82,7 +82,10 @@ public class testcases {
 			if(splited[0].equals("batchnodeinsert") || splited[0].equals("batchedgeinsert") ||
 					splited[0].equals("batchnodedelete") || splited[0].equals("batchedgedelete")) {
 				graphDB = splited[2];
-			} else if(splited[0].equals("nodequery") || splited[0].equals("edgequery") || splited[0].equals("sortMergeJoin") || splited[0].equals("TQA") || splited[0].equals("TQB")) {
+			} else if(splited[0].equals("nodequery") || splited[0].equals("edgequery") || 
+					splited[0].equals("sortMergeJoin") || splited[0].equals("TQA") || 
+					splited[0].equals("TQB") || splited[0].equals("PQ1") || splited[0].equals("PQ2")
+					|| splited[0].equals("PQ3")) {
 				graphDB = splited[1];
 				numBuf = Integer.parseInt(splited[2]);
 			}
@@ -98,7 +101,8 @@ public class testcases {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
+			System.out.println("buffers : "+SystemDefs.JavabaseBM.getNumBuffers()+" "
+					+ "unpinned : "+SystemDefs.JavabaseBM.getNumUnpinnedBuffers());
 			if(splited[0].equals("batchnodeinsert")) {
 				batchnodeinsert insertObj = new batchnodeinsert();
 				try {
@@ -170,6 +174,8 @@ public class testcases {
 				flushPages();
 			}
 			printReadWriteCount();
+			System.out.println("buffers : "+SystemDefs.JavabaseBM.getNumBuffers()+" "
+					+ "unpinned : "+SystemDefs.JavabaseBM.getNumUnpinnedBuffers());
 		} while(!exit);
 	}
 }

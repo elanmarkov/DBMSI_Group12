@@ -11,6 +11,7 @@ import global.Descriptor;
 import global.ExpType;
 import global.IndexType;
 import heap.EdgeHeapFile;
+import heap.FieldNumberOutOfBoundException;
 import heap.HFBufMgrException;
 import heap.HFDiskMgrException;
 import heap.HFException;
@@ -37,7 +38,22 @@ import iterator.TupleUtilsException;
 import iterator.UnknowAttrType;
 import iterator.UnknownKeyTypeException;
 import zindex.ZCurve;
-
+/*
+ * @author Jayanth Kumar M J
+ * this class provides api's for path expression.
+ * it can handle path expressions of type
+ * PE1 : NN/(NN/)* /NN
+ * where NN <- (Node_label | Node_descriptor),
+ * PE2 : NID /EN (/EN)*
+ * where EN <- (Edge_label | max edge weight)
+ * and 
+ * PE3 : NID //Bound
+ * where Bound <- (number_of_Edges | Max_total_weight)
+ * 
+ * It also handles a combination of PE1 and PE2 as mentioned below
+ * PE12Hybrid : NN/[(NN/*)(EN/*)]/[(NN)(EN)]
+ * 
+ */
 public class PathExpression{
 	private static final String OUTPUT_FILE_NAME = "results";
 	private int amountOfMemoryForEachJoin = 10;
@@ -92,7 +108,20 @@ public class PathExpression{
 		expr2[1] = null;
 	}
 
-	
+	/*
+	 *@param ExpType[] The array expression types
+	 *@param values[] The array values for each type
+	 *@return Iterator iterator for the output
+	 *This method uses the Nested index loop joins 
+	 *condition on the destination label to reduce number of tuples
+	 *returns an iterator on the path query's output
+	 * PE1 : NN/(NN/)* /NN
+	 * where NN <- (Node_label | Node_descriptor),
+	 * PE2 : NID /EN (/EN)*
+	 * where EN <- (Edge_label | max edge weight)
+	 * It also handles a combination of PE1 and PE2 as mentioned below
+	 * PE12Hybrid : NN/[(NN/*)(EN/*)]/[(NN)(EN)]
+	 */
 	public Iterator evaluatePathExpression(ExpType[] inputAttrTypes, String[] values){
 		AttrType[] nodeAttrTypes = new AttrType[2];
 		nodeAttrTypes[0] = new AttrType(AttrType.attrString);
@@ -302,6 +331,22 @@ public class PathExpression{
 		
 		return nljArray[nljArray.length-1];
 	}
+	
+	/*
+	 *@param ExpType starts nodes expression type
+	 *@param values value if the start node's expression type
+	 *@return Iterator iterator for the output
+	 *This method uses the Nested index loop joins on source labels
+	 *returns an iterator on the path query's output
+	 *For max total weight bound it uses sum relation spec to 
+	 *add to fields and project the result on the output   
+	 * PE1 : NN/(NN/)* /NN
+	 * where NN <- (Node_label | Node_descriptor),
+	 * PE2 : NID /EN (/EN)*
+	 * where EN <- (Edge_label | max edge weight)
+	 * It also handles a combination of PE1 and PE2 as mentioned below
+	 * PE12Hybrid : NN/[(NN/*)(EN/*)]/[(NN)(EN)]
+	 */
 	
 	public Iterator evaluateBoundPathExpression(ExpType inputAttrType, String values,ExpType boundType, int bound){
 		AttrType[] nodeAttrTypes = new AttrType[2];
@@ -701,15 +746,7 @@ public class PathExpression{
 				nodeAttrStrSizes, 2, 2, nodeProjList, condExpr, 1, false);
 	}
 
-	
-	public Tuple get_next() throws IOException, JoinsException, IndexException, InvalidTupleSizeException,
-			InvalidTypeException, PageNotReadException, TupleUtilsException, PredEvalException, SortException,
-			LowMemException, UnknowAttrType, UnknownKeyTypeException, Exception {
 		
-		return null;
-	}
-
-	
 	public void close() throws IOException, JoinsException, SortException, IndexException {
 		try {
 			am.close();

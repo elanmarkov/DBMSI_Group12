@@ -140,6 +140,7 @@ public class graphDB extends DB {
 		}
 		nodeQuery = new NodeQueryHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights, this);
 		edgeQuery = new EdgeQueryHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights, this);
+		pathQuery = new PathQueryHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights, this);
 		batchNodeDelete = new BatchNodeDeleteHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights, this);
 		batchEdgeDelete = new BatchEdgeDeleteHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights, this);
 		batchNodeInsert = new BatchNodeInsertHandler(nodes, edges, nodeLabels, nodeDesc, edgeLabels, edgeWeights, this);

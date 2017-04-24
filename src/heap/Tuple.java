@@ -598,4 +598,72 @@ public class Tuple implements GlobalConst {
 		}*/
 		return label;
 	}
+	
+	public void print(AttrType[] type, int[] fldsArray) throws IOException {
+
+		int i, val;
+		float fval;
+		String sval;
+		Descriptor dVal;
+
+		System.out.print("[");
+		for (i = 0; i < fldsArray.length - 1; i++) {
+			switch (type[i].attrType) {
+
+			case AttrType.attrInteger:
+				val = Convert.getIntValue(fldOffset[fldsArray[i]-1], data);
+				System.out.print(val);
+				break;
+
+			case AttrType.attrReal:
+				fval = Convert.getFloValue(fldOffset[fldsArray[i]-1], data);
+				System.out.print(fval);
+				break;
+
+			case AttrType.attrString:
+				sval = Convert.getStrValue(fldOffset[fldsArray[i]-1], data, fldOffset[fldsArray[i]] - fldOffset[fldsArray[i]-1]);
+				System.out.print(sval);
+				break;
+
+			case AttrType.attrDesc:
+				dVal = Convert.getDescValue(fldOffset[fldsArray[i]-1], data);
+				System.out.print(dVal);
+				break;
+
+			case AttrType.attrNull:
+			case AttrType.attrSymbol:
+				break;
+			}
+			System.out.print(", ");
+		}
+
+		switch (type[fldCnt - 1].attrType) {
+
+		case AttrType.attrInteger:
+			val = Convert.getIntValue(fldOffset[fldsArray[i]-1], data);
+			System.out.print(val);
+			break;
+
+		case AttrType.attrReal:
+			fval = Convert.getFloValue(fldOffset[fldsArray[i]-1], data);
+			System.out.print(fval);
+			break;
+
+		case AttrType.attrString:
+			sval = Convert.getStrValue(fldOffset[fldsArray[i]-1], data, fldOffset[fldsArray[i]] - fldOffset[fldsArray[i]-1]);
+			System.out.print(sval);
+			break;
+		case AttrType.attrDesc:
+			dVal = Convert.getDescValue(fldOffset[fldsArray[i]-1], data);
+			System.out.print(dVal);
+			break;
+
+		case AttrType.attrNull:
+		case AttrType.attrSymbol:
+			break;
+		}
+		System.out.println("]");
+
+	
+	}
 }

@@ -2,7 +2,9 @@ package diskmgr;
 
 
 import java.io.IOException;
+import java.util.Arrays;
 
+import bufmgr.PageNotReadException;
 import global.*;
 import heap.*;
 import index.IndexException;
@@ -53,7 +55,6 @@ public class TriangleQuery {
 			int[] weights = new int[2];
 			String sublabel1 = queries[0].substring(2);
 			String sublabel2 = queries[1].substring(2);
-			System.out.println("Strings:"+sublabel1+sublabel2);
 			weights[0] = Integer.parseInt(sublabel1);
 			weights[1] = Integer.parseInt(sublabel2);
 			expr = setCondExprWW(weights);	
@@ -108,6 +109,61 @@ public class TriangleQuery {
 		}
 	    
 	    return sort;
+	}
+	
+	public void performDuplicateRemoval(NestedLoopsJoins input_join) throws JoinsException, IndexException, InvalidTupleSizeException, InvalidTypeException, PageNotReadException, TupleUtilsException, PredEvalException, SortException, LowMemException, UnknowAttrType, UnknownKeyTypeException, IOException, Exception {
+		Tuple t;
+		t=null;
+		Heapfile tempheap = new Heapfile("Heapfortriangle"); 
+		AttrType[] type = new AttrType[4];
+		type[0] = new AttrType(AttrType.attrString);
+		type[2] = new AttrType(AttrType.attrString);
+		type[1] = new AttrType(AttrType.attrString);
+		type[3] = new AttrType(AttrType.attrString);
+		FldSpec[] projlist = new FldSpec[4];
+		RelSpec rel = new RelSpec(RelSpec.outer);
+		projlist[0] = new FldSpec(rel, 1);
+		projlist[1] = new FldSpec(rel, 2);
+		projlist[2] = new FldSpec(rel, 3);
+		projlist[3] = new FldSpec(rel, 4);
+		short[] strSizes = new short[4];
+		strSizes[0]=30;
+		strSizes[1]=4;
+		strSizes[2]=4;
+		strSizes[3]=4;
+		while((t=input_join.get_next())!=null) {
+		String[] values = new String[3];
+		values = t.convertArray();
+		while(values[0].compareTo(values[1])>0 || values[0].compareTo(values[2])>0) {
+			String temp;
+			temp = values[1];
+			values[1] = values[0];
+			values[0] = values[2];
+			values[2] = temp;
+			}
+		Tuple t1= new Tuple();
+		t1.setHdr((short)4, type, strSizes);
+		String concat = values[0]+values[1]+values[2];
+		t1.setStrFld(1, concat);
+		t1.setStrFld(2, values[0]);
+		t1.setStrFld(3, values[1]);
+		t1.setStrFld(4, values[2]);
+		
+		tempheap.insertRecord(t1.getTupleByteArray());
+			
+		}
+		
+		
+		FileScan fscan = new FileScan("Heapfortriangle", type, strSizes, (short) 4, 4, projlist, null);
+		DuplElim dup = new DuplElim(type,(short)4,strSizes,fscan, 100, false);
+		Tuple t1 = new Tuple();
+		int[] fldno = {2,3,4};
+		while((t1=dup.get_next())!=null) {
+			t1.print(type,fldno);
+		}
+		dup.close();
+		tempheap.deleteFile();
+				
 	}
 
 

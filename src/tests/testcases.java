@@ -85,7 +85,7 @@ public class testcases {
 			} else if(splited[0].equals("nodequery") || splited[0].equals("edgequery") || 
 					splited[0].equals("sortMergeJoin") || splited[0].equals("TQA") || 
 					splited[0].equals("TQB") || splited[0].equals("PQ1") || splited[0].equals("PQ2")
-					|| splited[0].equals("PQ3")) {
+					|| splited[0].equals("PQ3") || splited[0].equals("TQC")) {
 				graphDB = splited[1];
 				numBuf = Integer.parseInt(splited[2]);
 			}
@@ -157,7 +157,7 @@ public class testcases {
 				else 
 					SMJoinEdge.performSortMergeJoin(null);
 				flushPages();
-			} else if(splited[0].equals("TQA") ||  splited[0].equals("TQB")) {
+			} else if(splited[0].equals("TQA") ||  splited[0].equals("TQB") || splited[0].equals("TQC")) {
 				if(splited.length > 3) {
 					TriangleQueryTest tq;
 					try {

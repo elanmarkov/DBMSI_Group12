@@ -48,6 +48,7 @@ class TriangleQueryTest implements GlobalConst{
 		Tuple t = new Tuple();
 		t = null;
 		if(query[0].equals("TQA")) {
+			System.out.println("Triangles with duplications, with no sorting are:");
 			while ((t = TQ.nlj.get_next()) != null) {
 				try {
 					t.print(jtype);
@@ -57,6 +58,7 @@ class TriangleQueryTest implements GlobalConst{
 			}
 		}
 		else if(query[0].equals("TQB")) {
+			System.out.println("Triangles with duplications, with sorting are:");
 			Sort sort = TQ.performSorting(TQ.nlj);
 			while ((t = sort.get_next()) != null) {
 				try {
@@ -67,6 +69,10 @@ class TriangleQueryTest implements GlobalConst{
 			}
 			sort.close();
 			
+		}
+		else if(query[0].equals("TQC")) {
+			System.out.println("Triangles without duplications, with sorting are:");
+			TQ.performDuplicateRemoval(TQ.nlj);
 		}
 		
 		TQ.nlj.close();

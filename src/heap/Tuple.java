@@ -569,6 +569,26 @@ public class Tuple implements GlobalConst {
 
 	}
 
+	public String[] convertArray() throws IOException {
+		AttrType[] type = new AttrType[3];
+		type[0] = new AttrType(AttrType.attrString);
+		type[2] = new AttrType(AttrType.attrString);
+		type[1] = new AttrType(AttrType.attrString);
+		
+		int i;
+		String sval;
+		String[] values = new String[3];
+
+		for (i = 0; i <= fldCnt - 1; i++) {
+			switch (type[i].attrType) {
+			case AttrType.attrString:
+				sval = Convert.getStrValue(fldOffset[i], data, fldOffset[i + 1] - fldOffset[i]);
+				values[i] = sval;
+				break;
+			}
+		}
+		return values;
+	}
 	/**
 	 * private method Padding must be used when storing different types.
 	 * 

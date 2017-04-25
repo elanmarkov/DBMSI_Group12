@@ -62,7 +62,8 @@ public class PathExpression{
 	FileScan fam=null;
 	NodeHeapFile results;
 	NodeHeapFile intermediateFile;
-	
+	private static ArrayList<Integer> readCounter = new ArrayList<>();
+	private static ArrayList<Integer> writeCounter = new ArrayList<>();
 
 	public PathExpression(NodeHeapFile nodes, EdgeHeapFile edges, BTreeFile nodeLabels, ZCurve nodeDesc,
 			BTreeFile edgeLabels, BTreeFile edgeWeights, graphDB db) {
@@ -331,7 +332,8 @@ public class PathExpression{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}*/
-		
+		NestedIndexLoopJoin.setNUMBER_OF_JOINS(nljArray.length);
+		NestedIndexLoopJoin.savecurrentReadWriteCounter();
 		return nljArray[nljArray.length-1];
 	}
 	
@@ -353,6 +355,8 @@ public class PathExpression{
 	 */
 	
 	public Iterator evaluateBoundPathExpression(ExpType inputAttrType, String values,ExpType boundType, int bound){
+		PathExpression.readCounter = new ArrayList<>();
+		PathExpression.writeCounter = new ArrayList<>();
 		AttrType[] nodeAttrTypes = new AttrType[2];
 		nodeAttrTypes[0] = new AttrType(AttrType.attrString);
 		nodeAttrTypes[1] = new AttrType(AttrType.attrDesc);
@@ -453,7 +457,8 @@ public class PathExpression{
 				new FldSpec(new RelSpec(RelSpec.innerRel), 7),
 				new FldSpec(new RelSpec(RelSpec.innerRel), 8),
 				new FldSpec(new RelSpec(RelSpec.sum), 3 ,6)};
-		
+		int readCounter = PCounter.getRCount();
+		int writeCounter = PCounter.getWCount();
 	    if(inputAttrType.expType==ExpType.expNodeLabel){
 			CondExpr[] startNodeCondition = getConditionExprOnNodeLabels(labels,1);
 			
@@ -538,6 +543,10 @@ public class PathExpression{
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					PathExpression.readCounter.add(PCounter.getRCount()-readCounter);
+					PathExpression.writeCounter.add(PCounter.getWCount()-writeCounter);
+					readCounter = PCounter.getRCount();
+					writeCounter = PCounter.getWCount();
 				}
 			try {
 				intermediateFile = new NodeHeapFile("temp"+(bound-1));
@@ -619,6 +628,10 @@ public class PathExpression{
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					PathExpression.readCounter.add(PCounter.getRCount()-readCounter);
+					PathExpression.writeCounter.add(PCounter.getWCount()-writeCounter);
+					readCounter = PCounter.getRCount();
+					writeCounter = PCounter.getWCount();
 					i++;
 				}
 				break;
@@ -765,9 +778,13 @@ public class PathExpression{
 				for(int i = 0;i<nljArray.length;i++){
 					nljArray[i].close();
 				}
+				System.out.println("PathExpression.close() reads : "+NestedIndexLoopJoin.getReadCounter());
+				System.out.println("PathExpression.close() write : "+NestedIndexLoopJoin.getWriteCounter());
 			}
 			if(fam!=null){
 				fam.close();
+				System.out.println("PathExpression.close() reads : "+PathExpression.readCounter);
+				System.out.println("PathExpression.close() write : "+PathExpression.writeCounter);
 			}
 			results.deleteFile();
 		} catch (Exception e) {

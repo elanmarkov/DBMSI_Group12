@@ -35,7 +35,8 @@ public class testcases {
 	private static void printLongMenu() {
 		System.out.println("Graph Database Test Cases ");
 		System.out.println("Format of command line input:\n");
-
+		
+		System.out.println("============= Phase 2 Tests =============");
 		System.out.println("Batch Node Insert (Task 10 Query):");
 		System.out.println("batchnodeinsert NODEFILENAME GRAPHDBNAME");
 		System.out.println("NODEFILENAME should be a file in tests folder\n");
@@ -57,6 +58,40 @@ public class testcases {
 
 		System.out.println("Simple Edge Query (Task 15 Query):");
 		System.out.println("edgequery GRAPHDBNAME NUMBUF QTYPE INDEX [QUERYOPTIONS]\n\n");
+
+		System.out.println("============= Phase 3 Tests =============");
+		System.out.println("NL = Node Label");		
+		System.out.println("ND = Node Descriptor");
+		System.out.println("EL = Edge Label");		
+		System.out.println("MW = Max Edge Weight");
+		System.out.println("ME = Max Num Edges");		
+		System.out.println("TW = Max Total Edge Weight\n");
+
+		System.out.println("Path Expression Query 1 (Task 6 Query):");
+		System.out.println("PQ1 GRAPHDBNAME NUMBUF a/b/c ARGS");
+		System.out.println("ARGS = NN/(NN/)*/NN");
+		System.out.println("NN = (NL|ND)");
+		System.out.println("Example: PQ1 graph 1000 a NL1/ND1,2,3,4,5\n");
+
+		System.out.println("Path Expression Query 2 (Task 7 Query):");
+		System.out.println("PQ2 GRAPHDBNAME NUMBUF a/b/c ARGS");
+		System.out.println("ARGS = NN/EN(/EN)*");
+		System.out.println("NN = (NL|ND)");
+		System.out.println("EN = (EL|MW)");
+		System.out.println("Example: PQ2 graph 1000 a NL1/EL2\n");
+
+		System.out.println("Path Expression Query 3 (Task 8 Query):");
+		System.out.println("PQ3 GRAPHDBNAME NUMBUF a/b/c ARGS");
+		System.out.println("ARGS = NN/Bound");
+		System.out.println("NN = (NL|ND)");
+		System.out.println("Bound = (ME|TW)");
+		System.out.println("Example: PQ3 graph 1000 a NL1/ME5\n");
+
+		System.out.println("Triangle Query (Task 9 Query):");
+		System.out.println("TQA/TQB/TQC GRAPHDBNAME NUMBUF ARGS");
+		System.out.println("ARGS = EN;EN;EN");
+		System.out.println("EN = (EL|MW)");
+		System.out.println("Example: TQA graph 1000 EL1;EL2;EL3\n\n");
 	}
 	/** Short menu for graph tests. Gives list of possible entries.*/
 	private static void printShortMenu() {

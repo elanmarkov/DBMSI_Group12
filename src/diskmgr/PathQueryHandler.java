@@ -66,10 +66,8 @@ public class PathQueryHandler {
         
         Iterator it = pe.evaluatePathExpression(expType, expValue);
         try {
-                System.out.print("hello");
                         Tuple t =null;
                         while ((t = it.get_next()) != null) {
-                                System.out.print("hello");
                                 t.print(Jtypes, fldsArray);
                         }
                 } catch (Exception e) {
@@ -562,7 +560,6 @@ public class PathQueryHandler {
         String expValue = "";
         
                 if (exp1[0].startsWith("ND")){
-                        System.out.println("hello");
                         String[] y = exp1[0].split("ND");
                         expValue = y[1];
                         expType = new ExpType(ExpType.expDesc);
@@ -612,7 +609,7 @@ public class PathQueryHandler {
         Iterator it = pe.evaluateBoundPathExpression(expType, expValue, boundType, bound);
         
         try {
-                        Sort sort = new Sort(Jtypes, (short) 5, attrSize, it, 5,
+                        Sort sort = new Sort(Jtypes, (short) 6, attrSize, it, 5,
                                         new TupleOrder(TupleOrder.Ascending), 
                                         Tuple.LABEL_MAX_LENGTH, SORTPGNUM);
                         Tuple t =null;
@@ -648,7 +645,6 @@ public class PathQueryHandler {
         String expValue = "";
         
                 if (exp1[0].startsWith("ND")){
-                        System.out.println("hello");
                         String[] y = exp1[0].split("ND");
                         expValue = y[1];
                         expType = new ExpType(ExpType.expDesc);

@@ -657,7 +657,7 @@ public class Tuple implements GlobalConst {
 			System.out.print(", ");
 		}
 
-		switch (type[fldCnt - 1].attrType) {
+		switch (type[fldsArray.length - 1].attrType) {
 
 		case AttrType.attrInteger:
 			val = Convert.getIntValue(fldOffset[fldsArray[i]-1], data);

@@ -44,7 +44,6 @@ class TriangleQueryTest implements GlobalConst{
 		jtype[0] = new AttrType (AttrType.attrString);
 		jtype[1] = new AttrType (AttrType.attrString);
 		jtype[2] = new AttrType (AttrType.attrString);
-		
 		Tuple t = new Tuple();
 		t = null;
 		if(query[0].equals("TQA")) {
@@ -57,8 +56,10 @@ class TriangleQueryTest implements GlobalConst{
 				}
 			}
 		}
+		
+		
 		else if(query[0].equals("TQB")) {
-			System.out.println("Triangles with duplications, with sorting are:");
+			System.out.println("Triangles with duplications, with ascending sorting done on the first Node Label are:");
 			Sort sort = TQ.performSorting(TQ.nlj);
 			while ((t = sort.get_next()) != null) {
 				try {
@@ -71,14 +72,12 @@ class TriangleQueryTest implements GlobalConst{
 			
 		}
 		else if(query[0].equals("TQC")) {
-			System.out.println("Triangles without duplications, with sorting are:");
+			System.out.println("Triangles without duplications:");
 			TQ.performDuplicateRemoval(TQ.nlj);
 		}
 		
 		TQ.nlj.close();
-		TQ.sme.close();
-		
-		
+		TQ.leftscan.close();
 		
 
 	} 

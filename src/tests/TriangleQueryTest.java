@@ -38,7 +38,9 @@ class TriangleQueryTest implements GlobalConst{
 	 * @throws IndexException 
 	 * @throws JoinsException */
 	public TriangleQueryTest(String[] query) throws JoinsException, IndexException, InvalidTupleSizeException, InvalidTypeException, PageNotReadException, TupleUtilsException, PredEvalException, SortException, LowMemException, UnknowAttrType, UnknownKeyTypeException, IOException, Exception
-	{
+	{	boolean empty = false;
+		boolean notempty = true;
+		boolean status = empty;
 		TriangleQuery TQ = new TriangleQuery(query[3]);
 		AttrType [] jtype = new AttrType[3];
 		jtype[0] = new AttrType (AttrType.attrString);
@@ -50,6 +52,7 @@ class TriangleQueryTest implements GlobalConst{
 			System.out.println("Triangles with duplications, with no sorting are:");
 			while ((t = TQ.nlj.get_next()) != null) {
 				try {
+					status = notempty;
 					t.print(jtype);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -63,6 +66,7 @@ class TriangleQueryTest implements GlobalConst{
 			Sort sort = TQ.performSorting(TQ.nlj);
 			while ((t = sort.get_next()) != null) {
 				try {
+					status = notempty;
 					t.print(jtype);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -72,12 +76,16 @@ class TriangleQueryTest implements GlobalConst{
 			
 		}
 		else if(query[0].equals("TQC")) {
+			status = notempty;
 			System.out.println("Triangles without duplications:");
 			TQ.performDuplicateRemoval(TQ.nlj);
 		}
 		
 		TQ.nlj.close();
 		TQ.leftscan.close();
+		if(!status) {
+			System.out.println("No Triangles Found.");
+		}
 		
 
 	} 

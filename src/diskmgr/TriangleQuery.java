@@ -6,7 +6,7 @@
  * TQC is for getting triangles such that no duplicates are present.
  * 
  * The Query has 3 Edge Label or Edge Weight combinations which represent the 3 edges of the triangles which will be output.
- * For Edge Label , the prefix "EL" is used, for Maximum Edge Weight, prefix "EW" is used. 
+ * For Edge Label , the prefix "EL" is used, for Maximum Edge Weight, prefix "MW" is used. 
  * 
  * An example is TQA graphdb 1000 EL1;EL2;EW30
  * 
@@ -88,7 +88,7 @@ public class TriangleQuery {
 			WorL[1] = 1;
 				
 		}
-		else if(labels[0].equals("EL") && labels[1].equals("EW")){
+		else if(labels[0].equals("EL") && labels[1].equals("MW")){
 			String edge_label = new String();
 			edge_label = queries[0].substring(2);
 			int weight = Integer.parseInt(queries[1].substring(2));
@@ -96,7 +96,7 @@ public class TriangleQuery {
 			WorL[0] = 1;
 			WorL[1] = 6;
 		}
-		else if(labels[0].equals("EW") && labels[1].equals("EW")){
+		else if(labels[0].equals("MW") && labels[1].equals("MW")){
 			int[] weights = new int[2];
 			String sublabel1 = queries[0].substring(2);
 			String sublabel2 = queries[1].substring(2);
@@ -106,7 +106,7 @@ public class TriangleQuery {
 			WorL[0] = 6;
 			WorL[1] = 6;
 		}
-		else if(labels[0].equals("EW") && labels[1].equals("EL")){
+		else if(labels[0].equals("MW") && labels[1].equals("EL")){
 			String edge_label = new String();
 			edge_label = queries[1].substring(2);
 			int weight = Integer.parseInt(queries[0].substring(2));
@@ -136,7 +136,7 @@ public class TriangleQuery {
 		secondexpr[1] = new CondExpr();
 		secondexpr[2] = new CondExpr();
 		secondexpr[3] = new CondExpr();
-		if(labels[2].equals("EW")) {
+		if(labels[2].equals("MW")) {
 			int weight = Integer.parseInt(queries[2].substring(2));
 			secondexpr = setCondExprW(weight);
 		}

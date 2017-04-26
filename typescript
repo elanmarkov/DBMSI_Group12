@@ -1,6 +1,5 @@
-Script started on Wed 26 Apr 2017 09:15:17 AM MST
-[01;32muser@user-Linux[01;34m ~/Documents/CSE510/minjava/javaminibase $[00m cd src; make db; make  
-graphtest
+Script started on Wed 26 Apr 2017 03:12:28 PM MST
+[01;32muser@user-Linux[01;34m ~/Documents/CSE510/minjava/javaminibase $[00m exitcd javaminibase/src; make db; make ggraphtest
 make -C global
 make[1]: Entering directory `/home/user/Documents/CSE510/minjava/javaminibase/src/global'
 /usr/lib/jvm/default-java/bin/javac -classpath /usr/lib/jvm/default-java/lib/classes.zip:.:..:/home/user/Documents/CSE510/minjava/javaminibase/construction *.java
@@ -1472,6 +1471,8 @@ Triangles with duplications, with no sorting are:
 [813, 129, 629]
 [512, 221, 236]
 [887, 531, 616]
+Number of reads : [250]
+Number of writes : [0]
 
 No. of pages read : 260
 No. of pages write : 10
@@ -1493,6 +1494,8 @@ Sort on Column 1
 [771, 68, 255]
 [813, 129, 629]
 [887, 531, 616]
+Number of reads : [251]
+Number of writes : [0]
 
 No. of pages read : 261
 No. of pages write : 12
@@ -1514,25 +1517,11 @@ Duplicate Removal Object Initiated.
 [221, 236, 512]
 [255, 771, 68]
 [531, 616, 887]
+Number of reads : [251]
+Number of writes : [0]
 
 No. of pages read : 261
 No. of pages write : 12
-buffers : 1000 unpinned : 1000
-Enter menu to print the menu, exit to exit, or a command line input to execute:
-TQA graphdb1 1000 EL1;MW10;EL3
-Replacer: Clock
-
-buffers : 1000 unpinned : 993
-PROJECTION of Source Node and Destination Node Label of edge(SELECT with first expression as edge condition).
-Join On(Edge Source Node Label Index with second expression as edge condition)
-Projection of [SourceNode1,DestNode1,SourceNode2,DestNode2]
-Join on (Edge Source Node Label Index with third expression as edge condition and DestNode1 = DestNodeLabel of inner relation)
-Projection of [SourceNode1,DestNode1,DestNode2]
-Triangles with duplications, with no sorting are:
-No Triangles Found.
-
-No. of pages read : 221
-No. of pages write : 10
 buffers : 1000 unpinned : 1000
 Enter menu to print the menu, exit to exit, or a command line input to execute:
 TQA graphdb1 1000 EL1;MW30;EL3
@@ -1547,6 +1536,8 @@ Projection of [SourceNode1,DestNode1,DestNode2]
 Triangles with duplications, with no sorting are:
 [771, 68, 255]
 [512, 221, 236]
+Number of reads : [259]
+Number of writes : [0]
 
 No. of pages read : 269
 No. of pages write : 11
@@ -1565,6 +1556,8 @@ Triangles with duplications, with ascending sorting done on the first Node Label
 Sort on Column 1
 [512, 221, 236]
 [771, 68, 255]
+Number of reads : [260]
+Number of writes : [0]
 
 No. of pages read : 270
 No. of pages write : 13
@@ -1583,6 +1576,8 @@ Heap Created with Concatenated String of Node Labels as first field.
 Duplicate Removal Object Initiated.
 [221, 236, 512]
 [255, 771, 68]
+Number of reads : [260]
+Number of writes : [0]
 
 No. of pages read : 270
 No. of pages write : 13
@@ -1873,57 +1868,6 @@ No. of pages read : 19
 No. of pages write : 0
 buffers : 1000 unpinned : 983
 Enter menu to print the menu, exit to exit, or a command line input to execute:
-PQ3 graphdb1 1000 a NL0/ME1
-Replacer: Clock
-
-buffers : 1000 unpinned : 993
-(Find tuples on NodeLabel Index File which satisfies Given condition) 
- Join On (Source label Index file with source condition)
-[0, 248]
-[0, 1000]
-[0, 850]
-[0, 1023]
-PathExpression.close() reads : [11]
-PathExpression.close() write : [0]
-
-No. of pages read : 19
-No. of pages write : 0
-buffers : 1000 unpinned : 993
-Enter menu to print the menu, exit to exit, or a command line input to execute:
-PQ3 graphdb1 1000 b NL0/ME1
-Replacer: Clock
-
-buffers : 1000 unpinned : 993
-(Find tuples on NodeLabel Index File which satisfies Given condition) 
- Join On (Source label Index file with source condition)
-[0, 1000]
-[0, 1023]
-[0, 248]
-[0, 850]
-PathExpression.close() reads : [11]
-PathExpression.close() write : [0]
-
-No. of pages read : 19
-No. of pages write : 0
-buffers : 1000 unpinned : 993
-Enter menu to print the menu, exit to exit, or a command line input to execute:
-PQ3 graphdb1 1000 c NL0/ME1
-Replacer: Clock
-
-buffers : 1000 unpinned : 993
-(Find tuples on NodeLabel Index File which satisfies Given condition) 
- Join On (Source label Index file with source condition)
-[0, 1000]
-[0, 1023]
-[0, 248]
-[0, 850]
-PathExpression.close() reads : [11]
-PathExpression.close() write : [0]
-
-No. of pages read : 19
-No. of pages write : 0
-buffers : 1000 unpinned : 983
-Enter menu to print the menu, exit to exit, or a command line input to execute:
 TQA graphdb1 1000 EL1;EL2;EL1
 Replacer: Clock
 
@@ -1934,6 +1878,8 @@ Projection of [SourceNode1,DestNode1,SourceNode2,DestNode2]
 Join on (Edge Source Node Label Index with third expression as edge condition and DestNode1 = DestNodeLabel of inner relation)
 Projection of [SourceNode1,DestNode1,DestNode2]
 Triangles with duplications, with no sorting are:
+Number of reads : [15, 235]
+Number of writes : [0, 0]
 No Triangles Found.
 
 No. of pages read : 260
@@ -1951,6 +1897,8 @@ Join on (Edge Source Node Label Index with third expression as edge condition an
 Projection of [SourceNode1,DestNode1,DestNode2]
 Triangles with duplications, with ascending sorting done on the first Node Label are:
 Sort on Column 1
+Number of reads : [-124, 375]
+Number of writes : [0, 0]
 No Triangles Found.
 
 No. of pages read : 261
@@ -1968,6 +1916,8 @@ Join on (Edge Source Node Label Index with third expression as edge condition an
 Projection of [SourceNode1,DestNode1,DestNode2]
 Heap Created with Concatenated String of Node Labels as first field.
 Duplicate Removal Object Initiated.
+Number of reads : [-264, 515]
+Number of writes : [0, 0]
 
 No. of pages read : 261
 No. of pages write : 12
@@ -1983,6 +1933,8 @@ Projection of [SourceNode1,DestNode1,SourceNode2,DestNode2]
 Join on (Edge Source Node Label Index with third expression as edge condition and DestNode1 = DestNodeLabel of inner relation)
 Projection of [SourceNode1,DestNode1,DestNode2]
 Triangles with duplications, with no sorting are:
+Number of reads : [-306, 515]
+Number of writes : [0, 0]
 No Triangles Found.
 
 No. of pages read : 219
@@ -2000,6 +1952,8 @@ Join on (Edge Source Node Label Index with third expression as edge condition an
 Projection of [SourceNode1,DestNode1,DestNode2]
 Triangles with duplications, with ascending sorting done on the first Node Label are:
 Sort on Column 1
+Number of reads : [-305, 515]
+Number of writes : [0, 0]
 No Triangles Found.
 
 No. of pages read : 220
@@ -2017,66 +1971,12 @@ Join on (Edge Source Node Label Index with third expression as edge condition an
 Projection of [SourceNode1,DestNode1,DestNode2]
 Heap Created with Concatenated String of Node Labels as first field.
 Duplicate Removal Object Initiated.
+Number of reads : [-305, 515]
+Number of writes : [0, 0]
 
 No. of pages read : 220
 No. of pages write : 12
 buffers : 1000 unpinned : 1000
-Enter menu to print the menu, exit to exit, or a command line input to execute:
-PQ3 graphdb1 1000 a NL4/ME1
-Replacer: Clock
-
-buffers : 1000 unpinned : 993
-(Find tuples on NodeLabel Index File which satisfies Given condition) 
- Join On (Source label Index file with source condition)
-[4, 736]
-[4, 231]
-[4, 616]
-[4, 41]
-[4, 395]
-[4, 889]
-[4, 476]
-[4, 865]
-PathExpression.close() reads : [13]
-PathExpression.close() write : [0]
-
-No. of pages read : 21
-No. of pages write : 0
-buffers : 1000 unpinned : 993
-Enter menu to print the menu, exit to exit, or a command line input to execute:
-PQ3 graphdb1 1000 a NL40/ME1
-Replacer: Clock
-
-buffers : 1000 unpinned : 993
-(Find tuples on NodeLabel Index File which satisfies Given condition) 
- Join On (Source label Index file with source condition)
-[40, 387]
-[40, 805]
-[40, 870]
-[40, 601]
-[40, 474]
-[40, 410]
-PathExpression.close() reads : [28]
-PathExpression.close() write : [0]
-
-No. of pages read : 36
-No. of pages write : 0
-buffers : 1000 unpinned : 993
-Enter menu to print the menu, exit to exit, or a command line input to execute:
-PQ3 graphdb1 1000 a NL55/ME1
-Replacer: Clock
-
-buffers : 1000 unpinned : 993
-(Find tuples on NodeLabel Index File which satisfies Given condition) 
- Join On (Source label Index file with source condition)
-[55, 172]
-[55, 694]
-[55, 263]
-PathExpression.close() reads : [33]
-PathExpression.close() write : [0]
-
-No. of pages read : 41
-No. of pages write : 0
-buffers : 1000 unpinned : 993
 Enter menu to print the menu, exit to exit, or a command line input to execute:
 exit
 Replacer: Clock
@@ -2090,4 +1990,4 @@ make[1]: Leaving directory `/home/user/Documents/CSE510/minjava/javaminibase/src
 [01;32muser@user-Linux[01;34m ~/Documents/CSE510/minjava/javaminibase/src $[00m exit
 exit
 
-Script done on Wed 26 Apr 2017 09:27:40 AM MST
+Script done on Wed 26 Apr 2017 03:19:33 PM MST

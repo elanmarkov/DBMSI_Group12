@@ -1,8 +1,10 @@
 	package iterator;
 
 	import java.io.IOException;
+import java.util.ArrayList;
 
 import bufmgr.PageNotReadException;
+import diskmgr.PCounter;
 import global.AttrOperator;
 import global.AttrType;
 import global.IndexType;
@@ -16,6 +18,48 @@ public class NestedIndexLoopJoin extends Iterator{
 
 	
 		private static int count = 0;
+		private static ArrayList<Integer> readCounter = new ArrayList<>();
+		public static ArrayList<Integer> getReadCounter() {
+			return readCounter;
+		}
+
+		public static void setReadCounter(ArrayList<Integer> readCounter) {
+			NestedIndexLoopJoin.readCounter = readCounter;
+		}
+
+		public static ArrayList<Integer> getWriteCounter() {
+			return writeCounter;
+		}
+
+		public static void setWriteCounter(ArrayList<Integer> writeCounter) {
+			NestedIndexLoopJoin.writeCounter = writeCounter;
+		}
+
+		private static ArrayList<Integer> writeCounter = new ArrayList<>();
+		private static int prevReadCounter = 0;
+		private static int prevWriteCounter = 0;
+		private static int NUMBER_OF_JOINS = 0;
+		
+		public static int getNUMBER_OF_JOINS() {
+			return NUMBER_OF_JOINS;
+		}
+
+		public static void setNUMBER_OF_JOINS(int nUMBER_OF_JOINS) {
+			count=0;
+			NUMBER_OF_JOINS = nUMBER_OF_JOINS;
+			readCounter = new ArrayList<>();
+			writeCounter = new ArrayList<>();
+			for(int i =0 ; i<NUMBER_OF_JOINS;i++){
+				readCounter.add(0);
+				writeCounter.add(0);
+			}
+		}
+		
+		public static void savecurrentReadWriteCounter(){
+			prevReadCounter = PCounter.getRCount();
+			prevWriteCounter = PCounter.getWCount();
+		}
+
 		private AttrType _in1[], _in2[];
 		private int in1_len, in2_len;
 		private Iterator outer;
@@ -128,11 +172,11 @@ public class NestedIndexLoopJoin extends Iterator{
 				throw new NestedLoopException(e, "TupleUtilsException is caught by NestedLoopsJoins.java");
 			}
 
-			try {
+			/*try {
 				inner = new IndexScan(itype, indexedRelName, indexName, in2, t2_str_sizes, in2.length, in2.length, indexProjList, rightFilter, indexFldNo, false);
 			} catch (Exception e) {
 				throw new NestedLoopException(e, "Create new heapfile failed.");
-			}
+			}*/
 		}
 
 		/**
@@ -183,8 +227,12 @@ public class NestedIndexLoopJoin extends Iterator{
 				// an existing scan on the file, and reopen a new scan on the file.
 				// If a get_next on the outer returns DONE?, then the nested loops
 				// join is done too.
-				
 				if (get_from_outer == true) {
+					saveReadWriteCounters();
+					savecurrentReadWriteCounter();
+					if(count>0){
+						count--;
+					}
 					get_from_outer = false;
 					if (inner != null) // If this not the first time,
 					{
@@ -196,17 +244,20 @@ public class NestedIndexLoopJoin extends Iterator{
 					
 					if ((outer_tuple = outer.get_next()) == null) {
 						done = true;
+						
 						/*if (inner != null) {
 							inner.close();
 							inner = null;
 						}*/
 						return null;
 					}
+					
 					/*
 					 * condition expr to make sure that only limited tuples 
 					 * are fetched from the right to reduce the number of expression
 					 * i.e index on source label and condition on destination label
 					 */
+					
 					String label = outer_tuple.getStrFld(joinFldNo);
 					CondExpr[] indexExpr = new CondExpr[2];
 					indexExpr[0] = new CondExpr();
@@ -239,6 +290,11 @@ public class NestedIndexLoopJoin extends Iterator{
 									return Jtuple;
 								}
 							}else{
+								saveReadWriteCounters();
+								savecurrentReadWriteCounter();
+								if(count<NUMBER_OF_JOINS-1){
+									count++;
+								}
 								return Jtuple;
 							}
 						}
@@ -251,6 +307,15 @@ public class NestedIndexLoopJoin extends Iterator{
 
 				get_from_outer = true; // Loop back to top and get next outer tuple.
 			} while (true);
+		}
+
+		private void saveReadWriteCounters() {
+			if(readCounter.size()>count){
+				int reads = readCounter.get(count)+PCounter.getRCount()-prevReadCounter;
+				readCounter.set(count, reads);
+				int writes = writeCounter.get(count)+PCounter.getWCount()-prevWriteCounter;
+				writeCounter.set(count, writes);
+			}
 		}
 
 		/**

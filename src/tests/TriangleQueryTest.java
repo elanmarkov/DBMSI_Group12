@@ -46,7 +46,13 @@ class TriangleQueryTest implements GlobalConst{
 		jtype[2] = new AttrType (AttrType.attrString);
 		Tuple t = new Tuple();
 		t = null;
+		System.out.println("PROJECTION of Source Node and Destination Node Label of edge(SELECT with first expression as edge condition).");
+		System.out.println("Join On(Edge Source Node Label Index with second expression as edge condition)");
+		System.out.println("Projection of [SourceNode1,DestNode1,SourceNode2,DestNode2]");
+		System.out.println("Join on (Edge Source Node Label Index with third expression as edge condition and DestNode1 = DestNodeLabel of inner relation)");
+		System.out.println("Projection of [SourceNode1,DestNode1,DestNode2]");
 		if(query[0].equals("TQA")) {
+			
 			System.out.println("Triangles with duplications, with no sorting are:");
 			while ((t = TQ.nlj.get_next()) != null) {
 				try {
@@ -62,10 +68,7 @@ class TriangleQueryTest implements GlobalConst{
 		else if(query[0].equals("TQB")) {
 			System.out.println("Triangles with duplications, with ascending sorting done on the first Node Label are:");
 			Sort sort = TQ.performSorting(TQ.nlj);
-			System.out.println("Sorting Initiated.");
-			System.out.println("No. of pages read : " + PCounter.getRCount());
-			System.out.println("No. of pages write : " + PCounter.getWCount()+"\n");
-			PCounter.initialize();
+			System.out.println("Sort on Column 1");
 			while ((t = sort.get_next()) != null) {
 				try {
 					status = notempty;
@@ -74,12 +77,13 @@ class TriangleQueryTest implements GlobalConst{
 					e.printStackTrace();
 				}
 			}
+			
 			sort.close();
 			
 		}
 		else if(query[0].equals("TQC")) {
 			status = notempty;
-			System.out.println("Triangles without duplications:");
+			
 			TQ.performDuplicateRemoval(TQ.nlj);
 		}
 		

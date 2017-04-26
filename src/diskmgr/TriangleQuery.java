@@ -134,9 +134,8 @@ public class TriangleQuery {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		System.out.println("Index Scan and First Join Done.\n");
-		printReadWriteCount();
-		PCounter.initialize();
+	
+	
 		CondExpr[] secondexpr= new CondExpr[4];
 		secondexpr[0] = new CondExpr();
 		secondexpr[1] = new CondExpr();
@@ -150,9 +149,8 @@ public class TriangleQuery {
 			secondexpr = setCondExprL(queries[2].substring(2));	// Set up Condition Expressions for second Join
 		}
 		nlj = performSecondJoin(secondexpr);
-		System.out.println("Second Join Done.\n");
-		printReadWriteCount();
-		PCounter.initialize();
+		
+	
 		
 	
 	}
@@ -357,13 +355,11 @@ public class TriangleQuery {
 			
 		}
 		
-		
+		System.out.println("Heap Created with Concatenated String of Node Labels as first field.");
 		FileScan fscan = new FileScan("Heapfortriangle", type, strSizes, (short) 4, 4, projlist, null);
 		DuplElim dup = new DuplElim(type,(short)4,strSizes,fscan, 100, false);	// Duplicate elimination done on the first field of the Temp Heap File.
-		System.out.println("Duplicate Removal Initiated.");
-		System.out.println("No. of pages read : " + PCounter.getRCount());
-		System.out.println("No. of pages write : " + PCounter.getWCount()+"\n");
-		PCounter.initialize();
+		System.out.println("Duplicate Removal Object Initiated.");
+		
 		Tuple t1 = new Tuple();
 		int[] fldno = {2,3,4};
 		while((t1=dup.get_next())!=null) {

@@ -3,6 +3,8 @@ package diskmgr;
 import java.io.*;
 import java.util.*;
 
+import com.sun.org.apache.bcel.internal.generic.ArrayType;
+
 import global.*;
 import btree.*;
 import zindex.*;
@@ -591,14 +593,29 @@ public class PathQueryHandler {
                         return false;
                 }
         
+                
         
         PathExpression pe = SystemDefs.JavabaseDB.getPathExpressions();
-        AttrType[] Jtypes = { new AttrType(AttrType.attrString), 
-                                new AttrType(AttrType.attrString),
-                                new AttrType(AttrType.attrInteger),
-                                new AttrType(AttrType.attrString), 
-                                new AttrType(AttrType.attrString),
-                                new AttrType(AttrType.attrInteger),};
+        AttrType[] Jtypes =null;
+        if(exp1[1].startsWith("ME")){
+        	Jtypes =new AttrType[5];
+        	Jtypes[0] =  new AttrType(AttrType.attrString); 
+        	Jtypes[1] =  new AttrType(AttrType.attrString);
+        	Jtypes[2] =  new AttrType(AttrType.attrInteger);
+        	Jtypes[3] =  new AttrType(AttrType.attrString);
+        	Jtypes[4] =  new AttrType(AttrType.attrString);
+        }
+        else{
+        	// if tw
+        	Jtypes =new AttrType[6];
+        	Jtypes[0] =  new AttrType(AttrType.attrString); 
+        	Jtypes[1] =  new AttrType(AttrType.attrString);
+        	Jtypes[2] =  new AttrType(AttrType.attrInteger);
+        	Jtypes[3] =  new AttrType(AttrType.attrString);
+        	Jtypes[4] =  new AttrType(AttrType.attrString);
+        	Jtypes[5] =  new AttrType(AttrType.attrInteger);
+    	}
+        
         short[] attrSize = new short[4];
         attrSize[0] = Tuple.LABEL_MAX_LENGTH;
         attrSize[1] = Tuple.LABEL_MAX_LENGTH;
@@ -609,14 +626,13 @@ public class PathQueryHandler {
         Iterator it = pe.evaluateBoundPathExpression(expType, expValue, boundType, bound);
         
         try {
-                        Sort sort = new Sort(Jtypes, (short) 6, attrSize, it, 5,
+                        Sort sort = new Sort(Jtypes, (short) Jtypes.length, attrSize, it, 5,
                                         new TupleOrder(TupleOrder.Ascending), 
-                                        Tuple.LABEL_MAX_LENGTH, SORTPGNUM);
+                                        4, SORTPGNUM);
                         Tuple t =null;
                         while ((t = sort.get_next()) != null){
-                                t.print(Jtypes, fldsArray);
+                        		t.print(Jtypes, fldsArray);
                         }
-                        it.close();
                         sort.close();
 
                 } catch (Exception e) {

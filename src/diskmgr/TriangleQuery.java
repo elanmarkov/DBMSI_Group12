@@ -49,6 +49,10 @@ public class TriangleQuery {
 	public TriangleQuery(String query){
 		performTriangleQuery(query);
 	};
+	private static void printReadWriteCount() {
+		System.out.println("No. of pages read : " + PCounter.getRCount());
+		System.out.println("No. of pages write : " + PCounter.getWCount()+"\n");
+	}
 	public void performTriangleQuery(String query){
 		int WorL[] = new int[2];   //Used to check if the Scan is needed on Edge Labels or Edge Weights, 1 if Label, 6 if weight.
 		CondExpr[] main_expr = new CondExpr[4];
@@ -130,7 +134,9 @@ public class TriangleQuery {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		
+		System.out.println("Index Scan and First Join Done.\n");
+		printReadWriteCount();
+		PCounter.initialize();
 		CondExpr[] secondexpr= new CondExpr[4];
 		secondexpr[0] = new CondExpr();
 		secondexpr[1] = new CondExpr();
@@ -144,6 +150,9 @@ public class TriangleQuery {
 			secondexpr = setCondExprL(queries[2].substring(2));
 		}
 		nlj = performSecondJoin(secondexpr);
+		System.out.println("Second Join Done.\n");
+		printReadWriteCount();
+		PCounter.initialize();
 		
 	
 	}
@@ -216,8 +225,7 @@ public class TriangleQuery {
 		proj_list[1] = new FldSpec(new RelSpec(RelSpec.outer), 2);
 		proj_list[2] = new FldSpec(new RelSpec(RelSpec.innerRel), 7);
 		proj_list[3] = new FldSpec(new RelSpec(RelSpec.innerRel), 8);
-
-		TupleOrder ascending = new TupleOrder(TupleOrder.Ascending);
+		
 		AttrType[] attrType = new AttrType[8];				//Initiating the Index Scan......
 		attrType[0] = new AttrType(AttrType.attrString);
 		attrType[1] = new AttrType(AttrType.attrInteger);
@@ -349,6 +357,10 @@ public class TriangleQuery {
 		
 		FileScan fscan = new FileScan("Heapfortriangle", type, strSizes, (short) 4, 4, projlist, null);
 		DuplElim dup = new DuplElim(type,(short)4,strSizes,fscan, 100, false);
+		System.out.println("Duplicate Removal Initiated.");
+		System.out.println("No. of pages read : " + PCounter.getRCount());
+		System.out.println("No. of pages write : " + PCounter.getWCount()+"\n");
+		PCounter.initialize();
 		Tuple t1 = new Tuple();
 		int[] fldno = {2,3,4};
 		while((t1=dup.get_next())!=null) {

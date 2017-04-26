@@ -64,6 +64,10 @@ class TriangleQueryTest implements GlobalConst{
 		else if(query[0].equals("TQB")) {
 			System.out.println("Triangles with duplications, with ascending sorting done on the first Node Label are:");
 			Sort sort = TQ.performSorting(TQ.nlj);
+			System.out.println("Sorting Initiated.");
+			System.out.println("No. of pages read : " + PCounter.getRCount());
+			System.out.println("No. of pages write : " + PCounter.getWCount()+"\n");
+			PCounter.initialize();
 			while ((t = sort.get_next()) != null) {
 				try {
 					status = notempty;

@@ -1,6 +1,3 @@
-/*Author Harshdeep
-  This program runs with 2 parameters, FileName and GraphDBName. Task 13 of Phase 2. Takes
-  input of batch of edges and deletes them from the GraphDBName database.*/ 
 package tests;
 import java.io.*;
 import java.util.*;
@@ -20,8 +17,9 @@ import diskmgr.*;
 import global.*;
 import btree.*;
 
-/** Class for the batch edge delete test.
-Passes parameters to handler and runs program. */
+/*This class is handler for the Triangle Queries
+ * 
+ */
 class TriangleQueryTest implements GlobalConst{
 	/** Passes parameters to handler for current DB and outputs result of test. 
 	 * @throws Exception 

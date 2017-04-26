@@ -49,6 +49,10 @@ public class TriangleQuery {
 	public TriangleQuery(String query){
 		performTriangleQuery(query);
 	};
+	private static void printReadWriteCount() {
+		System.out.println("No. of pages read : " + PCounter.getRCount());
+		System.out.println("No. of pages write : " + PCounter.getWCount()+"\n");
+	}
 	public void performTriangleQuery(String query){
 		int WorL[] = new int[2];   //Used to check if the Scan is needed on Edge Labels or Edge Weights, 1 if Label, 6 if weight.
 		CondExpr[] main_expr = new CondExpr[4];
@@ -83,7 +87,7 @@ public class TriangleQuery {
 			edge_label[1] = new String();
 			edge_label[0] = queries[0].substring(2);
 			edge_label[1] = queries[1].substring(2);
-			main_expr = setCondExprLL(edge_label);
+			main_expr = setCondExprLL(edge_label);				// Set up Condition Expressions
 			WorL[0] = 1;
 			WorL[1] = 1;
 				
@@ -92,7 +96,7 @@ public class TriangleQuery {
 			String edge_label = new String();
 			edge_label = queries[0].substring(2);
 			int weight = Integer.parseInt(queries[1].substring(2));
-			main_expr = setCondExprLW(edge_label, weight);
+			main_expr = setCondExprLW(edge_label, weight);		// Set up Condition Expressions
 			WorL[0] = 1;
 			WorL[1] = 6;
 		}
@@ -102,7 +106,7 @@ public class TriangleQuery {
 			String sublabel2 = queries[1].substring(2);
 			weights[0] = Integer.parseInt(sublabel1);
 			weights[1] = Integer.parseInt(sublabel2);
-			main_expr = setCondExprWW(weights);
+			main_expr = setCondExprWW(weights);					// Set up Condition Expressions
 			WorL[0] = 6;
 			WorL[1] = 6;
 		}
@@ -111,7 +115,7 @@ public class TriangleQuery {
 			edge_label = queries[1].substring(2);
 			int weight = Integer.parseInt(queries[0].substring(2));
 			
-			main_expr = setCondExprWL(edge_label,weight);
+			main_expr = setCondExprWL(edge_label,weight);		// Set up Condition Expressions
 			WorL[0] = 6;
 			WorL[1] = 1;
 		}
@@ -130,7 +134,9 @@ public class TriangleQuery {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		
+		System.out.println("Index Scan and First Join Done.\n");
+		printReadWriteCount();
+		PCounter.initialize();
 		CondExpr[] secondexpr= new CondExpr[4];
 		secondexpr[0] = new CondExpr();
 		secondexpr[1] = new CondExpr();
@@ -138,12 +144,15 @@ public class TriangleQuery {
 		secondexpr[3] = new CondExpr();
 		if(labels[2].equals("MW")) {
 			int weight = Integer.parseInt(queries[2].substring(2));
-			secondexpr = setCondExprW(weight);
+			secondexpr = setCondExprW(weight);	// Set up Condition Expressions for second Join
 		}
 		else if(labels[2].equals("EL")) {
-			secondexpr = setCondExprL(queries[2].substring(2));
+			secondexpr = setCondExprL(queries[2].substring(2));	// Set up Condition Expressions for second Join
 		}
 		nlj = performSecondJoin(secondexpr);
+		System.out.println("Second Join Done.\n");
+		printReadWriteCount();
+		PCounter.initialize();
 		
 	
 	}
@@ -196,7 +205,9 @@ public class TriangleQuery {
 		indexprojlist[5] = new FldSpec(rel,6);
 		indexprojlist[6] = new FldSpec(rel,7);
 		indexprojlist[7] = new FldSpec(rel,8);
-		
+		// Nested Index Loop for the second Join, The Left iterator is the output iterator from the first join and the Right relation 
+		// is the Edge Heap . The index projection is the projection that is created while running index scan on the right relation during join
+		// and hence all the 8 attributes are given as input.
 		NestedIndexLoopJoin inl = null;
 		try {
 			inl = new NestedIndexLoopJoin(E2types,4, E2sizes, E1types, 8,
@@ -216,8 +227,7 @@ public class TriangleQuery {
 		proj_list[1] = new FldSpec(new RelSpec(RelSpec.outer), 2);
 		proj_list[2] = new FldSpec(new RelSpec(RelSpec.innerRel), 7);
 		proj_list[3] = new FldSpec(new RelSpec(RelSpec.innerRel), 8);
-
-		TupleOrder ascending = new TupleOrder(TupleOrder.Ascending);
+		
 		AttrType[] attrType = new AttrType[8];				//Initiating the Index Scan......
 		attrType[0] = new AttrType(AttrType.attrString);
 		attrType[1] = new AttrType(AttrType.attrInteger);
@@ -266,13 +276,13 @@ public class TriangleQuery {
 		leftscan = null;
 		
 		try {
-
+			// Index Scan created on the Edge Label or Edge Weight file according to the first expression in query.
 			leftscan = new IndexScan(new IndexType(IndexType.B_Index), "GraphDBEDGEHEAP", indexName[0], attrType, attrSize, 8, 2, projlist, leftexpr, WorL[0], false);
 				} catch (IndexException | InvalidTypeException | InvalidTupleSizeException | UnknownIndexTypeException
 				| IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}	// iterator from the first index used as left relation and Edges as the right relation and first join Performed.
 		this.NILJ = new NestedIndexLoopJoin(leftAttr,2, leftattrSize, attrType, 8,
 				attrSize, 100, leftscan, "GraphDBEDGESRCLABEL", new IndexType(IndexType.B_Index), "GraphDBEDGEHEAP",indexprojlist,
 				7, outfilter, rightexpr, proj_list, 4, 2,null);
@@ -294,7 +304,7 @@ public class TriangleQuery {
 	    TupleOrder order = new TupleOrder(TupleOrder.Ascending);
 	    Sort sort = null;
 	   
-	    try {
+	    try {// Sorting performed on the first Node Label received in each triplet.
 			sort = new Sort(attrType, (short) 3, attrSize, input_join, 1,order, 3, 100);
 		} catch (SortException | IOException e) {
 			// TODO Auto-generated catch block
@@ -307,7 +317,8 @@ public class TriangleQuery {
 	public void performDuplicateRemoval(NestedIndexLoopJoin input_join) throws JoinsException, IndexException, InvalidTupleSizeException, InvalidTypeException, PageNotReadException, TupleUtilsException, PredEvalException, SortException, LowMemException, UnknowAttrType, UnknownKeyTypeException, IOException, Exception {
 		Tuple t;
 		t=null;
-		Heapfile tempheap = new Heapfile("Heapfortriangle"); 
+		Heapfile tempheap = new Heapfile("Heapfortriangle"); // Temporary Heap File created to hold the field containing all the 3 node labels combined field along
+																// with the individual 3 node labels.
 		AttrType[] type = new AttrType[4];
 		type[0] = new AttrType(AttrType.attrString);
 		type[2] = new AttrType(AttrType.attrString);
@@ -324,7 +335,7 @@ public class TriangleQuery {
 		strSizes[1]=4;
 		strSizes[2]=4;
 		strSizes[3]=4;
-		while((t=input_join.get_next())!=null) {
+		while((t=input_join.get_next())!=null) {		// All the tuples from the second join read and added to Heap File accordingly.
 		String[] values = new String[3];
 		values = t.convertArray();
 		while(values[0].compareTo(values[1])>0 || values[0].compareTo(values[2])>0) {
@@ -334,8 +345,8 @@ public class TriangleQuery {
 			values[0] = values[2];
 			values[2] = temp;
 			}
-		Tuple t1= new Tuple();
-		t1.setHdr((short)4, type, strSizes);
+		Tuple t1= new Tuple();							// This logic takes care of bringing the node with lowest value to the front while keeping the order
+		t1.setHdr((short)4, type, strSizes);			// of node labels same.
 		String concat = values[0]+values[1]+values[2];
 		t1.setStrFld(1, concat);
 		t1.setStrFld(2, values[0]);
@@ -348,7 +359,11 @@ public class TriangleQuery {
 		
 		
 		FileScan fscan = new FileScan("Heapfortriangle", type, strSizes, (short) 4, 4, projlist, null);
-		DuplElim dup = new DuplElim(type,(short)4,strSizes,fscan, 100, false);
+		DuplElim dup = new DuplElim(type,(short)4,strSizes,fscan, 100, false);	// Duplicate elimination done on the first field of the Temp Heap File.
+		System.out.println("Duplicate Removal Initiated.");
+		System.out.println("No. of pages read : " + PCounter.getRCount());
+		System.out.println("No. of pages write : " + PCounter.getWCount()+"\n");
+		PCounter.initialize();
 		Tuple t1 = new Tuple();
 		int[] fldno = {2,3,4};
 		while((t1=dup.get_next())!=null) {

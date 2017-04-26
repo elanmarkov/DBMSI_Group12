@@ -1,0 +1,2093 @@
+Script started on Wed 26 Apr 2017 09:15:17 AM MST
+[01;32muser@user-Linux[01;34m ~/Documents/CSE510/minjava/javaminibase $[00m cd src; make db; make  
+graphtest
+make -C global
+make[1]: Entering directory `/home/user/Documents/CSE510/minjava/javaminibase/src/global'
+/usr/lib/jvm/default-java/bin/javac -classpath /usr/lib/jvm/default-java/lib/classes.zip:.:..:/home/user/Documents/CSE510/minjava/javaminibase/construction *.java
+make[1]: Leaving directory `/home/user/Documents/CSE510/minjava/javaminibase/src/global'
+make -C chainexception
+make[1]: Entering directory `/home/user/Documents/CSE510/minjava/javaminibase/src/chainexception'
+/usr/lib/jvm/default-java/bin/javac -classpath /usr/lib/jvm/default-java/lib/classes.zip:.:..:/home/user/Documents/CSE510/minjava/javaminibase/construction *.java
+make[1]: Leaving directory `/home/user/Documents/CSE510/minjava/javaminibase/src/chainexception'
+make -C btree
+make[1]: Entering directory `/home/user/Documents/CSE510/minjava/javaminibase/src/btree'
+/usr/lib/jvm/default-java/bin/javac -classpath /usr/lib/jvm/default-java/lib/classes.zip:.:..:/home/user/Documents/CSE510/minjava/javaminibase/construction *.java
+make[1]: Leaving directory `/home/user/Documents/CSE510/minjava/javaminibase/src/btree'
+make -C bufmgr
+make[1]: Entering directory `/home/user/Documents/CSE510/minjava/javaminibase/src/bufmgr'
+/usr/lib/jvm/default-java/bin/javac -classpath /usr/lib/jvm/default-java/lib/classes.zip:.:..:/home/user/Documents/CSE510/minjava/javaminibase/construction *.java
+make[1]: Leaving directory `/home/user/Documents/CSE510/minjava/javaminibase/src/bufmgr'
+make -C diskmgr
+make[1]: Entering directory `/home/user/Documents/CSE510/minjava/javaminibase/src/diskmgr'
+/usr/lib/jvm/default-java/bin/javac -classpath /usr/lib/jvm/default-java/lib/classes.zip:.:..:/home/user/Documents/CSE510/minjava/javaminibase/construction *.java
+graphDB.java:5: warning: ArrayType is internal proprietary API and may be removed in a future release
+of a graph database.
+         ^
+1 warning
+make[1]: Leaving directory `/home/user/Documents/CSE510/minjava/javaminibase/src/diskmgr'
+make -C heap
+make[1]: Entering directory `/home/user/Documents/CSE510/minjava/javaminibase/src/heap'
+/usr/lib/jvm/default-java/bin/javac -classpath /usr/lib/jvm/default-java/lib/classes.zip:.:..:/home/user/Documents/CSE510/minjava/javaminibase/construction *.java
+make[1]: Leaving directory `/home/user/Documents/CSE510/minjava/javaminibase/src/heap'
+make -C index
+make[1]: Entering directory `/home/user/Documents/CSE510/minjava/javaminibase/src/index'
+/usr/lib/jvm/default-java/bin/javac -classpath /usr/lib/jvm/default-java/lib/classes.zip:.:..:/home/user/Documents/CSE510/minjava/javaminibase/construction *.java
+make[1]: Leaving directory `/home/user/Documents/CSE510/minjava/javaminibase/src/index'
+make -C iterator
+make[1]: Entering directory `/home/user/Documents/CSE510/minjava/javaminibase/src/iterator'
+/usr/lib/jvm/default-java/bin/javac -classpath /usr/lib/jvm/default-java/lib/classes.zip:.:..:/home/user/Documents/CSE510/minjava/javaminibase/construction *.java
+make[1]: Leaving directory `/home/user/Documents/CSE510/minjava/javaminibase/src/iterator'
+cd tests; make graph
+make[1]: Entering directory `/home/user/Documents/CSE510/minjava/javaminibase/src/tests'
+/usr/lib/jvm/default-java/bin/javac -classpath .:.. testcases.java
+/usr/lib/jvm/default-java/bin/java  -classpath .:.. tests.testcases
+Graph Database Test Cases 
+Format of command line input:
+
+============= Phase 2 Tests =============
+Batch Node Insert (Task 10 Query):
+batchnodeinsert NODEFILENAME GRAPHDBNAME
+NODEFILENAME should be a file in tests folder
+
+Batch Edge Insert (Task 11 Query):
+batchedgeinsert EDGEFILENAME GRAPHDBNAME
+EDGEFILENAME should be a file in tests folder
+
+Batch Node Delete (Task 12 Query):
+batchnodedelete NODEFILENAME GRAPHDBNAME
+NODEFILENAME should be a file in tests folder
+
+Batch Edge Delete (Task 13 Query):
+batchnodeinsert EDGEFILENAME GRAPHDBNAME
+EDGEFILENAME should be a file in tests folder
+
+Simple Node Query (Task 14 Query):
+nodequery GRAPHDBNAME NUMBUF QTYPE INDEX [QUERYOPTIONS]
+
+Simple Edge Query (Task 15 Query):
+edgequery GRAPHDBNAME NUMBUF QTYPE INDEX [QUERYOPTIONS]
+
+
+============= Phase 3 Tests =============
+NL = Node Label
+ND = Node Descriptor
+EL = Edge Label
+MW = Max Edge Weight
+ME = Max Num Edges
+TW = Max Total Edge Weight
+
+Path Expression Query 1 (Task 6 Query):
+PQ1 GRAPHDBNAME NUMBUF a/b/c ARGS
+ARGS = NN/(NN/)*/NN
+NN = (NL|ND)
+Example: PQ1 graph 1000 a NL1/ND1,2,3,4,5
+
+Path Expression Query 2 (Task 7 Query):
+PQ2 GRAPHDBNAME NUMBUF a/b/c ARGS
+ARGS = NN/EN(/EN)*
+NN = (NL|ND)
+EN = (EL|MW)
+Example: PQ2 graph 1000 a NL1/EL2
+
+Path Expression Query 3 (Task 8 Query):
+PQ3 GRAPHDBNAME NUMBUF a/b/c ARGS
+ARGS = NN/Bound
+NN = (NL|ND)
+Bound = (ME|TW)
+Example: PQ3 graph 1000 a NL1/ME5
+
+Triangle Query (Task 9 Query):
+TQA/TQB/TQC GRAPHDBNAME NUMBUF ARGS
+ARGS = EN;EN;EN
+EN = (EL|MW)
+Example: TQA graph 1000 EL1;EL2;EL3
+
+
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+batchnodeinsert NodeInsertData.txt graphdb1
+Replacer: Clock
+
+buffers : 5000 unpinned : 4993
+
+Running Batch Node Insert tests....
+
+Node Count after batch insertion on graph database: 1056
+Edge Count after batch insertion on graph database: 0
+
+... Batch Node Insert tests completed successfully..
+
+
+No. of pages read : 3
+No. of pages write : 252
+buffers : 5000 unpinned : 5000
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+batchedgeinsert EdgeInsertData.txt graphdb1
+Replacer: Clock
+
+buffers : 5000 unpinned : 4993
+
+Running Batch Edge Insert tests....
+
+Node Count after batch insertion on graph database: 1056
+Edge Count after batch insertion on graph database: 3198
+
+... Batch Edge Insert tests completed successfully..
+
+
+No. of pages read : 48
+No. of pages write : 592
+buffers : 5000 unpinned : 5000
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ1 graphdb1 1000 a ND7,1,44,22,12/NL248/NL384/NL514
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on node Descriptor Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+[0, 514]
+PathExpression.close() reads : [7, 95, 46]
+PathExpression.close() write : [0, 0, 0]
+
+No. of pages read : 163
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ1 graphdb1 1000 b ND7,1,44,22,12/NL248/NL384/NL514
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on node Descriptor Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+[0, 514]
+PathExpression.close() reads : [8, 95, 46]
+PathExpression.close() write : [0, 0, 0]
+
+No. of pages read : 163
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ1 graphdb1 1000 c ND7,1,44,22,12/NL248/NL384/NL514
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on node Descriptor Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+[0, 514]
+PathExpression.close() reads : [8, 95, 46]
+PathExpression.close() write : [0, 0, 0]
+
+No. of pages read : 163
+No. of pages write : 0
+buffers : 1000 unpinned : 983
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ1 graphdb1 1000 a NL384/NL514
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+[384, 514]
+PathExpression.close() reads : [158]
+PathExpression.close() write : [0]
+
+No. of pages read : 170
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ1 graphdb1 1000 b NL384/NL514
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+[384, 514]
+PathExpression.close() reads : [159]
+PathExpression.close() write : [0]
+
+No. of pages read : 170
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ1 graphdb1 1000 c NL384/NL514
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+[384, 514]
+PathExpression.close() reads : [159]
+PathExpression.close() write : [0]
+
+No. of pages read : 170
+No. of pages write : 0
+buffers : 1000 unpinned : 983
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ1 graphdb1 1000 a ND24,42,37,8,44/ND42,2,47,47,33
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on node Descriptor Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_Descriptor's_label_in_PE))
+[64, 261]
+PathExpression.close() reads : [30]
+PathExpression.close() write : [0]
+
+No. of pages read : 58
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ1 graphdb1 1000 b ND24,42,37,8,44/ND42,2,47,47,33
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on node Descriptor Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_Descriptor's_label_in_PE))
+[64, 261]
+PathExpression.close() reads : [31]
+PathExpression.close() write : [0]
+
+No. of pages read : 58
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ1 graphdb1 1000 c ND24,42,37,8,44/ND42,2,47,47,33
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on node Descriptor Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_Descriptor's_label_in_PE))
+[64, 261]
+PathExpression.close() reads : [31]
+PathExpression.close() write : [0]
+
+No. of pages read : 58
+No. of pages write : 0
+buffers : 1000 unpinned : 983
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ1 graphdb1 1000 a NL23/ND20,14,37,12,23/NL727
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_Descriptor's_label_in_PE))
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+[23, 727]
+PathExpression.close() reads : [14, 140]
+PathExpression.close() write : [0, 0]
+
+No. of pages read : 186
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ1 graphdb1 1000 b NL23/ND20,14,37,12,23/NL727
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_Descriptor's_label_in_PE))
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+[23, 727]
+PathExpression.close() reads : [15, 140]
+PathExpression.close() write : [0, 0]
+
+No. of pages read : 186
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ1 graphdb1 1000 c NL23/ND20,14,37,12,23/NL727
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_Descriptor's_label_in_PE))
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+[23, 727]
+PathExpression.close() reads : [15, 140]
+PathExpression.close() write : [0, 0]
+
+No. of pages read : 186
+No. of pages write : 0
+buffers : 1000 unpinned : 983
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 a NL23/MW100/MW150
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge weight Condition (edge_weight <= next_edge_weight_in_PE))
+ Join On ( Source label Index file with source condition andedge weight Condition (edge_weight <= next_edge_weight_in_PE))
+[23, 887]
+[23, 960]
+[23, 842]
+[23, 727]
+[23, 979]
+PathExpression.close() reads : [16, 223]
+PathExpression.close() write : [0, 0]
+
+No. of pages read : 251
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 b NL23/MW100/MW150
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+PathQuery.runTests() 3
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge weight Condition (edge_weight <= next_edge_weight_in_PE))
+ Join On ( Source label Index file with source condition andedge weight Condition (edge_weight <= next_edge_weight_in_PE))
+[23, 727]
+[23, 842]
+[23, 887]
+[23, 960]
+[23, 979]
+PathExpression.close() reads : [17, 223]
+PathExpression.close() write : [0, 0]
+
+No. of pages read : 251
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 c NL23/MW100/MW150
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge weight Condition (edge_weight <= next_edge_weight_in_PE))
+ Join On ( Source label Index file with source condition andedge weight Condition (edge_weight <= next_edge_weight_in_PE))
+[23, 727]
+[23, 842]
+[23, 887]
+[23, 960]
+[23, 979]
+PathExpression.close() reads : [17, 223]
+PathExpression.close() write : [0, 0]
+
+No. of pages read : 251
+No. of pages write : 0
+buffers : 1000 unpinned : 983
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 a NL0/EL0_248
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge label Condition (edge_label = next_edge_label_in_PE))
+[0, 248]
+PathExpression.close() reads : [7]
+PathExpression.close() write : [0]
+
+No. of pages read : 19
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 b NL0/EL0_248
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+PathQuery.runTests() 3
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge label Condition (edge_label = next_edge_label_in_PE))
+[0, 248]
+PathExpression.close() reads : [8]
+PathExpression.close() write : [0]
+
+No. of pages read : 19
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 c NL0/EL0_248
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge label Condition (edge_label = next_edge_label_in_PE))
+[0, 248]
+PathExpression.close() reads : [8]
+PathExpression.close() write : [0]
+
+No. of pages read : 19
+No. of pages write : 0
+buffers : 1000 unpinned : 983
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 a NL0/EL0_248/MW140
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge label Condition (edge_label = next_edge_label_in_PE))
+ Join On ( Source label Index file with source condition andedge weight Condition (edge_weight <= next_edge_weight_in_PE))
+[0, 384]
+[0, 422]
+[0, 616]
+[0, 649]
+[0, 467]
+[0, 885]
+PathExpression.close() reads : [7, 95]
+PathExpression.close() write : [0, 0]
+
+No. of pages read : 114
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 b NL0/EL0_248/MW140
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+PathQuery.runTests() 3
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge label Condition (edge_label = next_edge_label_in_PE))
+ Join On ( Source label Index file with source condition andedge weight Condition (edge_weight <= next_edge_weight_in_PE))
+[0, 384]
+[0, 422]
+[0, 467]
+[0, 616]
+[0, 649]
+[0, 885]
+PathExpression.close() reads : [8, 95]
+PathExpression.close() write : [0, 0]
+
+No. of pages read : 114
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 c NL0/EL0_248/MW140
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge label Condition (edge_label = next_edge_label_in_PE))
+ Join On ( Source label Index file with source condition andedge weight Condition (edge_weight <= next_edge_weight_in_PE))
+[0, 384]
+[0, 422]
+[0, 467]
+[0, 616]
+[0, 649]
+[0, 885]
+PathExpression.close() reads : [8, 95]
+PathExpression.close() write : [0, 0]
+
+No. of pages read : 114
+No. of pages write : 0
+buffers : 1000 unpinned : 983
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 a NL0/EL0_248/MW20
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge label Condition (edge_label = next_edge_label_in_PE))
+ Join On ( Source label Index file with source condition andedge weight Condition (edge_weight <= next_edge_weight_in_PE))
+[0, 384]
+[0, 422]
+[0, 885]
+PathExpression.close() reads : [7, 95]
+PathExpression.close() write : [0, 0]
+
+No. of pages read : 114
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 b NL0/EL0_248/MW20
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+PathQuery.runTests() 3
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge label Condition (edge_label = next_edge_label_in_PE))
+ Join On ( Source label Index file with source condition andedge weight Condition (edge_weight <= next_edge_weight_in_PE))
+[0, 384]
+[0, 422]
+[0, 885]
+PathExpression.close() reads : [8, 95]
+PathExpression.close() write : [0, 0]
+
+No. of pages read : 114
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 c NL0/EL0_248/MW20
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge label Condition (edge_label = next_edge_label_in_PE))
+ Join On ( Source label Index file with source condition andedge weight Condition (edge_weight <= next_edge_weight_in_PE))
+[0, 384]
+[0, 422]
+[0, 885]
+PathExpression.close() reads : [8, 95]
+PathExpression.close() write : [0, 0]
+
+No. of pages read : 114
+No. of pages write : 0
+buffers : 1000 unpinned : 983
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 a NL0/MW20
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge weight Condition (edge_weight <= next_edge_weight_in_PE))
+[0, 1023]
+PathExpression.close() reads : [7]
+PathExpression.close() write : [0]
+
+No. of pages read : 19
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 b NL0/MW20
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+PathQuery.runTests() 3
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge weight Condition (edge_weight <= next_edge_weight_in_PE))
+[0, 1023]
+PathExpression.close() reads : [8]
+PathExpression.close() write : [0]
+
+No. of pages read : 19
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 c NL0/MW20
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge weight Condition (edge_weight <= next_edge_weight_in_PE))
+[0, 1023]
+PathExpression.close() reads : [8]
+PathExpression.close() write : [0]
+
+No. of pages read : 19
+No. of pages write : 0
+buffers : 1000 unpinned : 983
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 a NL0/MW40
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge weight Condition (edge_weight <= next_edge_weight_in_PE))
+[0, 248]
+[0, 1000]
+[0, 850]
+[0, 1023]
+PathExpression.close() reads : [7]
+PathExpression.close() write : [0]
+
+No. of pages read : 19
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 b NL0/MW40
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+PathQuery.runTests() 3
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge weight Condition (edge_weight <= next_edge_weight_in_PE))
+[0, 1000]
+[0, 1023]
+[0, 248]
+[0, 850]
+PathExpression.close() reads : [8]
+PathExpression.close() write : [0]
+
+No. of pages read : 19
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 c NL0/MW40
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge weight Condition (edge_weight <= next_edge_weight_in_PE))
+[0, 1000]
+[0, 1023]
+[0, 248]
+[0, 850]
+PathExpression.close() reads : [8]
+PathExpression.close() write : [0]
+
+No. of pages read : 19
+No. of pages write : 0
+buffers : 1000 unpinned : 983
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 a NL45/ME4
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On (Source label Index file with source condition)
+ Join On (Source label Index file with source condition)
+ Join On (Source label Index file with source condition)
+ Join On (Source label Index file with source condition)
+[45, 577]
+[45, 453]
+[45, 457]
+[45, 620]
+[45, 435]
+[45, 918]
+[45, 791]
+[45, 989]
+[45, 739]
+[45, 911]
+[45, 818]
+[45, 852]
+[45, 922]
+[45, 735]
+[45, 516]
+[45, 842]
+[45, 525]
+[45, 702]
+[45, 728]
+[45, 472]
+[45, 486]
+[45, 975]
+[45, 788]
+[45, 596]
+[45, 924]
+[45, 982]
+[45, 824]
+[45, 1000]
+[45, 963]
+[45, 844]
+[45, 1017]
+[45, 891]
+[45, 964]
+[45, 845]
+[45, 745]
+[45, 1002]
+[45, 797]
+[45, 1053]
+[45, 885]
+[45, 683]
+[45, 798]
+[45, 781]
+[45, 886]
+[45, 975]
+[45, 795]
+[45, 989]
+[45, 862]
+[45, 782]
+[45, 1024]
+[45, 705]
+[45, 806]
+[45, 879]
+[45, 914]
+[45, 918]
+[45, 967]
+[45, 933]
+[45, 981]
+[45, 966]
+[45, 988]
+[45, 887]
+[45, 921]
+[45, 801]
+[45, 874]
+[45, 1042]
+[45, 1018]
+[45, 1011]
+[45, 861]
+[45, 1029]
+[45, 946]
+[45, 900]
+[45, 905]
+[45, 1035]
+[45, 1042]
+[45, 873]
+[45, 1037]
+[45, 974]
+[45, 872]
+[45, 91]
+[45, 991]
+[45, 1035]
+[45, 918]
+[45, 991]
+[45, 941]
+PathExpression.close() reads : [30, 208, 22, 12]
+PathExpression.close() write : [0, 0, 0, 0]
+
+No. of pages read : 280
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 b NL45/ME4
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On (Source label Index file with source condition)
+ Join On (Source label Index file with source condition)
+ Join On (Source label Index file with source condition)
+ Join On (Source label Index file with source condition)
+[45, 1000]
+[45, 1002]
+[45, 1011]
+[45, 1017]
+[45, 1018]
+[45, 1024]
+[45, 1029]
+[45, 1035]
+[45, 1035]
+[45, 1037]
+[45, 1042]
+[45, 1042]
+[45, 1053]
+[45, 435]
+[45, 453]
+[45, 457]
+[45, 472]
+[45, 486]
+[45, 516]
+[45, 525]
+[45, 577]
+[45, 596]
+[45, 620]
+[45, 683]
+[45, 702]
+[45, 705]
+[45, 728]
+[45, 735]
+[45, 739]
+[45, 745]
+[45, 781]
+[45, 782]
+[45, 788]
+[45, 791]
+[45, 795]
+[45, 797]
+[45, 798]
+[45, 801]
+[45, 806]
+[45, 818]
+[45, 824]
+[45, 842]
+[45, 844]
+[45, 845]
+[45, 852]
+[45, 861]
+[45, 862]
+[45, 872]
+[45, 873]
+[45, 874]
+[45, 879]
+[45, 885]
+[45, 886]
+[45, 887]
+[45, 891]
+[45, 900]
+[45, 905]
+[45, 91]
+[45, 911]
+[45, 914]
+[45, 918]
+[45, 918]
+[45, 918]
+[45, 921]
+[45, 922]
+[45, 924]
+[45, 933]
+[45, 941]
+[45, 946]
+[45, 963]
+[45, 964]
+[45, 966]
+[45, 967]
+[45, 974]
+[45, 975]
+[45, 975]
+[45, 981]
+[45, 982]
+[45, 988]
+[45, 989]
+[45, 989]
+[45, 991]
+[45, 991]
+PathExpression.close() reads : [30, 208, 22, 12]
+PathExpression.close() write : [0, 0, 0, 0]
+
+No. of pages read : 280
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 c NL45/ME4
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On (Source label Index file with source condition)
+ Join On (Source label Index file with source condition)
+ Join On (Source label Index file with source condition)
+ Join On (Source label Index file with source condition)
+[45, 1000]
+[45, 1002]
+[45, 1011]
+[45, 1017]
+[45, 1018]
+[45, 1024]
+[45, 1029]
+[45, 1035]
+[45, 1037]
+[45, 1042]
+[45, 1053]
+[45, 435]
+[45, 453]
+[45, 457]
+[45, 472]
+[45, 486]
+[45, 516]
+[45, 525]
+[45, 577]
+[45, 596]
+[45, 620]
+[45, 683]
+[45, 702]
+[45, 705]
+[45, 728]
+[45, 735]
+[45, 739]
+[45, 745]
+[45, 781]
+[45, 782]
+[45, 788]
+[45, 791]
+[45, 795]
+[45, 797]
+[45, 798]
+[45, 801]
+[45, 806]
+[45, 818]
+[45, 824]
+[45, 842]
+[45, 844]
+[45, 845]
+[45, 852]
+[45, 861]
+[45, 862]
+[45, 872]
+[45, 873]
+[45, 874]
+[45, 879]
+[45, 885]
+[45, 886]
+[45, 887]
+[45, 891]
+[45, 900]
+[45, 905]
+[45, 91]
+[45, 911]
+[45, 914]
+[45, 918]
+[45, 921]
+[45, 922]
+[45, 924]
+[45, 933]
+[45, 941]
+[45, 946]
+[45, 963]
+[45, 964]
+[45, 966]
+[45, 967]
+[45, 974]
+[45, 975]
+[45, 981]
+[45, 982]
+[45, 988]
+[45, 989]
+[45, 991]
+PathExpression.close() reads : [30, 208, 22, 12]
+PathExpression.close() write : [0, 0, 0, 0]
+
+No. of pages read : 280
+No. of pages write : 0
+buffers : 1000 unpinned : 983
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 a ND7,1,44,22,12/TW45
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on node Descriptor Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+[0, 248]
+[0, 1000]
+[0, 850]
+[0, 1023]
+[0, 384]
+[0, 422]
+[0, 885]
+[0, 514]
+[0, 811]
+[0, 443]
+[0, 438]
+[0, 938]
+[0, 962]
+[0, 1032]
+[0, 974]
+[0, 827]
+[0, 992]
+PathExpression.close() reads : [14, 226, 3, 4, 9, 0]
+PathExpression.close() write : [0, 0, 0, 0, 0, 0]
+
+No. of pages read : 264
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 b ND7,1,44,22,12/TW45
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on node Descriptor Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+[0, 1000]
+[0, 1023]
+[0, 1032]
+[0, 248]
+[0, 384]
+[0, 422]
+[0, 438]
+[0, 443]
+[0, 514]
+[0, 811]
+[0, 827]
+[0, 850]
+[0, 885]
+[0, 938]
+[0, 962]
+[0, 974]
+[0, 992]
+PathExpression.close() reads : [14, 226, 3, 4, 9, 0]
+PathExpression.close() write : [0, 0, 0, 0, 0, 0]
+
+No. of pages read : 264
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 c ND7,1,44,22,12/TW45
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on node Descriptor Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+[0, 1000]
+[0, 1023]
+[0, 1032]
+[0, 248]
+[0, 384]
+[0, 422]
+[0, 438]
+[0, 443]
+[0, 514]
+[0, 811]
+[0, 827]
+[0, 850]
+[0, 885]
+[0, 938]
+[0, 962]
+[0, 974]
+[0, 992]
+PathExpression.close() reads : [14, 226, 3, 4, 9, 0]
+PathExpression.close() write : [0, 0, 0, 0, 0, 0]
+
+No. of pages read : 264
+No. of pages write : 0
+buffers : 1000 unpinned : 983
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 a NL0/TW45
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+[0, 248]
+[0, 1000]
+[0, 850]
+[0, 1023]
+[0, 384]
+[0, 422]
+[0, 885]
+[0, 514]
+[0, 811]
+[0, 443]
+[0, 438]
+[0, 938]
+[0, 962]
+[0, 1032]
+[0, 974]
+[0, 827]
+[0, 992]
+PathExpression.close() reads : [11, 226, 3, 4, 9, 0]
+PathExpression.close() write : [0, 0, 0, 0, 0, 0]
+
+No. of pages read : 261
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 b NL0/TW45
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+[0, 1000]
+[0, 1023]
+[0, 1032]
+[0, 248]
+[0, 384]
+[0, 422]
+[0, 438]
+[0, 443]
+[0, 514]
+[0, 811]
+[0, 827]
+[0, 850]
+[0, 885]
+[0, 938]
+[0, 962]
+[0, 974]
+[0, 992]
+PathExpression.close() reads : [11, 226, 3, 4, 9, 0]
+PathExpression.close() write : [0, 0, 0, 0, 0, 0]
+
+No. of pages read : 261
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 c NL0/TW45
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+[0, 1000]
+[0, 1023]
+[0, 1032]
+[0, 248]
+[0, 384]
+[0, 422]
+[0, 438]
+[0, 443]
+[0, 514]
+[0, 811]
+[0, 827]
+[0, 850]
+[0, 885]
+[0, 938]
+[0, 962]
+[0, 974]
+[0, 992]
+PathExpression.close() reads : [11, 226, 3, 4, 9, 0]
+PathExpression.close() write : [0, 0, 0, 0, 0, 0]
+
+No. of pages read : 261
+No. of pages write : 0
+buffers : 1000 unpinned : 983
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 a NL0/ME1
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On (Source label Index file with source condition)
+[0, 248]
+[0, 1000]
+[0, 850]
+[0, 1023]
+PathExpression.close() reads : [11]
+PathExpression.close() write : [0]
+
+No. of pages read : 19
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 b NL0/ME1
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On (Source label Index file with source condition)
+[0, 1000]
+[0, 1023]
+[0, 248]
+[0, 850]
+PathExpression.close() reads : [11]
+PathExpression.close() write : [0]
+
+No. of pages read : 19
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 c NL0/ME1
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On (Source label Index file with source condition)
+[0, 1000]
+[0, 1023]
+[0, 248]
+[0, 850]
+PathExpression.close() reads : [11]
+PathExpression.close() write : [0]
+
+No. of pages read : 19
+No. of pages write : 0
+buffers : 1000 unpinned : 983
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 a NL0/ME5
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On (Source label Index file with source condition)
+ Join On (Source label Index file with source condition)
+ Join On (Source label Index file with source condition)
+ Join On (Source label Index file with source condition)
+ Join On (Source label Index file with source condition)
+[0, 248]
+[0, 1000]
+[0, 850]
+[0, 1023]
+[0, 384]
+[0, 422]
+[0, 616]
+[0, 649]
+[0, 467]
+[0, 885]
+[0, 1005]
+[0, 514]
+[0, 811]
+[0, 939]
+[0, 706]
+[0, 593]
+[0, 443]
+[0, 542]
+[0, 438]
+[0, 887]
+[0, 880]
+[0, 910]
+[0, 624]
+[0, 791]
+[0, 734]
+[0, 938]
+[0, 869]
+[0, 935]
+[0, 744]
+[0, 962]
+[0, 1032]
+[0, 974]
+[0, 652]
+[0, 791]
+[0, 911]
+[0, 727]
+[0, 827]
+[0, 941]
+[0, 531]
+[0, 1032]
+[0, 947]
+[0, 705]
+[0, 868]
+[0, 940]
+[0, 764]
+[0, 924]
+[0, 982]
+[0, 824]
+[0, 800]
+[0, 856]
+[0, 231]
+[0, 923]
+[0, 943]
+[0, 901]
+[0, 791]
+[0, 855]
+[0, 996]
+[0, 992]
+[0, 940]
+[0, 924]
+[0, 982]
+[0, 824]
+[0, 1017]
+[0, 1045]
+[0, 966]
+[0, 990]
+[0, 616]
+[0, 759]
+[0, 631]
+[0, 999]
+[0, 993]
+[0, 940]
+[0, 933]
+[0, 981]
+[0, 910]
+[0, 880]
+[0, 941]
+[0, 965]
+[0, 458]
+[0, 913]
+[0, 261]
+PathExpression.close() reads : [11, 226, 6, 17, 10]
+PathExpression.close() write : [0, 0, 0, 0, 0]
+
+No. of pages read : 278
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 b NL0/ME5
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On (Source label Index file with source condition)
+ Join On (Source label Index file with source condition)
+ Join On (Source label Index file with source condition)
+ Join On (Source label Index file with source condition)
+ Join On (Source label Index file with source condition)
+[0, 1000]
+[0, 1005]
+[0, 1017]
+[0, 1023]
+[0, 1032]
+[0, 1032]
+[0, 1045]
+[0, 231]
+[0, 248]
+[0, 261]
+[0, 384]
+[0, 422]
+[0, 438]
+[0, 443]
+[0, 458]
+[0, 467]
+[0, 514]
+[0, 531]
+[0, 542]
+[0, 593]
+[0, 616]
+[0, 616]
+[0, 624]
+[0, 631]
+[0, 649]
+[0, 652]
+[0, 705]
+[0, 706]
+[0, 727]
+[0, 734]
+[0, 744]
+[0, 759]
+[0, 764]
+[0, 791]
+[0, 791]
+[0, 791]
+[0, 800]
+[0, 811]
+[0, 824]
+[0, 824]
+[0, 827]
+[0, 850]
+[0, 855]
+[0, 856]
+[0, 868]
+[0, 869]
+[0, 880]
+[0, 880]
+[0, 885]
+[0, 887]
+[0, 901]
+[0, 910]
+[0, 910]
+[0, 911]
+[0, 913]
+[0, 923]
+[0, 924]
+[0, 924]
+[0, 933]
+[0, 935]
+[0, 938]
+[0, 939]
+[0, 940]
+[0, 940]
+[0, 940]
+[0, 941]
+[0, 941]
+[0, 943]
+[0, 947]
+[0, 962]
+[0, 965]
+[0, 966]
+[0, 974]
+[0, 981]
+[0, 982]
+[0, 982]
+[0, 990]
+[0, 992]
+[0, 993]
+[0, 996]
+[0, 999]
+PathExpression.close() reads : [11, 226, 6, 17, 10]
+PathExpression.close() write : [0, 0, 0, 0, 0]
+
+No. of pages read : 278
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 c NL0/ME5
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On (Source label Index file with source condition)
+ Join On (Source label Index file with source condition)
+ Join On (Source label Index file with source condition)
+ Join On (Source label Index file with source condition)
+ Join On (Source label Index file with source condition)
+[0, 1000]
+[0, 1005]
+[0, 1017]
+[0, 1023]
+[0, 1032]
+[0, 1045]
+[0, 231]
+[0, 248]
+[0, 261]
+[0, 384]
+[0, 422]
+[0, 438]
+[0, 443]
+[0, 458]
+[0, 467]
+[0, 514]
+[0, 531]
+[0, 542]
+[0, 593]
+[0, 616]
+[0, 624]
+[0, 631]
+[0, 649]
+[0, 652]
+[0, 705]
+[0, 706]
+[0, 727]
+[0, 734]
+[0, 744]
+[0, 759]
+[0, 764]
+[0, 791]
+[0, 800]
+[0, 811]
+[0, 824]
+[0, 827]
+[0, 850]
+[0, 855]
+[0, 856]
+[0, 868]
+[0, 869]
+[0, 880]
+[0, 885]
+[0, 887]
+[0, 901]
+[0, 910]
+[0, 911]
+[0, 913]
+[0, 923]
+[0, 924]
+[0, 933]
+[0, 935]
+[0, 938]
+[0, 939]
+[0, 940]
+[0, 941]
+[0, 943]
+[0, 947]
+[0, 962]
+[0, 965]
+[0, 966]
+[0, 974]
+[0, 981]
+[0, 982]
+[0, 990]
+[0, 992]
+[0, 993]
+[0, 996]
+[0, 999]
+PathExpression.close() reads : [11, 226, 6, 17, 10]
+PathExpression.close() write : [0, 0, 0, 0, 0]
+
+No. of pages read : 278
+No. of pages write : 0
+buffers : 1000 unpinned : 983
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+TQA graphdb1 1000 EL1;EL2;EL3
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+PROJECTION of Source Node and Destination Node Label of edge(SELECT with first expression as edge condition).
+Join On(Edge Source Node Label Index with second expression as edge condition)
+Projection of [SourceNode1,DestNode1,SourceNode2,DestNode2]
+Join on (Edge Source Node Label Index with third expression as edge condition and DestNode1 = DestNodeLabel of inner relation)
+Projection of [SourceNode1,DestNode1,DestNode2]
+Triangles with duplications, with no sorting are:
+[771, 68, 255]
+[1024, 91, 163]
+[813, 129, 629]
+[512, 221, 236]
+[887, 531, 616]
+
+No. of pages read : 260
+No. of pages write : 10
+buffers : 1000 unpinned : 1000
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+TQB graphdb1 1000 EL1;EL2;EL3
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+PROJECTION of Source Node and Destination Node Label of edge(SELECT with first expression as edge condition).
+Join On(Edge Source Node Label Index with second expression as edge condition)
+Projection of [SourceNode1,DestNode1,SourceNode2,DestNode2]
+Join on (Edge Source Node Label Index with third expression as edge condition and DestNode1 = DestNodeLabel of inner relation)
+Projection of [SourceNode1,DestNode1,DestNode2]
+Triangles with duplications, with ascending sorting done on the first Node Label are:
+Sort on Column 1
+[1024, 91, 163]
+[512, 221, 236]
+[771, 68, 255]
+[813, 129, 629]
+[887, 531, 616]
+
+No. of pages read : 261
+No. of pages write : 12
+buffers : 1000 unpinned : 1000
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+TQC graphdb1 1000 EL1;EL2;EL3
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+PROJECTION of Source Node and Destination Node Label of edge(SELECT with first expression as edge condition).
+Join On(Edge Source Node Label Index with second expression as edge condition)
+Projection of [SourceNode1,DestNode1,SourceNode2,DestNode2]
+Join on (Edge Source Node Label Index with third expression as edge condition and DestNode1 = DestNodeLabel of inner relation)
+Projection of [SourceNode1,DestNode1,DestNode2]
+Heap Created with Concatenated String of Node Labels as first field.
+Duplicate Removal Object Initiated.
+[1024, 91, 163]
+[129, 629, 813]
+[221, 236, 512]
+[255, 771, 68]
+[531, 616, 887]
+
+No. of pages read : 261
+No. of pages write : 12
+buffers : 1000 unpinned : 1000
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+TQA graphdb1 1000 EL1;MW10;EL3
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+PROJECTION of Source Node and Destination Node Label of edge(SELECT with first expression as edge condition).
+Join On(Edge Source Node Label Index with second expression as edge condition)
+Projection of [SourceNode1,DestNode1,SourceNode2,DestNode2]
+Join on (Edge Source Node Label Index with third expression as edge condition and DestNode1 = DestNodeLabel of inner relation)
+Projection of [SourceNode1,DestNode1,DestNode2]
+Triangles with duplications, with no sorting are:
+No Triangles Found.
+
+No. of pages read : 221
+No. of pages write : 10
+buffers : 1000 unpinned : 1000
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+TQA graphdb1 1000 EL1;MW30;EL3
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+PROJECTION of Source Node and Destination Node Label of edge(SELECT with first expression as edge condition).
+Join On(Edge Source Node Label Index with second expression as edge condition)
+Projection of [SourceNode1,DestNode1,SourceNode2,DestNode2]
+Join on (Edge Source Node Label Index with third expression as edge condition and DestNode1 = DestNodeLabel of inner relation)
+Projection of [SourceNode1,DestNode1,DestNode2]
+Triangles with duplications, with no sorting are:
+[771, 68, 255]
+[512, 221, 236]
+
+No. of pages read : 269
+No. of pages write : 11
+buffers : 1000 unpinned : 1000
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+TQB graphdb1 1000 EL1;MW30;EL3
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+PROJECTION of Source Node and Destination Node Label of edge(SELECT with first expression as edge condition).
+Join On(Edge Source Node Label Index with second expression as edge condition)
+Projection of [SourceNode1,DestNode1,SourceNode2,DestNode2]
+Join on (Edge Source Node Label Index with third expression as edge condition and DestNode1 = DestNodeLabel of inner relation)
+Projection of [SourceNode1,DestNode1,DestNode2]
+Triangles with duplications, with ascending sorting done on the first Node Label are:
+Sort on Column 1
+[512, 221, 236]
+[771, 68, 255]
+
+No. of pages read : 270
+No. of pages write : 13
+buffers : 1000 unpinned : 1000
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+TQC graphdb1 1000 EL1;MW30;EL3
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+PROJECTION of Source Node and Destination Node Label of edge(SELECT with first expression as edge condition).
+Join On(Edge Source Node Label Index with second expression as edge condition)
+Projection of [SourceNode1,DestNode1,SourceNode2,DestNode2]
+Join on (Edge Source Node Label Index with third expression as edge condition and DestNode1 = DestNodeLabel of inner relation)
+Projection of [SourceNode1,DestNode1,DestNode2]
+Heap Created with Concatenated String of Node Labels as first field.
+Duplicate Removal Object Initiated.
+[221, 236, 512]
+[255, 771, 68]
+
+No. of pages read : 270
+No. of pages write : 13
+buffers : 1000 unpinned : 1000
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ1 graphdb1 1000 a ND7,1,44,22,12/NL248/NL384/NL0
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on node Descriptor Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+PathExpression.close() reads : [7, 95, 46]
+PathExpression.close() write : [0, 0, 0]
+
+No. of pages read : 163
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ1 graphdb1 1000 b ND7,1,44,22,12/NL248/NL384/NL0
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on node Descriptor Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+PathExpression.close() reads : [8, 95, 46]
+PathExpression.close() write : [0, 0, 0]
+
+No. of pages read : 163
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ1 graphdb1 1000 c ND7,1,44,22,12/NL248/NL384/NL0
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on node Descriptor Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+PathExpression.close() reads : [8, 95, 46]
+PathExpression.close() write : [0, 0, 0]
+
+No. of pages read : 163
+No. of pages write : 0
+buffers : 1000 unpinned : 983
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ1 graphdb1 1000 a NL64/NL91
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+PathExpression.close() reads : [34]
+PathExpression.close() write : [0]
+
+No. of pages read : 46
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ1 graphdb1 1000 b NL64/NL91
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+PathExpression.close() reads : [35]
+PathExpression.close() write : [0]
+
+No. of pages read : 46
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ1 graphdb1 1000 c NL64/NL91
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition anddestination Condition (dest_label = next_label_in_PE))
+PathExpression.close() reads : [35]
+PathExpression.close() write : [0]
+
+No. of pages read : 46
+No. of pages write : 0
+buffers : 1000 unpinned : 983
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 a NL0/MW2
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge weight Condition (edge_weight <= next_edge_weight_in_PE))
+PathExpression.close() reads : [7]
+PathExpression.close() write : [0]
+
+No. of pages read : 19
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 b NL0/MW2
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+PathQuery.runTests() 3
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge weight Condition (edge_weight <= next_edge_weight_in_PE))
+PathExpression.close() reads : [8]
+PathExpression.close() write : [0]
+
+No. of pages read : 19
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 c NL0/MW2
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge weight Condition (edge_weight <= next_edge_weight_in_PE))
+PathExpression.close() reads : [8]
+PathExpression.close() write : [0]
+
+No. of pages read : 19
+No. of pages write : 0
+buffers : 1000 unpinned : 983
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 a NL64/EL0_248
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge label Condition (edge_label = next_edge_label_in_PE))
+PathExpression.close() reads : [34]
+PathExpression.close() write : [0]
+
+No. of pages read : 46
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 b NL64/EL0_248
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+PathQuery.runTests() 3
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge label Condition (edge_label = next_edge_label_in_PE))
+PathExpression.close() reads : [35]
+PathExpression.close() write : [0]
+
+No. of pages read : 46
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 c NL64/EL0_248
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge label Condition (edge_label = next_edge_label_in_PE))
+PathExpression.close() reads : [35]
+PathExpression.close() write : [0]
+
+No. of pages read : 46
+No. of pages write : 0
+buffers : 1000 unpinned : 983
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 a NL0/EL0_248/MW2
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge label Condition (edge_label = next_edge_label_in_PE))
+ Join On ( Source label Index file with source condition andedge weight Condition (edge_weight <= next_edge_weight_in_PE))
+PathExpression.close() reads : [7, 95]
+PathExpression.close() write : [0, 0]
+
+No. of pages read : 114
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 b NL0/EL0_248/MW2
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+PathQuery.runTests() 3
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge label Condition (edge_label = next_edge_label_in_PE))
+ Join On ( Source label Index file with source condition andedge weight Condition (edge_weight <= next_edge_weight_in_PE))
+PathExpression.close() reads : [8, 95]
+PathExpression.close() write : [0, 0]
+
+No. of pages read : 114
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ2 graphdb1 1000 c NL0/EL0_248/MW2
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition andedge label Condition (edge_label = next_edge_label_in_PE))
+ Join On ( Source label Index file with source condition andedge weight Condition (edge_weight <= next_edge_weight_in_PE))
+PathExpression.close() reads : [8, 95]
+PathExpression.close() write : [0, 0]
+
+No. of pages read : 114
+No. of pages write : 0
+buffers : 1000 unpinned : 983
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 a ND7,1,4,22,12/TW2
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on node Descriptor Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+PathExpression.close() reads : [5]
+PathExpression.close() write : [0]
+
+No. of pages read : 14
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 b NL7,1,4,22,12/TW2
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+PathExpression.close() reads : [4]
+PathExpression.close() write : [0]
+
+No. of pages read : 13
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 c NL7,1,4,22,12/TW2
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+PathExpression.close() reads : [4]
+PathExpression.close() write : [0]
+
+No. of pages read : 13
+No. of pages write : 0
+buffers : 1000 unpinned : 983
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 a NL0/TW2
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+PathExpression.close() reads : [10]
+PathExpression.close() write : [0]
+
+No. of pages read : 19
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 b NL0/TW2
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+PathExpression.close() reads : [10]
+PathExpression.close() write : [0]
+
+No. of pages read : 19
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 c NL0/TW2
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On ( Source label Index file with source condition and totalWeight <= given_total_weight)
+PathExpression.close() reads : [10]
+PathExpression.close() write : [0]
+
+No. of pages read : 19
+No. of pages write : 0
+buffers : 1000 unpinned : 983
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 a NL0/ME1
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On (Source label Index file with source condition)
+[0, 248]
+[0, 1000]
+[0, 850]
+[0, 1023]
+PathExpression.close() reads : [11]
+PathExpression.close() write : [0]
+
+No. of pages read : 19
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 b NL0/ME1
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On (Source label Index file with source condition)
+[0, 1000]
+[0, 1023]
+[0, 248]
+[0, 850]
+PathExpression.close() reads : [11]
+PathExpression.close() write : [0]
+
+No. of pages read : 19
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 c NL0/ME1
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On (Source label Index file with source condition)
+[0, 1000]
+[0, 1023]
+[0, 248]
+[0, 850]
+PathExpression.close() reads : [11]
+PathExpression.close() write : [0]
+
+No. of pages read : 19
+No. of pages write : 0
+buffers : 1000 unpinned : 983
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+TQA graphdb1 1000 EL1;EL2;EL1
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+PROJECTION of Source Node and Destination Node Label of edge(SELECT with first expression as edge condition).
+Join On(Edge Source Node Label Index with second expression as edge condition)
+Projection of [SourceNode1,DestNode1,SourceNode2,DestNode2]
+Join on (Edge Source Node Label Index with third expression as edge condition and DestNode1 = DestNodeLabel of inner relation)
+Projection of [SourceNode1,DestNode1,DestNode2]
+Triangles with duplications, with no sorting are:
+No Triangles Found.
+
+No. of pages read : 260
+No. of pages write : 10
+buffers : 1000 unpinned : 1000
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+TQB graphdb1 1000 EL1;EL2;EL1
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+PROJECTION of Source Node and Destination Node Label of edge(SELECT with first expression as edge condition).
+Join On(Edge Source Node Label Index with second expression as edge condition)
+Projection of [SourceNode1,DestNode1,SourceNode2,DestNode2]
+Join on (Edge Source Node Label Index with third expression as edge condition and DestNode1 = DestNodeLabel of inner relation)
+Projection of [SourceNode1,DestNode1,DestNode2]
+Triangles with duplications, with ascending sorting done on the first Node Label are:
+Sort on Column 1
+No Triangles Found.
+
+No. of pages read : 261
+No. of pages write : 12
+buffers : 1000 unpinned : 1000
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+TQC graphdb1 1000 EL1;EL2;EL1
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+PROJECTION of Source Node and Destination Node Label of edge(SELECT with first expression as edge condition).
+Join On(Edge Source Node Label Index with second expression as edge condition)
+Projection of [SourceNode1,DestNode1,SourceNode2,DestNode2]
+Join on (Edge Source Node Label Index with third expression as edge condition and DestNode1 = DestNodeLabel of inner relation)
+Projection of [SourceNode1,DestNode1,DestNode2]
+Heap Created with Concatenated String of Node Labels as first field.
+Duplicate Removal Object Initiated.
+
+No. of pages read : 261
+No. of pages write : 12
+buffers : 1000 unpinned : 1000
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+TQA graphdb1 1000 EL1;MW0;EL3
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+PROJECTION of Source Node and Destination Node Label of edge(SELECT with first expression as edge condition).
+Join On(Edge Source Node Label Index with second expression as edge condition)
+Projection of [SourceNode1,DestNode1,SourceNode2,DestNode2]
+Join on (Edge Source Node Label Index with third expression as edge condition and DestNode1 = DestNodeLabel of inner relation)
+Projection of [SourceNode1,DestNode1,DestNode2]
+Triangles with duplications, with no sorting are:
+No Triangles Found.
+
+No. of pages read : 219
+No. of pages write : 10
+buffers : 1000 unpinned : 1000
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+TQB graphdb1 1000 EL1;MW0;EL3
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+PROJECTION of Source Node and Destination Node Label of edge(SELECT with first expression as edge condition).
+Join On(Edge Source Node Label Index with second expression as edge condition)
+Projection of [SourceNode1,DestNode1,SourceNode2,DestNode2]
+Join on (Edge Source Node Label Index with third expression as edge condition and DestNode1 = DestNodeLabel of inner relation)
+Projection of [SourceNode1,DestNode1,DestNode2]
+Triangles with duplications, with ascending sorting done on the first Node Label are:
+Sort on Column 1
+No Triangles Found.
+
+No. of pages read : 220
+No. of pages write : 12
+buffers : 1000 unpinned : 1000
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+TQC graphdb1 1000 EL1;MW0;EL3
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+PROJECTION of Source Node and Destination Node Label of edge(SELECT with first expression as edge condition).
+Join On(Edge Source Node Label Index with second expression as edge condition)
+Projection of [SourceNode1,DestNode1,SourceNode2,DestNode2]
+Join on (Edge Source Node Label Index with third expression as edge condition and DestNode1 = DestNodeLabel of inner relation)
+Projection of [SourceNode1,DestNode1,DestNode2]
+Heap Created with Concatenated String of Node Labels as first field.
+Duplicate Removal Object Initiated.
+
+No. of pages read : 220
+No. of pages write : 12
+buffers : 1000 unpinned : 1000
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 a NL4/ME1
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On (Source label Index file with source condition)
+[4, 736]
+[4, 231]
+[4, 616]
+[4, 41]
+[4, 395]
+[4, 889]
+[4, 476]
+[4, 865]
+PathExpression.close() reads : [13]
+PathExpression.close() write : [0]
+
+No. of pages read : 21
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 a NL40/ME1
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On (Source label Index file with source condition)
+[40, 387]
+[40, 805]
+[40, 870]
+[40, 601]
+[40, 474]
+[40, 410]
+PathExpression.close() reads : [28]
+PathExpression.close() write : [0]
+
+No. of pages read : 36
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+PQ3 graphdb1 1000 a NL55/ME1
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+(Find tuples on NodeLabel Index File which satisfies Given condition) 
+ Join On (Source label Index file with source condition)
+[55, 172]
+[55, 694]
+[55, 263]
+PathExpression.close() reads : [33]
+PathExpression.close() write : [0]
+
+No. of pages read : 41
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+Enter menu to print the menu, exit to exit, or a command line input to execute:
+exit
+Replacer: Clock
+
+buffers : 1000 unpinned : 993
+
+No. of pages read : 8
+No. of pages write : 0
+buffers : 1000 unpinned : 993
+make[1]: Leaving directory `/home/user/Documents/CSE510/minjava/javaminibase/src/tests'
+[01;32muser@user-Linux[01;34m ~/Documents/CSE510/minjava/javaminibase/src $[00m exit
+exit
+
+Script done on Wed 26 Apr 2017 09:27:40 AM MST

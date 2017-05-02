@@ -377,6 +377,7 @@ public class SortMerge extends Iterator implements GlobalConst
 		}
 	      else
 		{
+	      io_buf2.setDone(false);
 		  io_buf2.reread();
 		  _tuple2= io_buf2.Get( TempTuple2);
 		}

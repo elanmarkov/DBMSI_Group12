@@ -45,6 +45,7 @@ public class TriangleQuery {
 	private static boolean FAIL = false;
 	public NestedIndexLoopJoin NILJ;
 	public NestedIndexLoopJoin nlj;
+	public NestedLoopsJoins nlj1;
 	public IndexScan leftscan;
 	public TriangleQuery(String query){
 		performTriangleQuery(query);
@@ -128,8 +129,9 @@ public class TriangleQuery {
 		rightexpr[1] = null;
 		outerfilter[0] = main_expr[0];
 		outerfilter[1] = null;
+		SortMergeEdge sme = null;
 			try {
-				performfirstjoin(leftexpr,rightexpr,outerfilter,WorL);
+				sme = new SortMergeEdge(main_expr);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -148,7 +150,7 @@ public class TriangleQuery {
 		else if(labels[2].equals("EL")) {
 			secondexpr = setCondExprL(queries[2].substring(2));	// Set up Condition Expressions for second Join
 		}
-		nlj = performSecondJoin(secondexpr);
+		nlj1 = sme.performSecondJoin(secondexpr);
 		
 	
 		
@@ -288,7 +290,7 @@ public class TriangleQuery {
 
 		
 	}
-	public Sort performSorting(NestedIndexLoopJoin input_join) {
+	public Sort performSorting(NestedLoopsJoins input_join) {
 		AttrType[] attrType = new AttrType[3];
 	    attrType[0] = new AttrType(AttrType.attrString);
 	    attrType[1] = new AttrType(AttrType.attrString);
@@ -312,7 +314,7 @@ public class TriangleQuery {
 	    return sort;
 	}
 	
-	public void performDuplicateRemoval(NestedIndexLoopJoin input_join) throws JoinsException, IndexException, InvalidTupleSizeException, InvalidTypeException, PageNotReadException, TupleUtilsException, PredEvalException, SortException, LowMemException, UnknowAttrType, UnknownKeyTypeException, IOException, Exception {
+	public void performDuplicateRemoval(NestedLoopsJoins input_join) throws JoinsException, IndexException, InvalidTupleSizeException, InvalidTypeException, PageNotReadException, TupleUtilsException, PredEvalException, SortException, LowMemException, UnknowAttrType, UnknownKeyTypeException, IOException, Exception {
 		Tuple t;
 		t=null;
 		Heapfile tempheap = new Heapfile("Heapfortriangle"); // Temporary Heap File created to hold the field containing all the 3 node labels combined field along
@@ -382,7 +384,7 @@ public class TriangleQuery {
 		expr[0].op    = new AttrOperator(AttrOperator.aopEQ);
 		expr[0].type1 = new AttrType(AttrType.attrSymbol);
 		expr[0].type2 = new AttrType(AttrType.attrSymbol);
-		expr[0].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),2);
+		expr[0].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),8);
 		expr[0].operand2.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),7);
 
 		expr[1].next   = null;
@@ -396,7 +398,7 @@ public class TriangleQuery {
 		expr[2].op    = new AttrOperator(AttrOperator.aopEQ);
 		expr[2].type1 = new AttrType(AttrType.attrSymbol);
 		expr[2].type2 = new AttrType(AttrType.attrString);
-		expr[2].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),1);
+		expr[2].operand1.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),1);
 		expr[2].operand2.string = labels[1];
 		expr[3] = null;
 		return expr;
@@ -412,7 +414,7 @@ public class TriangleQuery {
 		expr[0].op    = new AttrOperator(AttrOperator.aopEQ);
 		expr[0].type1 = new AttrType(AttrType.attrSymbol);
 		expr[0].type2 = new AttrType(AttrType.attrSymbol);
-		expr[0].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),2);
+		expr[0].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),8);
 		expr[0].operand2.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),7);
 
 		expr[1].next   = null;
@@ -425,7 +427,7 @@ public class TriangleQuery {
 		expr[2].op    = new AttrOperator(AttrOperator.aopLE);
 		expr[2].type1 = new AttrType(AttrType.attrSymbol);
 		expr[2].type2 = new AttrType(AttrType.attrInteger);
-		expr[2].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),6);
+		expr[2].operand1.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),6);
 		expr[2].operand2.integer = weights[1];
 		expr[3] = null;
 		return expr;
@@ -441,7 +443,7 @@ public class TriangleQuery {
 		expr[0].op    = new AttrOperator(AttrOperator.aopEQ);
 		expr[0].type1 = new AttrType(AttrType.attrSymbol);
 		expr[0].type2 = new AttrType(AttrType.attrSymbol);
-		expr[0].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),2);
+		expr[0].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),8);
 		expr[0].operand2.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),7);
 		expr[1].next   = null;
 		expr[1].op    = new AttrOperator(AttrOperator.aopEQ);
@@ -453,7 +455,7 @@ public class TriangleQuery {
 		expr[2].op    = new AttrOperator(AttrOperator.aopLE);
 		expr[2].type1 = new AttrType(AttrType.attrSymbol);
 		expr[2].type2 = new AttrType(AttrType.attrInteger);
-		expr[2].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),6);
+		expr[2].operand1.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),6);
 		expr[2].operand2.integer = weight;
 		expr[3] = null;
 		return expr;
@@ -469,15 +471,8 @@ public class TriangleQuery {
 		expr[0].op    = new AttrOperator(AttrOperator.aopEQ);
 		expr[0].type1 = new AttrType(AttrType.attrSymbol);
 		expr[0].type2 = new AttrType(AttrType.attrSymbol);
-		expr[0].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),2);
+		expr[0].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),8);
 		expr[0].operand2.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),7);
-
-		expr[2].next   = null;
-		expr[2].op    = new AttrOperator(AttrOperator.aopEQ);
-		expr[2].type1 = new AttrType(AttrType.attrSymbol);
-		expr[2].type2 = new AttrType(AttrType.attrString);
-		expr[2].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),1);
-		expr[2].operand2.string = label;
 
 		expr[1].next   = null;
 		expr[1].op    = new AttrOperator(AttrOperator.aopLE);
@@ -485,6 +480,13 @@ public class TriangleQuery {
 		expr[1].type2 = new AttrType(AttrType.attrInteger);
 		expr[1].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),6);
 		expr[1].operand2.integer = weight;
+		
+		expr[2].next   = null;
+		expr[2].op    = new AttrOperator(AttrOperator.aopEQ);
+		expr[2].type1 = new AttrType(AttrType.attrSymbol);
+		expr[2].type2 = new AttrType(AttrType.attrString);
+		expr[2].operand1.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),1);
+		expr[2].operand2.string = label;
 
 		expr[3] = null;
 		return expr;
@@ -514,7 +516,7 @@ public class TriangleQuery {
   		expr[2].op    = new AttrOperator(AttrOperator.aopLE);
   		expr[2].type1 = new AttrType(AttrType.attrSymbol);
   		expr[2].type2 = new AttrType(AttrType.attrInteger);
-  		expr[2].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),6);
+  		expr[2].operand1.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),6);
   		expr[2].operand2.integer = weight;
   
   		expr[3] = null;
@@ -545,7 +547,7 @@ public class TriangleQuery {
   		expr[2].op    = new AttrOperator(AttrOperator.aopEQ);
   		expr[2].type1 = new AttrType(AttrType.attrSymbol);
   		expr[2].type2 = new AttrType(AttrType.attrString);
-  		expr[2].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),1);
+  		expr[2].operand1.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),1);
   		expr[2].operand2.string = label;
   
   		expr[3] = null;

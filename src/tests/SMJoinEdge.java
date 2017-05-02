@@ -31,16 +31,16 @@ public class SMJoinEdge {
 		expr[1].next   = null;
 		expr[1].op    = new AttrOperator(AttrOperator.aopEQ);
 		expr[1].type1 = new AttrType(AttrType.attrSymbol);
-		expr[1].type2 = new AttrType(AttrType.attrInteger);
-		expr[1].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),6);
-		expr[1].operand2.integer = weights1;
+		expr[1].type2 = new AttrType(AttrType.attrString);
+		expr[1].operand1.symbol = new FldSpec (new RelSpec(RelSpec.outer),1);
+		expr[1].operand2.string = "1";
 
 		expr[2].next   = null;
 		expr[2].op    = new AttrOperator(AttrOperator.aopEQ);
 		expr[2].type1 = new AttrType(AttrType.attrSymbol);
-		expr[2].type2 = new AttrType(AttrType.attrInteger);
-		expr[2].operand1.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),6);
-		expr[2].operand2.integer = weights2;
+		expr[2].type2 = new AttrType(AttrType.attrString);
+		expr[2].operand1.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),1);
+		expr[2].operand2.string = "2";
 
 		expr[3] = null;
 		return expr;
@@ -68,11 +68,11 @@ public class SMJoinEdge {
 		expr[1].operand2.symbol =  new FldSpec (new RelSpec(RelSpec.outer),1);
 
 		expr[2].next   = null;
-		expr[2].op    = new AttrOperator(AttrOperator.aopLE);
+		expr[2].op    = new AttrOperator(AttrOperator.aopEQ);
 		expr[2].type1 = new AttrType(AttrType.attrSymbol);
-		expr[2].type2 = new AttrType(AttrType.attrInteger);
-		expr[2].operand1.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),6);
-		expr[2].operand2.integer = weights1;
+		expr[2].type2 = new AttrType(AttrType.attrString);
+		expr[2].operand1.symbol = new FldSpec (new RelSpec(RelSpec.innerRel),1);
+		expr[2].operand2.string = "3";
 
 		expr[3] = null;
 		return expr;

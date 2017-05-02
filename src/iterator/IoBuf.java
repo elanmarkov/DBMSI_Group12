@@ -189,6 +189,9 @@ public class IoBuf implements GlobalConst{
 	  curr_page    = 0;
 	}
     }   
+  public void setDone(boolean value) {
+	  done = value;
+  }
   
   public static final int WRITE_BUFFER =0;
   public static final int READ_BUFFER  =1;

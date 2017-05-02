@@ -6,6 +6,7 @@ import heap.*;
 import index.IndexException;
 import iterator.JoinsException;
 import iterator.LowMemException;
+import iterator.NestedIndexLoopJoin;
 import iterator.PredEvalException;
 import iterator.Sort;
 import iterator.SortException;
@@ -87,8 +88,12 @@ class TriangleQueryTest implements GlobalConst{
 			TQ.performDuplicateRemoval(TQ.nlj1);
 		}
 		
+
 		TQ.nlj1.close();
 		//TQ.leftscan.close();
+		System.out.println("Number of reads : "+NestedIndexLoopJoin.getReadCounter());
+		System.out.println("Number of writes : "+NestedIndexLoopJoin.getWriteCounter());
+
 		if(!status) {
 			System.out.println("No Triangles Found.");
 		}

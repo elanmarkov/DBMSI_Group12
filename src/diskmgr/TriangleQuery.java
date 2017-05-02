@@ -50,10 +50,7 @@ public class TriangleQuery {
 	public TriangleQuery(String query){
 		performTriangleQuery(query);
 	};
-	private static void printReadWriteCount() {
-		System.out.println("No. of pages read : " + PCounter.getRCount());
-		System.out.println("No. of pages write : " + PCounter.getWCount()+"\n");
-	}
+	
 	public void performTriangleQuery(String query){
 		int WorL[] = new int[2];   //Used to check if the Scan is needed on Edge Labels or Edge Weights, 1 if Label, 6 if weight.
 		CondExpr[] main_expr = new CondExpr[4];
@@ -152,7 +149,8 @@ public class TriangleQuery {
 		}
 		nlj1 = sme.performSecondJoin(secondexpr);
 		
-	
+		NestedIndexLoopJoin.setNUMBER_OF_JOINS(2);
+		NestedIndexLoopJoin.savecurrentReadWriteCounter();
 		
 	
 	}

@@ -193,7 +193,7 @@ public class SortMerge extends Iterator implements GlobalConst
       // Two buffer pages to store equivalence classes
       // NOTE -- THESE PAGES ARE NOT OBTAINED FROM THE BUFFER POOL
       // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      _n_pages = 1;
+      _n_pages = 5;
       _bufs1 = new byte [_n_pages][MINIBASE_PAGESIZE];
       _bufs2 = new byte [_n_pages][MINIBASE_PAGESIZE];
      
@@ -286,7 +286,7 @@ public class SortMerge extends Iterator implements GlobalConst
 	      while ((comp_res < 0 && _order.tupleOrder == TupleOrder.Ascending) ||
 		     (comp_res > 0 && _order.tupleOrder == TupleOrder.Descending))
 		{
-		  if ((tuple1 = p_i1.get_next()) == null) {
+	      if ((tuple1 = p_i1.get_next()) == null) {
 		    done = true;
 		    return null;
 		  }
@@ -300,7 +300,7 @@ public class SortMerge extends Iterator implements GlobalConst
 	      while ((comp_res > 0 && _order.tupleOrder == TupleOrder.Ascending) ||
 		     (comp_res < 0 && _order.tupleOrder == TupleOrder.Descending))
 		{
-		  if ((tuple2 = p_i2.get_next()) == null)
+	      if ((tuple2 = p_i2.get_next()) == null)
 		    {
 		      done = true;
 		      return null;
@@ -309,7 +309,6 @@ public class SortMerge extends Iterator implements GlobalConst
 		  comp_res = TupleUtils.CompareTupleWithTuple(sortFldType, tuple1,
 							      jc_in1, tuple2, jc_in2);
 		}
-	      
 	      if (comp_res != 0)
 		{
 		  process_next_block = true;
@@ -319,13 +318,12 @@ public class SortMerge extends Iterator implements GlobalConst
 	      TempTuple1.tupleCopy(tuple1);
 	      TempTuple2.tupleCopy(tuple2); 
 	      
-	      io_buf1.init(_bufs1,       1, t1_size, temp_file_fd1);
-	      io_buf2.init(_bufs2,       1, t2_size, temp_file_fd2);
-	      
+	      io_buf1.init(_bufs1,       _n_pages, t1_size, temp_file_fd1);
+	      io_buf2.init(_bufs2,       _n_pages, t2_size, temp_file_fd2);
 	      while (TupleUtils.CompareTupleWithTuple(sortFldType, tuple1,
 						      jc_in1, TempTuple1, jc_in1) == 0)
 		{
-		  // Insert tuple1 into io_buf1
+	      // Insert tuple1 into io_buf1
 		  try {
 		    io_buf1.Put(tuple1);
 		  }
@@ -338,12 +336,10 @@ public class SortMerge extends Iterator implements GlobalConst
 		      break;
 		    }
 		}
-	      
 	      while (TupleUtils.CompareTupleWithTuple(sortFldType, tuple2,
 						      jc_in2, TempTuple2, jc_in2) == 0)
 		{
 		  // Insert tuple2 into io_buf2
-		  
 		  try {
 		    io_buf2.Put(tuple2);
 		  }
@@ -372,7 +368,7 @@ public class SortMerge extends Iterator implements GlobalConst
 	    {
 	      if (( _tuple1= io_buf1.Get(TempTuple1)) == null)
 		{
-		  process_next_block = true;
+	      process_next_block = true;
 		  continue;                                // Process next equivalence class
 		}
 	      else
@@ -384,7 +380,7 @@ public class SortMerge extends Iterator implements GlobalConst
 	    }
 	  if (PredEval.Eval(OutputFilter, TempTuple1, TempTuple2, _in1, _in2) == true)
 	    {
-	      Projection.Join(TempTuple1, _in1, 
+		  Projection.Join(TempTuple1, _in1, 
 			      TempTuple2, _in2, 
 			      Jtuple, perm_mat, nOutFlds);
 	      return Jtuple;

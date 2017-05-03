@@ -103,6 +103,7 @@ public class IoBuf implements GlobalConst{
 	  if ((temptuple= i_buf.Get(buf)) == null)
 	    {
 	      done = true;
+	      i_buf.close();
 	      return null;
 	    }
 	}

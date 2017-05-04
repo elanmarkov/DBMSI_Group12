@@ -40,6 +40,8 @@ public class SortMerge extends Iterator implements GlobalConst
   private  Tuple     Jtuple;
   private  FldSpec   perm_mat[];
   private  int        nOutFlds;
+  public static int PAGE_READ_COUNT = 0;
+  public static int PAGE_WRITE_COUNT = 0;
   
   /**
    *constructor,initialization
@@ -102,6 +104,10 @@ public class SortMerge extends Iterator implements GlobalConst
 	   IOException
 		   
     {
+	  int CurrRcounter = PCounter.getRCount();
+	  int CurrWcounter = PCounter.getWCount();
+	  PAGE_READ_COUNT=0;
+	  PAGE_WRITE_COUNT=0;
       _in1 = new AttrType[in1.length];
       _in2 = new AttrType[in2.length];
       System.arraycopy(in1,0,_in1,0,in1.length);
@@ -212,6 +218,8 @@ public class SortMerge extends Iterator implements GlobalConst
       sortFldType = _in1[jc_in1-1];
       
       // Now, that stuff is setup, all we have to do is a get_next !!!!
+      //PAGE_READ_COUNT = PAGE_READ_COUNT+PCounter.getRCount()-CurrRcounter;
+      //PAGE_WRITE_COUNT = PAGE_WRITE_COUNT+PCounter.getWCount()-CurrWcounter;
     }
   
   /**
@@ -254,7 +262,8 @@ public class SortMerge extends Iterator implements GlobalConst
 	   UnknownKeyTypeException,
 	   Exception
     {
-      
+	  int CurrRcounter = PCounter.getRCount();
+	  int CurrWcounter = PCounter.getWCount();
       double    comp_res;
       Tuple _tuple1,_tuple2;
       if (done) return null;
@@ -268,12 +277,16 @@ public class SortMerge extends Iterator implements GlobalConst
 		if ((tuple1 = p_i1.get_next()) == null)
 		  {
 		    done = true;
+		    PAGE_READ_COUNT = PAGE_READ_COUNT+PCounter.getRCount()-CurrRcounter;
+		    PAGE_WRITE_COUNT = PAGE_WRITE_COUNT+PCounter.getWCount()-CurrWcounter;
 		    return null;
 		  }
 	      if (get_from_in2)
 		if ((tuple2 = p_i2.get_next()) == null)
 		  {
 		    done = true;
+		    PAGE_READ_COUNT = PAGE_READ_COUNT+PCounter.getRCount()-CurrRcounter;
+		    PAGE_WRITE_COUNT = PAGE_WRITE_COUNT+PCounter.getWCount()-CurrWcounter;
 		    return null;
 		  }
 	      get_from_in1 = get_from_in2 = false;
@@ -288,6 +301,8 @@ public class SortMerge extends Iterator implements GlobalConst
 		{
 	      if ((tuple1 = p_i1.get_next()) == null) {
 		    done = true;
+		    PAGE_READ_COUNT = PAGE_READ_COUNT+PCounter.getRCount()-CurrRcounter;
+		    PAGE_WRITE_COUNT = PAGE_WRITE_COUNT+PCounter.getWCount()-CurrWcounter;
 		    return null;
 		  }
 		  
@@ -302,6 +317,8 @@ public class SortMerge extends Iterator implements GlobalConst
 		{
 	      if ((tuple2 = p_i2.get_next()) == null)
 		    {
+	          PAGE_READ_COUNT = PAGE_READ_COUNT+PCounter.getRCount()-CurrRcounter;
+	          PAGE_WRITE_COUNT = PAGE_WRITE_COUNT+PCounter.getWCount()-CurrWcounter;
 		      done = true;
 		      return null;
 		    }
@@ -383,6 +400,8 @@ public class SortMerge extends Iterator implements GlobalConst
 		  Projection.Join(TempTuple1, _in1, 
 			      TempTuple2, _in2, 
 			      Jtuple, perm_mat, nOutFlds);
+	      PAGE_READ_COUNT = PAGE_READ_COUNT+PCounter.getRCount()-CurrRcounter;
+	      PAGE_WRITE_COUNT = PAGE_WRITE_COUNT+PCounter.getWCount()-CurrWcounter;
 	      return Jtuple;
 	    }
 	}

@@ -45,8 +45,9 @@ public class TriangleQuery {
 	private static boolean FAIL = false;
 	public NestedIndexLoopJoin NILJ;
 	public NestedIndexLoopJoin nlj;
-	public NestedLoopsJoins nlj1;
+	public Iterator nlj1;
 	public IndexScan leftscan;
+	private SortMergeEdge sme;
 	public TriangleQuery(String query){
 		performTriangleQuery(query);
 	};
@@ -126,7 +127,6 @@ public class TriangleQuery {
 		rightexpr[1] = null;
 		outerfilter[0] = main_expr[0];
 		outerfilter[1] = null;
-		SortMergeEdge sme = null;
 			try {
 				sme = new SortMergeEdge(main_expr);
 			} catch (Exception e) {
@@ -149,7 +149,7 @@ public class TriangleQuery {
 		}
 		nlj1 = sme.performSecondJoin(secondexpr);
 		
-		NestedIndexLoopJoin.setNUMBER_OF_JOINS(2);
+		NestedIndexLoopJoin.setNUMBER_OF_JOINS(1);
 		NestedIndexLoopJoin.savecurrentReadWriteCounter();
 		
 	
@@ -288,7 +288,7 @@ public class TriangleQuery {
 
 		
 	}
-	public Sort performSorting(NestedLoopsJoins input_join) {
+	public Sort performSorting(Iterator input_join) {
 		AttrType[] attrType = new AttrType[3];
 	    attrType[0] = new AttrType(AttrType.attrString);
 	    attrType[1] = new AttrType(AttrType.attrString);
@@ -312,7 +312,7 @@ public class TriangleQuery {
 	    return sort;
 	}
 	
-	public void performDuplicateRemoval(NestedLoopsJoins input_join) throws JoinsException, IndexException, InvalidTupleSizeException, InvalidTypeException, PageNotReadException, TupleUtilsException, PredEvalException, SortException, LowMemException, UnknowAttrType, UnknownKeyTypeException, IOException, Exception {
+	public void performDuplicateRemoval(Iterator input_join) throws JoinsException, IndexException, InvalidTupleSizeException, InvalidTypeException, PageNotReadException, TupleUtilsException, PredEvalException, SortException, LowMemException, UnknowAttrType, UnknownKeyTypeException, IOException, Exception {
 		Tuple t;
 		t=null;
 		Heapfile tempheap = new Heapfile("Heapfortriangle"); // Temporary Heap File created to hold the field containing all the 3 node labels combined field along
@@ -553,7 +553,9 @@ public class TriangleQuery {
   	}
 	
 
-
+	public void close(){
+		sme.close();
+	}
 
 
 }

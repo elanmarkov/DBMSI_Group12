@@ -16,6 +16,7 @@ package iterator;
 import global.AttrOperator;
 import global.AttrType;
 import global.Descriptor;
+import global.IndexType;
 import global.TupleOrder;
 import heap.Tuple;
 
@@ -208,50 +209,67 @@ public class SortMergeEdge extends Iterator{
 		}
 	}
 	
-	public NestedLoopsJoins performSecondJoin (CondExpr[] expr) {
-		AttrType [] E1types = new AttrType[8];
-		E1types[0] = new AttrType(AttrType.attrString);
-		E1types[1] = new AttrType(AttrType.attrInteger);
-		E1types[2] = new AttrType(AttrType.attrInteger);
-		E1types[3] = new AttrType(AttrType.attrInteger);
-		E1types[4] = new AttrType(AttrType.attrInteger);
-		E1types[5] = new AttrType(AttrType.attrInteger);
-		E1types[6] = new AttrType(AttrType.attrString);
-		E1types[7] = new AttrType(AttrType.attrString);
-		
-		short [] E1sizes = new short[3];
-		E1sizes[0] = Tuple.LABEL_MAX_LENGTH;
-		E1sizes[1] = 4;
-		E1sizes[2] = 4;
-		
-		AttrType [] E2types = new AttrType[4];
-		E2types[0] = new AttrType(AttrType.attrString);
-		E2types[1] = new AttrType(AttrType.attrString);
-		E2types[2] = new AttrType(AttrType.attrString);
-		E2types[3] = new AttrType(AttrType.attrString);
+	public Iterator performSecondJoin (CondExpr[] expr) {
+	AttrType [] E1types = new AttrType[8];
+	E1types[0] = new AttrType(AttrType.attrString);
+	E1types[1] = new AttrType(AttrType.attrInteger);
+	E1types[2] = new AttrType(AttrType.attrInteger);
+	E1types[3] = new AttrType(AttrType.attrInteger);
+	E1types[4] = new AttrType(AttrType.attrInteger);
+	E1types[5] = new AttrType(AttrType.attrInteger);
+	E1types[6] = new AttrType(AttrType.attrString);
+	E1types[7] = new AttrType(AttrType.attrString);
+	
+	short [] E1sizes = new short[3];
+	E1sizes[0] = Tuple.LABEL_MAX_LENGTH;
+	E1sizes[1] = 4;
+	E1sizes[2] = 4;
+	/*CondExpr[] outfilter = new CondExpr[3];
+	outfilter[0] = main_expr[0];
+	outfilter[1] = main_expr[1];
+	outfilter[2] = null;
+	CondExpr[] rightexpr = new CondExpr[2];
+	rightexpr[0] = main_expr[2];
+	rightexpr[1] = null;
+	*/
+	AttrType [] E2types = new AttrType[4];
+	E2types[0] = new AttrType(AttrType.attrString);
+	E2types[1] = new AttrType(AttrType.attrString);
+	E2types[2] = new AttrType(AttrType.attrString);
+	E2types[3] = new AttrType(AttrType.attrString);
 
-		short [] E2sizes = new short[4];
-		E2sizes[0] = 4;
-		E2sizes[1] = 4;
-		E2sizes[2] = 4;
-		E2sizes[3] = 4;
-		
-		FldSpec [] proj_list = new FldSpec[3];
-		proj_list[0] = new FldSpec(new RelSpec(RelSpec.innerRel), 7);
-		proj_list[1] = new FldSpec(new RelSpec(RelSpec.innerRel), 8);
-		proj_list[2] = new FldSpec(new RelSpec(RelSpec.outer), 2);
-		
-		NestedLoopsJoins inl = null;
+	short [] E2sizes = new short[4];
+	E2sizes[0] = 4;
+	E2sizes[1] = 4;
+	E2sizes[2] = 4;
+	E2sizes[3] = 4;
+	
+	FldSpec [] proj_list = new FldSpec[3];
+	proj_list[0] = new FldSpec(new RelSpec(RelSpec.innerRel), 7);
+	proj_list[1] = new FldSpec(new RelSpec(RelSpec.innerRel), 8);
+	proj_list[2] = new FldSpec(new RelSpec(RelSpec.outer), 2);
+	RelSpec rel = new RelSpec(RelSpec.outer);
+	FldSpec[] indexprojlist = new FldSpec[8];
+	indexprojlist[0] = new FldSpec(rel,1);
+	indexprojlist[1] = new FldSpec(rel,2);
+	indexprojlist[2] = new FldSpec(rel,3);
+	indexprojlist[3] = new FldSpec(rel,4);
+	indexprojlist[4] = new FldSpec(rel,5);
+	indexprojlist[5] = new FldSpec(rel,6);
+	indexprojlist[6] = new FldSpec(rel,7);
+	indexprojlist[7] = new FldSpec(rel,8);
+	// Nested Index Loop for the second Join, The Left iterator is the output iterator from the first join and the Right relation 
+	// is the Edge Heap . The index projection is the projection that is created while running index scan on the right relation during join
+	// and hence all the 8 attributes are given as input.
+	Iterator inl = null;
 		try {
-			inl = new NestedLoopsJoins (E2types, 4, E2sizes,
-					E1types, 8, E1sizes,
-					200,
-					this.sm, "GraphDBEDGEHEAP",
-					expr, null, proj_list, 3);
+			inl = new NestedIndexLoopJoin(E2types,4, E2sizes, E1types, 8,
+					E1sizes, 100, sm, "GraphDBEDGESRCLABEL", new IndexType(IndexType.B_Index), "GraphDBEDGEHEAP",indexprojlist,
+					7, expr, null, proj_list, 3, 4,null);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		return inl;
+	return inl;
 	}
 	
 	public Tuple get_next() {

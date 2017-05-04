@@ -10,6 +10,7 @@ import iterator.NestedIndexLoopJoin;
 import iterator.PredEvalException;
 import iterator.Sort;
 import iterator.SortException;
+import iterator.SortMerge;
 import iterator.TupleUtilsException;
 import iterator.UnknowAttrType;
 import iterator.UnknownKeyTypeException;
@@ -90,10 +91,18 @@ class TriangleQueryTest implements GlobalConst{
 		
 
 		TQ.nlj1.close();
+		TQ.close();
 		//TQ.leftscan.close();
-		System.out.println("Number of reads : "+NestedIndexLoopJoin.getReadCounter());
-		System.out.println("Number of writes : "+NestedIndexLoopJoin.getWriteCounter());
-
+		ArrayList<Integer> read = new ArrayList<>();
+		ArrayList<Integer> write = new ArrayList<>();
+		read.add(SortMerge.PAGE_READ_COUNT);
+		read.add(NestedIndexLoopJoin.getReadCounter().get(0));
+		write.add(SortMerge.PAGE_WRITE_COUNT);
+		write.add(NestedIndexLoopJoin.getWriteCounter().get(0));
+		System.out.println("Number of reads : "+read);
+		System.out.println("Number of writes : "+write);
+		read.clear();
+		write.clear();
 		if(!status) {
 			System.out.println("No Triangles Found.");
 		}

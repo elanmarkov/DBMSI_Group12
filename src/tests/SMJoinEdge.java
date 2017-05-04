@@ -8,6 +8,7 @@ import global.AttrType;
 import heap.Tuple;
 import iterator.CondExpr;
 import iterator.FldSpec;
+import iterator.Iterator;
 import iterator.NestedLoopsJoins;
 import iterator.RelSpec;
 import iterator.SortMergeEdge;
@@ -91,7 +92,7 @@ public class SMJoinEdge {
 			}
 		}
 
-		NestedLoopsJoins inl = sme.performSecondJoin(setCondExprW(2000));
+		Iterator inl = sme.performSecondJoin(setCondExprW(2000));
 		AttrType [] jtype1 = new AttrType[3];
 		jtype1[0] = new AttrType (AttrType.attrString);
 		jtype1[1] = new AttrType (AttrType.attrString);
